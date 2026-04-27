@@ -1,0 +1,20 @@
+site_name: Pressure NN
+site_description: Meaning-first pressure network experiment notes.
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: mkdocs
+
+nav:
+  - Home: index.md
+  - Concepts:
+      - Pressure Network: concepts/pressure-network.md
+      - Learning Dynamics: concepts/learning-dynamics.md
+      - Topology: concepts/topology.md
+  - Code Notes:
+      - network.js: code/network.js.doc.md
+      - main.js: code/main.js.doc.md
+      - visualizer.js: code/visualizer.js.doc.md
+  - Experiments:
+      - Output Flooding: experiments/001-output-flooding.md

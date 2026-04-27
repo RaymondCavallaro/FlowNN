@@ -140,8 +140,9 @@ select {
 }
 
 .signal-buttons button {
-  width: 30px;
+  min-width: 34px;
   height: 30px;
+  padding: 0 7px;
   border: 0;
   border-radius: 6px;
   color: var(--text);
@@ -183,7 +184,7 @@ canvas {
   right: 18px;
   bottom: 18px;
   display: grid;
-  grid-template-columns: repeat(8, minmax(78px, 1fr));
+  grid-template-columns: repeat(11, minmax(70px, 1fr));
   gap: 1px;
   overflow: hidden;
   border: 1px solid var(--line);

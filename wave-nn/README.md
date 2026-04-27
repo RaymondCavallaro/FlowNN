@@ -1,77 +1,82 @@
-# Wave NN
+# Pressure NN
 
-A small browser simulation for pressure-shaped wave routing.
+A meaning-first pressure network experiment.
 
-Each node routes incoming signals through outgoing valves. The current prototype has four dedicated input/control nodes:
+The current prototype removes wave/timing routing and tests whether local pressure learning can form useful paths. Signal identity is structural: a pressure pulse starts at a source node such as `A0` or `B1`; the signal itself only carries strength.
 
-- IN0: `0` signal
-- IN1: `1` signal
-- INT: tighten feedback
-- INL: loosen feedback
+## Model
 
-Four signal types are available:
+- `Signal`: pressure only.
+- `PressureNode`: internal pressure, threshold, decay, activation.
+- `InputValve`: source node, target node, resistance, weight, pressure/activity.
+- `OutputNode`: endpoint during testing, but an active pressure source during flood training.
 
-- `0`
-- `1`
-- `tighten`
-- `loosen`
+The operation region tracks continuous plasticity. Plasticity scales future valve updates across the active operation area, so successful behavior can consolidate without permanently freezing individual valves.
 
-A signal carries:
+Sources:
 
-- strength
-- frequency
-- phase
-- time through the simulation loop
+- `A0`, `A1`
+- `B0`, `B1`
 
-Each valve has:
+Outputs:
 
-- size: maximum throughput
-- frequency: preferred repetition pattern
-- phase: preferred timing alignment
-- looseness: tolerance around frequency and phase
-- pressure: accumulated mismatch
-- weight: pathway usefulness after repeated successful routing
+- `OUT0`
+- `OUT1`
 
-Good matches strengthen and tune the valve. Poor matches create pressure. Pressure loosens valves and can trigger spread, pushing signal through more pathways to search for new patterns.
+Initial valves start near middle resistance so they are neither fully open nor fully closed.
 
-Training examples inject two bit signals through the `0` and `1` input nodes. Four fixed output sinks receive `00`, `01`, `10`, and `11` patterns. When a paired pattern reaches its assigned output and the selected operation says that case is true, `tighten` feedback is injected. Otherwise, `loosen` feedback is injected. Output nodes are sinks: they receive signal and consume it.
+The first hidden layer is intentionally simple: `H0` receives `A0+B0`, `H1` receives `A0+B1`, `H2` receives `A1+B0`, and `H3` receives `A1+B1`. Reverse valves from outputs are currently reserved for later experiments; the shaped topology learns from active output pressure at the pair-to-output boundary.
 
-The tighten and loosen inputs are isolated control inputs. They do not route through the graph; instead, their active signal energy globally nudges every valve's looseness down or up. Reactor feedback injects these controls automatically, while manual `T` and `L` pulses are still available for experiments.
+## Training
 
-The graph includes recurrent links, so waves can travel forward, loop back, and form circulating pathways. There is no explicit path-history credit assignment. Learning pressure stays local: valves adapt from their current fit, pressure, and memory. Tighten and loosen controls act hardest on valves that are already tight, without using flow trace as a shortcut.
+Flood training injects the selected truth-table input sources and the desired output node at the same time.
 
-Control pulses have adaptive amplitude. Stronger activation produces stronger control. Recent accuracy biases the control gains: higher accuracy amplifies tighten feedback to stabilize useful narrow pathways, while lower accuracy amplifies loosen feedback to encourage exploration.
+Example for XOR:
+
+```text
+A0 + B1 + OUT1
+```
+
+Local co-activation lowers resistance / raises weight. Pressure that accumulates without activation can increase resistance. There is no signal type, no accepted signal type, no path history, and no backprop-style credit assignment.
+
+Desired-output flood strength is balanced by output rarity so less frequent output meanings still receive enough teacher pressure.
+
+Teacher duration can also be balanced by output rarity. This lets experiments compare stronger teacher pulses against longer calibration time.
+
+## Testing
+
+Input-only testing injects only the input sources. The predicted output is whichever output node activates more strongly after a settle window. Ambiguous or missing output counts as incorrect.
+
+Tests also record diagnostic peak, area, duration, and hybrid output predictions so we can distinguish short strong activation from longer weak activation.
+
+## Controls
+
+- `+`: train one truth-table row.
+- `C`: train one full truth-table cycle.
+- `T`: test one full truth-table cycle.
+- `A`: toggle auto-train.
+- `R`: reset.
+- Operation selector: XOR, AND, OR, NAND.
+- `A0`, `A1`, `B0`, `B1`: manual source pulses.
+- Valve mode: neutral, seeking, certainty.
+- Threshold mode: neutral, seeking, certainty.
+
+Valve mode and threshold mode are separate global ecology controls. Valve seeking/certainty changes where pressure can travel. Threshold seeking/certainty changes what pressure level counts as activation. They are experiment conditions, not route-specific feedback.
 
 ## Run
-
-From this folder:
 
 ```bash
 python3 -m http.server 4173
 ```
 
-Then open:
+Open:
 
 ```text
 http://127.0.0.1:4173/
 ```
 
-## Controls
+## Test
 
-- Pause/resume the simulation.
-- Inject a training example.
-- Reset the network.
-- Pick XOR, AND, OR, or NAND, then reset to restart the fixed output task.
-- Inject manual `0`, `1`, `tighten`, or `loosen` signals through their dedicated input/control nodes.
-- Adjust learning strength.
-- Toggle automatic pulsing.
-- Switch pulse mode between clocked pulses and wait-until-settled pulses.
-- Click a node or valve to inspect active signals, pressure, tuning, and type affinity.
-
-## Visual Language
-
-- Bright teal glow: active signal.
-- Red glow: accumulated pressure.
-- Thicker lines: looser or higher-throughput valves.
-- Brighter valve lines: recently used routes.
-- Spread count: pressure-forced routing events.
+```bash
+npm test
+```

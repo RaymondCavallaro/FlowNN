@@ -27,34 +27,36 @@ export class Visualizer {
     const ctx = this.ctx;
     const width = this.canvas.width;
     const height = this.canvas.height;
-
     ctx.clearRect(0, 0, width, height);
-    this.drawField(ctx, width, height, network.time);
+    this.drawField(ctx, width, height);
     this.drawValves(ctx, network, selection);
-    this.drawSignals(ctx, network);
-    this.drawNodes(ctx, network, settings, selection);
+    this.drawNodes(ctx, network, selection);
+    this.drawHud(ctx, network, settings);
   }
 
-  drawField(ctx, width, height, time) {
+  drawField(ctx, width, height) {
     const gradient = ctx.createLinearGradient(0, 0, width, height);
     gradient.addColorStop(0, "#102626");
-    gradient.addColorStop(0.42, "#171f2d");
-    gradient.addColorStop(1, "#211c24");
+    gradient.addColorStop(0.5, "#171f2d");
+    gradient.addColorStop(1, "#221c20");
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, width, height);
 
     ctx.save();
-    ctx.globalAlpha = 0.24;
+    ctx.globalAlpha = 0.18;
     ctx.strokeStyle = "#d8fff7";
-    ctx.lineWidth = 1;
-    const gap = 46 * this.pixelRatio;
-    for (let x = -gap; x < width + gap; x += gap) {
+    ctx.lineWidth = 1 * this.pixelRatio;
+    const gap = 54 * this.pixelRatio;
+    for (let x = 0; x < width; x += gap) {
       ctx.beginPath();
-      for (let y = 0; y <= height; y += 18 * this.pixelRatio) {
-        const wave = Math.sin(y * 0.009 + time * 1.9 + x * 0.008) * 8 * this.pixelRatio;
-        if (y === 0) ctx.moveTo(x + wave, y);
-        else ctx.lineTo(x + wave, y);
-      }
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, height);
+      ctx.stroke();
+    }
+    for (let y = 0; y < height; y += gap) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(width, y);
       ctx.stroke();
     }
     ctx.restore();
@@ -64,114 +66,107 @@ export class Visualizer {
     for (const valve of network.valves) {
       const from = this.point(network.getNode(valve.from));
       const to = this.point(network.getNode(valve.to));
-      const pressure = clamp(valve.pressure / 1.8, 0, 1);
-      const activity = clamp(valve.activity, 0, 1);
       const selected = selection?.kind === "valve" && selection.id === valve.id;
-      const width = (2 + valve.size * 5 + valve.looseness * 8 + activity * 8) * this.pixelRatio;
+      const openness = 1 - valve.resistance;
+      const activity = clamp(valve.activity, 0, 1.8);
+      const pressure = clamp(valve.pressure, 0, 1.8);
+      const width = (1.5 + openness * 5 + activity * 5) * this.pixelRatio;
 
       ctx.save();
       ctx.lineCap = "round";
-      ctx.lineWidth = width + pressure * 8 * this.pixelRatio + (selected ? 8 * this.pixelRatio : 0);
-      ctx.strokeStyle = selected ? "rgba(255, 245, 179, 0.7)" : `rgba(255, 79, 92, ${0.08 + pressure * 0.42})`;
+      ctx.lineWidth = width + pressure * 5 * this.pixelRatio + (selected ? 7 * this.pixelRatio : 0);
+      ctx.strokeStyle = selected ? "rgba(255, 245, 179, 0.75)" : `rgba(255, 91, 105, ${0.08 + pressure * 0.2})`;
       ctx.beginPath();
       ctx.moveTo(from.x, from.y);
       ctx.lineTo(to.x, to.y);
       ctx.stroke();
 
       ctx.lineWidth = width;
-      ctx.strokeStyle = `hsla(${175 + valve.frequency * 18}, 84%, ${52 + activity * 20}%, ${0.18 + activity * 0.58})`;
+      ctx.strokeStyle = `rgba(132, 246, 223, ${0.16 + openness * 0.32 + activity * 0.22})`;
       ctx.beginPath();
       ctx.moveTo(from.x, from.y);
       ctx.lineTo(to.x, to.y);
       ctx.stroke();
-
-      this.drawArrow(ctx, from, to, activity, valve.burst);
+      this.drawArrow(ctx, from, to, activity);
       ctx.restore();
     }
   }
 
-  drawArrow(ctx, from, to, activity, burst) {
+  drawArrow(ctx, from, to, activity) {
     const angle = Math.atan2(to.y - from.y, to.x - from.x);
-    const midX = from.x + (to.x - from.x) * 0.62;
-    const midY = from.y + (to.y - from.y) * 0.62;
-    const size = (8 + activity * 10 + burst * 5) * this.pixelRatio;
+    const midX = from.x + (to.x - from.x) * 0.7;
+    const midY = from.y + (to.y - from.y) * 0.7;
+    const size = (7 + activity * 5) * this.pixelRatio;
 
     ctx.save();
     ctx.translate(midX, midY);
     ctx.rotate(angle);
-    ctx.fillStyle = `rgba(235, 255, 246, ${0.22 + activity * 0.72})`;
+    ctx.fillStyle = `rgba(235, 255, 246, ${0.2 + activity * 0.4})`;
     ctx.beginPath();
     ctx.moveTo(size, 0);
-    ctx.lineTo(-size * 0.65, -size * 0.42);
-    ctx.lineTo(-size * 0.38, 0);
-    ctx.lineTo(-size * 0.65, size * 0.42);
+    ctx.lineTo(-size * 0.55, -size * 0.38);
+    ctx.lineTo(-size * 0.34, 0);
+    ctx.lineTo(-size * 0.55, size * 0.38);
     ctx.closePath();
     ctx.fill();
     ctx.restore();
   }
 
-  drawSignals(ctx, network) {
-    const signalsByNode = new Map();
-    for (const signal of network.signals) {
-      signalsByNode.set(signal.nodeId, (signalsByNode.get(signal.nodeId) || 0) + signal.strength);
-    }
-
-    for (const [nodeId, strength] of signalsByNode.entries()) {
-      const rawNode = network.getNode(nodeId);
-      if (!rawNode) continue;
-      const node = this.point(rawNode);
-      const radius = (18 + clamp(strength, 0, 1.5) * 32) * this.pixelRatio;
-      const pulse = Math.sin(network.time * 7 + strength * 2) * 0.5 + 0.5;
+  drawNodes(ctx, network, selection) {
+    for (const node of network.nodes) {
+      const point = this.point(node);
+      const selected = selection?.kind === "node" && selection.id === node.id;
+      const active = clamp(node.activation + node.pulse, 0, 2);
+      const pressure = clamp(node.pressure / Math.max(0.1, node.threshold), 0, 1.5);
+      const radius = (16 + active * 5 + pressure * 4) * this.pixelRatio;
 
       ctx.save();
-      ctx.globalCompositeOperation = "lighter";
-      const gradient = ctx.createRadialGradient(node.x, node.y, 1, node.x, node.y, radius);
-      gradient.addColorStop(0, `rgba(174, 255, 232, ${0.42 + pulse * 0.26})`);
-      gradient.addColorStop(1, "rgba(174, 255, 232, 0)");
-      ctx.fillStyle = gradient;
+      ctx.shadowColor = `rgba(132, 246, 223, ${0.18 + active * 0.22})`;
+      ctx.shadowBlur = (12 + active * 18) * this.pixelRatio;
+      ctx.fillStyle = nodeFill(node, active);
+      ctx.strokeStyle = selected ? "#fff3a8" : "rgba(255,255,255,0.55)";
+      ctx.lineWidth = (selected ? 5 : 2) * this.pixelRatio;
       ctx.beginPath();
-      ctx.arc(node.x, node.y, radius, 0, TAU);
+      ctx.arc(point.x, point.y, radius, 0, TAU);
       ctx.fill();
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      if (node.role === "hidden" || node.role === "output") this.drawThresholdRing(ctx, point, node, radius);
+
+      ctx.fillStyle = "#102126";
+      ctx.font = `${12 * this.pixelRatio}px ui-sans-serif, system-ui, sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(node.id, point.x, point.y);
+      ctx.fillStyle = "rgba(235, 255, 247, 0.72)";
+      ctx.font = `${10 * this.pixelRatio}px ui-sans-serif, system-ui, sans-serif`;
+      ctx.fillText(node.label, point.x, point.y + 30 * this.pixelRatio);
       ctx.restore();
     }
   }
 
-  drawNodes(ctx, network, settings, selection) {
-    for (const node of network.nodes) {
-      const point = this.point(node);
-      const signalStrength = network.signals
-        .filter((signal) => signal.nodeId === node.id)
-        .reduce((sum, signal) => sum + signal.strength, 0)
-        + (network.outputEnergy?.[node.id] ?? 0);
-      const active = clamp(signalStrength, 0, 1);
-      const selected = selection?.kind === "node" && selection.id === node.id;
+  drawThresholdRing(ctx, point, node, radius) {
+    const ratio = clamp(node.pressure / node.threshold, 0, 1);
+    ctx.save();
+    ctx.strokeStyle = `rgba(249, 214, 107, ${0.28 + ratio * 0.6})`;
+    ctx.lineWidth = 3 * this.pixelRatio;
+    ctx.beginPath();
+    ctx.arc(point.x, point.y, radius + 5 * this.pixelRatio, -Math.PI / 2, -Math.PI / 2 + TAU * ratio);
+    ctx.stroke();
+    ctx.restore();
+  }
 
-      ctx.save();
-      ctx.shadowColor = `rgba(132, 246, 223, ${0.22 + active * 0.5})`;
-      ctx.shadowBlur = (16 + active * 24) * this.pixelRatio;
-      ctx.fillStyle = node.role === "control" ? "#e7c5ff" : node.role === "output" ? "#ffe7a3" : active > 0.02 ? "#d9fff5" : "#b9cad2";
-      ctx.strokeStyle = selected ? "#fff3a8" : "rgba(255,255,255,0.55)";
-      ctx.lineWidth = (selected ? 5 : 2) * this.pixelRatio;
-      ctx.beginPath();
-      ctx.arc(point.x, point.y, (17 + active * 8) * this.pixelRatio, 0, TAU);
-      ctx.fill();
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-      ctx.fillStyle = "#102126";
-      ctx.font = `${13 * this.pixelRatio}px ui-sans-serif, system-ui, sans-serif`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(node.id, point.x, point.y + 0.5 * this.pixelRatio);
-      ctx.fillStyle = "rgba(235, 255, 247, 0.72)";
-      ctx.font = `${10 * this.pixelRatio}px ui-sans-serif, system-ui, sans-serif`;
-      ctx.fillText(node.label || node.role, point.x, point.y + 30 * this.pixelRatio);
-      ctx.restore();
-    }
-
+  drawHud(ctx, network, settings) {
+    const metrics = network.metrics();
     ctx.save();
     ctx.fillStyle = "rgba(235, 255, 247, 0.72)";
     ctx.font = `${12 * this.pixelRatio}px ui-sans-serif, system-ui, sans-serif`;
-    ctx.fillText(`op:${settings.operation.toUpperCase()} rate:${settings.rate.toFixed(1)} learn:${settings.learning.toFixed(2)}`, 24 * this.pixelRatio, 32 * this.pixelRatio);
+    ctx.fillText(
+      `op:${settings.operation.toUpperCase()} mode:${metrics.mode} valves:${settings.valveMode} thresholds:${settings.thresholdMode}`,
+      24 * this.pixelRatio,
+      32 * this.pixelRatio,
+    );
     ctx.restore();
   }
 
@@ -183,7 +178,7 @@ export class Visualizer {
     for (const node of network.nodes) {
       const point = this.point(node);
       const distance = Math.hypot(point.x - x, point.y - y);
-      if (distance <= 28 * this.pixelRatio) return { kind: "node", id: node.id };
+      if (distance <= 30 * this.pixelRatio) return { kind: "node", id: node.id };
     }
 
     let best = null;
@@ -198,6 +193,12 @@ export class Visualizer {
 
     return best ? { kind: best.kind, id: best.id } : null;
   }
+}
+
+function nodeFill(node, active) {
+  if (node.role === "source") return active > 0.02 ? "#d9fff5" : "#b9cad2";
+  if (node.role === "output") return active > 0.02 ? "#fff0b8" : "#d2bea1";
+  return active > 0.02 ? "#c8f7df" : "#b9cad2";
 }
 
 function distanceToSegment(px, py, ax, ay, bx, by) {

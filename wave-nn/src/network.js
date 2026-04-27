@@ -1,479 +1,619 @@
-import { clamp, lerp, phaseDistance, rand, signedPhaseDelta, wrap01 } from "./math.js";
+import { clamp } from "./math.js";
 
-const MAX_SIGNALS = 260;
-export const SIGNAL_TYPES = {
-  zero: { label: "0", frequency: 1.3, phase: 0.08, hue: 205 },
-  one: { label: "1", frequency: 5.7, phase: 0.58, hue: 52 },
-  tighten: { label: "tighten", frequency: 8.2, phase: 0.04, hue: 278 },
-  loosen: { label: "loosen", frequency: 0.7, phase: 0.94, hue: 24 },
-  pair00: { label: "00", frequency: 1.8, phase: 0.16, hue: 220 },
-  pair01: { label: "01", frequency: 4.4, phase: 0.31, hue: 170 },
-  pair10: { label: "10", frequency: 4.9, phase: 0.69, hue: 92 },
-  pair11: { label: "11", frequency: 6.8, phase: 0.54, hue: 38 },
-};
+export const OPERATIONS = ["xor", "and", "or", "nand"];
+export const TRUTH_TABLE = [
+  { a: 0, b: 0 },
+  { a: 0, b: 1 },
+  { a: 1, b: 0 },
+  { a: 1, b: 1 },
+];
 
-const SIGNAL_INPUTS = {
-  zero: "IN0",
-  one: "IN1",
-  tighten: "INT",
-  loosen: "INL",
-};
+const SETTLE_STEPS = 18;
+const TRAIN_STEPS = 22;
+const ROLLING_WINDOW = 32;
+const VALVE_ECOLOGY_RATE = 0.006;
+const THRESHOLD_ECOLOGY_RATE = 0.01;
+const MIN_REGION_PLASTICITY = 0.12;
+const MAX_REGION_PLASTICITY = 1.8;
 
-const OUTPUT_MAP = {
-  "00": "O00",
-  "01": "O01",
-  "10": "O10",
-  "11": "O11",
-};
+function sigmoid(value) {
+  if (value > 40) return 1 - 1e-12;
+  if (value < -40) return 1e-12;
+  return 1 / (1 + Math.exp(-value));
+}
+
+function logit(value) {
+  const bounded = clamp(value, 0.001, 0.999);
+  return Math.log(bounded / (1 - bounded));
+}
 
 export class Signal {
-  constructor({ nodeId, strength, frequency, phase, bornAt, hue = 190, generation = 0, type = "zero", target = null, packetId = 0, lastValveId = null, source = null, caseKey = null }) {
-    this.nodeId = nodeId;
+  constructor({ strength }) {
     this.strength = strength;
-    this.frequency = frequency;
-    this.phase = wrap01(phase);
-    this.bornAt = bornAt;
-    this.age = 0;
-    this.hue = hue;
-    this.generation = generation;
-    this.type = type;
-    this.target = target;
-    this.packetId = packetId;
-    this.lastValveId = lastValveId;
-    this.source = source;
-    this.caseKey = caseKey;
   }
 }
 
-export class Valve {
-  constructor({ id, from, to, size, frequency, phase, looseness }) {
+export class PressureNode {
+  constructor({ id, label, role, x, y, threshold = 1, decay = 0.72 }) {
+    this.id = id;
+    this.label = label;
+    this.role = role;
+    this.x = x;
+    this.y = y;
+    this.minThreshold = role === "source" ? threshold : threshold * 0.45;
+    this.maxThreshold = role === "source" ? threshold : threshold * 1.9;
+    this.thresholdState = role === "source"
+      ? 0
+      : logit((threshold - this.minThreshold) / (this.maxThreshold - this.minThreshold));
+    this.decay = decay;
+    this.pressure = 0;
+    this.activation = 0;
+    this.received = 0;
+    this.pulse = 0;
+  }
+
+  get threshold() {
+    if (this.role === "source") return this.minThreshold;
+    return this.minThreshold + (this.maxThreshold - this.minThreshold) * sigmoid(this.thresholdState);
+  }
+
+  adjustThreshold(amount) {
+    if (this.role === "source") return;
+    this.thresholdState += amount;
+  }
+
+  resetRuntime() {
+    this.pressure = 0;
+    this.activation = 0;
+    this.received = 0;
+    this.pulse = 0;
+  }
+
+  inject(strength) {
+    this.pressure += strength;
+    this.received += strength;
+    this.pulse = Math.max(this.pulse, strength);
+  }
+
+  settle() {
+    if (this.role === "source") {
+      this.activation = this.pressure;
+      this.pressure *= 0.12;
+    } else if (this.role === "output") {
+      this.activation = this.pressure >= this.threshold ? this.pressure : this.received;
+      this.pressure *= this.decay;
+    } else {
+      this.activation = this.pressure >= this.threshold ? this.pressure : 0;
+      this.pressure *= this.decay;
+    }
+
+    this.received *= 0.58;
+    this.pulse *= 0.7;
+  }
+}
+
+export class InputValve {
+  constructor({ id, from, to, resistance = 0.5, weight = 1, trainingOnly = false }) {
     this.id = id;
     this.from = from;
     this.to = to;
-    this.size = size;
-    this.frequency = frequency;
-    this.phase = wrap01(phase);
-    this.looseness = looseness;
+    this.trainingOnly = trainingOnly;
+    this.aperture = logit(1 - resistance);
+    this.weight = weight;
     this.pressure = 0;
-    this.weight = 0.45;
     this.activity = 0;
-    this.burst = 0;
-    this.trace = 0;
-    this.memory = 0;
-    this.affinity = Object.fromEntries(Object.keys(SIGNAL_TYPES).map((type) => [type, rand(0.75, 1.25)]));
+    this.coactivity = 0;
   }
 
-  match(signal) {
-    const freqError = Math.abs(signal.frequency - this.frequency) / 8;
-    const phaseError = phaseDistance(signal.phase, this.phase);
-    const error = freqError * 0.58 + phaseError * 0.42;
-    const tolerance = clamp(this.looseness, 0.025, 0.9);
-    const fit = Math.exp(-error / tolerance);
-    const affinity = this.affinity[signal.type] ?? 1;
-    return { error, fit, affinity };
+  get openness() {
+    return sigmoid(this.aperture);
   }
 
-  adapt(signal, error, fit, learning) {
-    const success = fit * signal.strength;
-    const learningRate = 0.004 + learning * 0.025;
-
-    if (fit > 0.45) {
-      this.weight = clamp(this.weight + success * 0.016, 0.08, 2.4);
-      this.frequency = lerp(this.frequency, signal.frequency, learningRate * success);
-      this.phase = wrap01(this.phase + signedPhaseDelta(signal.phase, this.phase) * learningRate * success);
-      this.looseness = clamp(this.looseness - success * 0.0008, 0.035, 0.75);
-      this.memory = clamp(this.memory + success * 0.006, -0.55, 1.25);
-      this.affinity[signal.type] = clamp((this.affinity[signal.type] ?? 1) + success * 0.018, 0.12, 3);
-    } else {
-      this.pressure += error * signal.strength * (0.55 + learning);
-      this.looseness = clamp(this.looseness + this.pressure * 0.00018 * learning, 0.035, 0.82);
-      this.memory = clamp(this.memory - error * signal.strength * 0.01, -0.55, 1.25);
-      this.affinity[signal.type] = clamp((this.affinity[signal.type] ?? 1) - error * 0.025 * learning, 0.12, 3);
-    }
+  get resistance() {
+    return 1 - this.openness;
   }
 
-  reinforce(signal, amount) {
-    this.weight = clamp(this.weight + amount * 0.05, 0.08, 2.8);
-    this.memory = clamp(this.memory + amount * 0.08, -0.55, 1.25);
-    this.affinity[signal.type] = clamp((this.affinity[signal.type] ?? 1) + amount * 0.08, 0.12, 3.2);
-    this.activity = Math.max(this.activity, amount);
+  adjustOpenness(amount) {
+    this.aperture += amount;
   }
 
-  punish(signal, amount) {
-    this.pressure += amount;
-    this.looseness = clamp(this.looseness + amount * 0.012, 0.035, 0.9);
-    this.weight = clamp(this.weight - amount * 0.035, 0.08, 2.8);
-    this.memory = clamp(this.memory - amount * 0.06, -0.55, 1.25);
-    this.affinity[signal.type] = clamp((this.affinity[signal.type] ?? 1) - amount * 0.12, 0.12, 3.2);
+  resetRuntime() {
+    this.pressure = 0;
+    this.activity = 0;
+    this.coactivity = 0;
+  }
+
+  conduct(sourceActivation, totalConductance = 1) {
+    const conductance = this.weight * this.openness;
+    const throughput = sourceActivation * conductance / Math.max(1, totalConductance);
+    this.pressure += throughput;
+    this.activity = Math.max(this.activity, throughput);
+    return throughput;
   }
 
   cool() {
-    this.pressure *= 0.982;
-    this.activity *= 0.9;
-    this.burst *= 0.86;
-    this.trace *= 0.94;
-    this.memory *= 0.985;
-    this.weight = clamp(this.weight * 0.9994, 0.08, 2.4);
+    this.pressure *= 0.66;
+    this.activity *= 0.62;
+    this.coactivity *= 0.7;
   }
 }
 
-export class WaveNetwork {
+export class PressureNetwork {
   constructor() {
+    this.operation = "xor";
     this.nodes = [];
     this.valves = [];
-    this.signals = [];
+    this.truthIndex = 0;
+    this.cycleCount = 0;
+    this.trainSteps = 0;
+    this.testSteps = 0;
+    this.lastMode = "idle";
+    this.lastCase = null;
+    this.lastResult = null;
+    this.testHistory = [];
+    this.operationRegion = { id: "operation", label: "operation", plasticity: 1 };
+    this.lastCycleAccuracy = null;
+    this.perfectCycleStreak = 0;
+    this.lastCycleSummary = null;
     this.time = 0;
-    this.spreadEvents = 0;
-    this.packetId = 0;
-    this.outcomes = [];
-    this.outputMap = { ...OUTPUT_MAP };
-    this.outputEnergy = {};
-    this.feedbackStats = { tighten: 0, loosen: 0 };
-    this.completedPackets = new Set();
-    this.controlEnergy = { tighten: 0, loosen: 0 };
-    this.controlGain = { tighten: 1, loosen: 1, activation: 1 };
-    this.operation = "xor";
     this.reset();
   }
 
   reset(operation = this.operation) {
     this.operation = operation;
+    this.truthIndex = 0;
+    this.cycleCount = 0;
+    this.trainSteps = 0;
+    this.testSteps = 0;
+    this.lastMode = "idle";
+    this.lastCase = null;
+    this.lastResult = null;
+    this.testHistory = [];
+    this.operationRegion = { id: "operation", label: "operation", plasticity: 1 };
+    this.lastCycleAccuracy = null;
+    this.perfectCycleStreak = 0;
+    this.lastCycleSummary = null;
     this.time = 0;
-    this.spreadEvents = 0;
-    this.packetId = 0;
-    this.outcomes = [];
-    this.outputMap = { ...OUTPUT_MAP };
-    this.outputEnergy = {};
-    this.feedbackStats = { tighten: 0, loosen: 0 };
-    this.completedPackets = new Set();
-    this.controlEnergy = { tighten: 0, loosen: 0 };
-    this.controlGain = { tighten: 1, loosen: 1, activation: 1 };
-    this.signals = [];
+
     this.nodes = [
-      { id: "IN0", x: 0.07, y: 0.18, bias: 0.1, role: "input", label: "signal 0" },
-      { id: "IN1", x: 0.07, y: 0.39, bias: 0.3, role: "input", label: "signal 1" },
-      { id: "INT", x: 0.07, y: 0.64, bias: 0.12, role: "control", label: "tighten feedback" },
-      { id: "INL", x: 0.07, y: 0.84, bias: 0.88, role: "control", label: "loosen feedback" },
-      { id: "N0", x: 0.26, y: 0.16, bias: 0.2, role: "hidden" },
-      { id: "N1", x: 0.28, y: 0.39, bias: 0.35, role: "hidden" },
-      { id: "N2", x: 0.26, y: 0.63, bias: 0.52, role: "hidden" },
-      { id: "N3", x: 0.28, y: 0.84, bias: 0.72, role: "hidden" },
-      { id: "N4", x: 0.50, y: 0.22, bias: 0.26, role: "hidden" },
-      { id: "N5", x: 0.53, y: 0.48, bias: 0.46, role: "hidden" },
-      { id: "N6", x: 0.50, y: 0.74, bias: 0.66, role: "hidden" },
-      { id: "N7", x: 0.73, y: 0.18, bias: 0.31, role: "hidden" },
-      { id: "N8", x: 0.76, y: 0.49, bias: 0.55, role: "hidden" },
-      { id: "N9", x: 0.73, y: 0.79, bias: 0.78, role: "hidden" },
-      { id: "O00", x: 0.93, y: 0.18, bias: 0.14, role: "output", label: "00 sink" },
-      { id: "O01", x: 0.93, y: 0.39, bias: 0.36, role: "output", label: "01 sink" },
-      { id: "O10", x: 0.93, y: 0.61, bias: 0.62, role: "output", label: "10 sink" },
-      { id: "O11", x: 0.93, y: 0.82, bias: 0.86, role: "output", label: "11 sink" },
+      new PressureNode({ id: "A0", label: "A = 0", role: "source", x: 0.08, y: 0.22 }),
+      new PressureNode({ id: "A1", label: "A = 1", role: "source", x: 0.08, y: 0.40 }),
+      new PressureNode({ id: "B0", label: "B = 0", role: "source", x: 0.08, y: 0.60 }),
+      new PressureNode({ id: "B1", label: "B = 1", role: "source", x: 0.08, y: 0.78 }),
+      new PressureNode({ id: "H0", label: "pair 00", role: "hidden", x: 0.34, y: 0.20, threshold: 1, decay: 0.5 }),
+      new PressureNode({ id: "H1", label: "pair 01", role: "hidden", x: 0.34, y: 0.42, threshold: 1, decay: 0.5 }),
+      new PressureNode({ id: "H2", label: "pair 10", role: "hidden", x: 0.34, y: 0.64, threshold: 1, decay: 0.5 }),
+      new PressureNode({ id: "H3", label: "pair 11", role: "hidden", x: 0.34, y: 0.84, threshold: 1, decay: 0.5 }),
+      new PressureNode({ id: "OUT0", label: "output 0", role: "output", x: 0.88, y: 0.38, threshold: 0.8 }),
+      new PressureNode({ id: "OUT1", label: "output 1", role: "output", x: 0.88, y: 0.64, threshold: 0.8 }),
+    ];
+
+    const sourceLinks = [
+      ["A0", "H0"], ["B0", "H0"],
+      ["A0", "H1"], ["B1", "H1"],
+      ["A1", "H2"], ["B0", "H2"],
+      ["A1", "H3"], ["B1", "H3"],
+    ];
+
+    const reversibleLinks = [
+      ["H0", "OUT0"], ["H0", "OUT1"], ["H1", "OUT0"], ["H1", "OUT1"],
+      ["H2", "OUT0"], ["H2", "OUT1"], ["H3", "OUT0"], ["H3", "OUT1"],
     ];
 
     const links = [
-      ["IN0", "N0"], ["IN0", "N1"], ["IN0", "N2"],
-      ["IN1", "N1"], ["IN1", "N2"], ["IN1", "N3"],
-      ["N0", "N4"], ["N0", "N5"], ["N1", "N4"], ["N1", "N5"], ["N1", "N6"],
-      ["N2", "N5"], ["N2", "N6"], ["N3", "N5"], ["N3", "N6"],
-      ["N4", "N7"], ["N4", "N8"], ["N5", "N7"], ["N5", "N8"], ["N5", "N9"], ["N6", "N8"], ["N6", "N9"],
-      ["N7", "N4"], ["N8", "N5"], ["N9", "N6"],
-      ["N4", "N0"], ["N5", "N0"], ["N5", "N1"], ["N6", "N2"], ["N6", "N3"],
-      ["N7", "N1"], ["N8", "N2"], ["N9", "N3"],
-      ["N4", "N5"], ["N5", "N4"], ["N5", "N6"], ["N6", "N5"], ["N7", "N8"], ["N8", "N7"], ["N8", "N9"], ["N9", "N8"],
-      ["N4", "O00"], ["N5", "O00"], ["N7", "O00"],
-      ["N4", "O01"], ["N5", "O01"], ["N8", "O01"],
-      ["N5", "O10"], ["N6", "O10"], ["N8", "O10"],
-      ["N6", "O11"], ["N8", "O11"], ["N9", "O11"],
+      ...sourceLinks.map(([from, to]) => ({ from, to })),
+      ...reversibleLinks.map(([from, to]) => ({ from, to })),
+      ...reversibleLinks.map(([from, to]) => ({ from: to, to: from, trainingOnly: true })),
     ];
 
-    this.valves = links.map(([from, to], index) => {
-      const fromNode = this.getNode(from);
-      const toNode = this.getNode(to);
-      const seededFreq = 1.2 + ((index * 1.7 + toNode.bias * 3) % 6.2);
-      return new Valve({
-        id: `${from}-${to}`,
+    this.valves = links.map(({ from, to, trainingOnly = false }) => {
+      return new InputValve({
+        id: `${from}->${to}`,
         from,
         to,
-        size: rand(0.34, 0.92),
-        frequency: seededFreq,
-        phase: wrap01(fromNode.bias * 0.41 + toNode.bias * 0.37 + rand(-0.12, 0.12)),
-        looseness: rand(0.08, 0.22),
+        trainingOnly,
+        resistance: 0.5,
+        weight: 1,
       });
     });
-    this.outputEnergy = Object.fromEntries(Object.values(this.outputMap).map((id) => [id, 0]));
   }
 
   getNode(id) {
     return this.nodes.find((node) => node.id === id);
   }
 
-  outgoing(nodeId) {
-    return this.valves.filter((valve) => valve.from === nodeId);
-  }
-
   getValve(id) {
     return this.valves.find((valve) => valve.id === id);
   }
 
-  inject({ nodeId = null, type = "zero", strength = 1, target = null, packetId = 0, source = null, caseKey = null }) {
-    const profile = SIGNAL_TYPES[type] ?? SIGNAL_TYPES.zero;
-    const resolvedNode = nodeId ?? SIGNAL_INPUTS[type] ?? "IN0";
-    this.signals.push(new Signal({
-      nodeId: resolvedNode,
-      strength,
-      frequency: profile.frequency,
-      phase: profile.phase,
-      bornAt: this.time,
-      hue: profile.hue,
-      type,
-      target,
-      packetId,
-      source: source ?? resolvedNode,
-      caseKey,
-    }));
+  nextTruthCase() {
+    const row = TRUTH_TABLE[this.truthIndex % TRUTH_TABLE.length];
+    const truthCase = this.caseFor(row.a, row.b);
+    this.truthIndex += 1;
+    if (this.truthIndex % TRUTH_TABLE.length === 0) this.cycleCount += 1;
+    return truthCase;
   }
 
-  injectExample({ a, b, operation }) {
-    const expected = evaluateOperation(a, b, operation);
-    const packetId = ++this.packetId;
-    const caseKey = `${a ? 1 : 0}${b ? 1 : 0}`;
-    const target = this.outputMap[caseKey];
-    this.inject({ type: a ? "one" : "zero", strength: 1, target, packetId, source: "A", caseKey });
-    this.inject({ type: b ? "one" : "zero", strength: 1, target, packetId, source: "B", caseKey });
-    return { packetId, expected, target, caseKey };
-  }
-
-  step(dt, settings) {
-    this.time += dt;
-    const nextSignals = [];
-    this.feedbackQueue = [];
-    let routedEnergy = 0;
-
-    for (const valve of this.valves) valve.cool();
-    this.applyLearningControls(dt, settings.learning);
-    const signalsToProcess = this.withMixedPacketSignals();
-
-    for (const signal of signalsToProcess) {
-      signal.age += dt;
-      if (signal.type === "tighten" || signal.type === "loosen") {
-        if (signal.age < 0.65 && signal.strength > 0.03) {
-          nextSignals.push(new Signal({
-            nodeId: signal.nodeId,
-            strength: signal.strength * 0.9,
-            frequency: signal.frequency,
-            phase: signal.phase,
-            bornAt: signal.bornAt,
-            hue: signal.hue,
-            generation: signal.generation,
-            type: signal.type,
-            source: signal.source,
-          }));
-        }
-        continue;
-      }
-
-      const outgoing = this.outgoing(signal.nodeId);
-      if (!outgoing.length || signal.strength < 0.018 || signal.age > 13) continue;
-
-      const scored = outgoing
-      .map((valve) => {
-          const { error, fit, affinity } = valve.match(signal);
-          const memoryBoost = 1 + clamp(valve.memory, -0.35, 0.9);
-          const routeScore = fit * valve.size * valve.weight * affinity * memoryBoost;
-          return { valve, error, fit, routeScore };
-        })
-        .sort((a, b) => b.routeScore - a.routeScore);
-
-      const best = scored[0]?.routeScore ?? 0;
-      const pressure = scored.reduce((sum, item) => sum + item.error * signal.strength * (1 - item.fit), 0);
-      const shouldSpread = pressure > 0.28 || best < 0.18;
-      const routeCount = shouldSpread ? Math.min(scored.length, 3) : Math.min(scored.length, 2);
-      if (shouldSpread) this.spreadEvents += 1;
-
-      for (const item of scored.slice(0, routeCount)) {
-        const { valve, error, fit, routeScore } = item;
-        valve.adapt(signal, error, fit, settings.learning);
-
-        if (shouldSpread) {
-          valve.pressure += 0.02 * signal.strength;
-          valve.burst = Math.max(valve.burst, 1);
-        }
-
-        const share = routeScore / Math.max(0.001, scored.slice(0, routeCount).reduce((sum, part) => sum + part.routeScore, 0.001));
-        const throughput = clamp(signal.strength * valve.size * (0.18 + fit * 0.92) * share, 0, valve.size);
-        if (throughput < 0.012) continue;
-
-        valve.activity = Math.max(valve.activity, throughput);
-        valve.trace = clamp(valve.trace + throughput * 0.42, 0, 4);
-        routedEnergy += throughput;
-
-        if (this.outputEnergy[valve.to] !== undefined) {
-          this.handleOutput(signal, valve, throughput, settings);
-          continue;
-        }
-
-        nextSignals.push(new Signal({
-          nodeId: valve.to,
-          strength: throughput * (shouldSpread ? 0.82 : 0.95),
-          frequency: lerp(signal.frequency, valve.frequency, 0.08),
-          phase: wrap01(signal.phase + 0.035 + signedPhaseDelta(valve.phase, signal.phase) * 0.12),
-          bornAt: this.time,
-          hue: signal.hue,
-          generation: signal.generation + 1,
-          type: signal.type,
-          target: signal.target,
-          packetId: signal.packetId,
-          lastValveId: valve.id,
-          source: signal.source,
-          caseKey: signal.caseKey,
-        }));
-      }
-    }
-
-    this.signals = [...nextSignals, ...this.feedbackQueue]
-      .sort((a, b) => b.strength - a.strength)
-      .slice(0, MAX_SIGNALS);
-    this.feedbackQueue = [];
-
+  caseFor(a, b) {
+    const expected = evaluateOperation(Boolean(a), Boolean(b), this.operation) ? 1 : 0;
     return {
-      routedEnergy,
-      pressure: this.totalPressure(),
-      rawPressure: this.totalPressure(),
-      spreadEvents: this.spreadEvents,
-      valveCount: this.valves.length,
-      activeSignals: this.signals.reduce((sum, signal) => sum + signal.strength, 0),
-      accuracy: this.accuracy(),
-      operation: this.operation,
-      outputs: { ...this.outputMap },
-      feedbackStats: { ...this.feedbackStats },
-      controlEnergy: { ...this.controlEnergy },
-      controlGain: { ...this.controlGain },
+      a,
+      b,
+      inputIds: [`A${a}`, `B${b}`],
+      expected,
+      expectedOutputId: `OUT${expected}`,
+      outputRarity: this.outputRarityFor(expected),
     };
   }
 
-  applyLearningControls(dt, learning) {
-    const tightenEnergy = this.signals
-      .filter((signal) => signal.type === "tighten")
-      .reduce((sum, signal) => sum + signal.strength, 0);
-    const loosenEnergy = this.signals
-      .filter((signal) => signal.type === "loosen")
-      .reduce((sum, signal) => sum + signal.strength, 0);
-    const accuracy = this.modulationAccuracy();
-    const activation = clamp(tightenEnergy + loosenEnergy, 0, 4);
-    const activationGain = 0.55 + Math.pow(activation, 1.18) * 0.28;
-    const tightenGain = (0.58 + accuracy * 1.05) * activationGain;
-    const loosenGain = (0.72 + (1 - accuracy) * 1.22) * activationGain;
-    const net = clamp(loosenEnergy * loosenGain - tightenEnergy * tightenGain, -3.2, 3.2);
-    const amount = net * (0.0016 + learning * 0.0048) * Math.max(0.5, dt * 60);
-
-    if (amount !== 0) {
-      for (const valve of this.valves) {
-        const tightness = 1 - clamp((valve.looseness - 0.025) / 0.925, 0, 1);
-        const tightFocus = 0.45 + tightness * 1.85;
-        const controlAmount = amount * tightFocus;
-        valve.looseness = clamp(valve.looseness + controlAmount, 0.025, 0.95);
-        valve.memory = clamp(valve.memory - controlAmount * 1.25, -0.55, 1.25);
-        valve.pressure = clamp(valve.pressure + Math.max(0, -controlAmount) * 0.12, 0, 6);
-      }
-    }
-
-    this.controlEnergy.tighten = this.controlEnergy.tighten * 0.82 + tightenEnergy;
-    this.controlEnergy.loosen = this.controlEnergy.loosen * 0.82 + loosenEnergy;
-    this.controlGain = { tighten: tightenGain, loosen: loosenGain, activation: activationGain };
+  outputRarityFor(expected) {
+    const count = TRUTH_TABLE.filter((row) => {
+      return evaluateOperation(Boolean(row.a), Boolean(row.b), this.operation) === Boolean(expected);
+    }).length;
+    return TRUTH_TABLE.length / Math.max(1, count);
   }
 
-  handleOutput(signal, valve, throughput, settings) {
-    this.outputEnergy[valve.to] = this.outputEnergy[valve.to] * 0.86 + throughput;
-    if (!signal.type.startsWith("pair") || !signal.packetId) return;
-    if (this.completedPackets.has(signal.packetId)) return;
-    this.completedPackets.add(signal.packetId);
-
-    const correct = signal.target === valve.to;
-    const expected = evaluateOperation(signal.caseKey[0] === "1", signal.caseKey[1] === "1", this.operation);
-    const feedbackType = correct && expected ? "tighten" : "loosen";
-    const accuracy = this.modulationAccuracy();
-    const feedbackGain = feedbackType === "tighten"
-      ? 0.72 + accuracy * 0.9
-      : 0.82 + (1 - accuracy) * 1.1;
-    const feedbackStrength = (correct ? 0.75 : 0.55) * feedbackGain;
-
-    if (correct) {
-      valve.reinforce(signal, throughput);
-    } else {
-      valve.punish(signal, throughput * 1.8);
-    }
-
-    const profile = SIGNAL_TYPES[feedbackType];
-    this.feedbackStats[feedbackType] += 1;
-    this.feedbackQueue.push(new Signal({
-      nodeId: SIGNAL_INPUTS[feedbackType],
-      type: feedbackType,
-      strength: feedbackStrength * (0.65 + settings.learning * 0.7),
-      frequency: profile.frequency,
-      phase: profile.phase,
-      bornAt: this.time,
-      hue: profile.hue,
-      packetId: signal.packetId,
-      source: "feedback",
-      caseKey: signal.caseKey,
-    }));
-
-    this.outcomes.push({ correct, target: signal.target, actual: valve.to, at: this.time, caseKey: signal.caseKey });
-    if (this.outcomes.length > 80) this.outcomes.shift();
+  teacherStrengthFor(truthCase, strengthBalance = 0.5) {
+    const rarity = truthCase.outputRarity;
+    const distinctiveness = 1 + (rarity - 1) * 0.12;
+    return 1.1 * Math.pow(rarity, strengthBalance) * distinctiveness;
   }
 
-  withMixedPacketSignals() {
-    const mixed = [];
-    const groups = new Map();
+  trainStepsFor(truthCase, durationBalance = 0) {
+    return Math.max(1, Math.round(TRAIN_STEPS * Math.pow(truthCase.outputRarity, durationBalance)));
+  }
 
-    for (const signal of this.signals) {
-      if (!signal.packetId || signal.generation < 1 || signal.source === "feedback") continue;
-      const key = `${signal.nodeId}:${signal.packetId}`;
-      const group = groups.get(key) ?? {};
-      group[signal.source] = signal;
-      groups.set(key, group);
-    }
+  trainNextRow({
+    learning = 0.65,
+    valveMode = "neutral",
+    thresholdMode = "neutral",
+    strengthBalance = 0.5,
+    durationBalance = 0,
+  } = {}) {
+    return this.trainCase(this.nextTruthCase(), {
+      learning,
+      valveMode,
+      thresholdMode,
+      strengthBalance,
+      durationBalance,
+    });
+  }
 
-    for (const group of groups.values()) {
-      if (!group.A || !group.B) continue;
-      const a = group.A.type === "one" ? "1" : "0";
-      const b = group.B.type === "one" ? "1" : "0";
-      const type = `pair${a}${b}`;
-      const profile = SIGNAL_TYPES[type];
-      mixed.push(new Signal({
-        nodeId: group.A.nodeId,
-        strength: Math.min(group.A.strength, group.B.strength) * 1.18,
-        frequency: profile.frequency,
-        phase: profile.phase,
-        bornAt: this.time,
-        hue: profile.hue,
-        generation: Math.max(group.A.generation, group.B.generation),
-        type,
-        target: group.A.target,
-        packetId: group.A.packetId,
-        source: "pair",
-        caseKey: group.A.caseKey,
+  trainCycle({
+    learning = 0.65,
+    valveMode = "neutral",
+    thresholdMode = "neutral",
+    strengthBalance = 0.5,
+    durationBalance = 0,
+  } = {}) {
+    const results = [];
+    for (let index = 0; index < TRUTH_TABLE.length; index += 1) {
+      results.push(this.trainNextRow({
+        learning,
+        valveMode,
+        thresholdMode,
+        strengthBalance,
+        durationBalance,
       }));
     }
-
-    return [...this.signals, ...mixed].slice(0, MAX_SIGNALS);
+    return results;
   }
 
-  totalPressure() {
-    return this.valves.reduce((sum, valve) => sum + valve.pressure, 0);
+  trainCase(truthCase, {
+    learning = 0.65,
+    valveMode = "neutral",
+    thresholdMode = "neutral",
+    strengthBalance = 0.5,
+    durationBalance = 0,
+  } = {}) {
+    this.clearRuntime();
+    this.lastMode = "flood";
+    this.lastCase = truthCase;
+    const trainSteps = this.trainStepsFor(truthCase, durationBalance);
+    const teacherStrength = this.teacherStrengthFor(truthCase, strengthBalance);
+
+    for (let step = 0; step < trainSteps; step += 1) {
+      this.injectCase(truthCase, { floodOutput: true, strength: 1, teacherStrength });
+      this.step({
+        learning: true,
+        learningRate: learning,
+        teacherOutputId: truthCase.expectedOutputId,
+        valveMode,
+        thresholdMode,
+      });
+    }
+
+    this.trainSteps += 1;
+    return this.metrics();
   }
 
-  accuracy() {
-    if (!this.outcomes.length) return 0;
-    const correct = this.outcomes.filter((outcome) => outcome.correct).length;
-    return correct / this.outcomes.length;
+  testNextRow() {
+    return this.testCase(this.nextTruthCase());
   }
 
-  modulationAccuracy() {
-    if (!this.outcomes.length) return 0.5;
-    const recent = this.outcomes.slice(-24);
-    const correct = recent.filter((outcome) => outcome.correct).length;
-    return correct / recent.length;
+  testCycle() {
+    const results = [];
+    for (const row of TRUTH_TABLE) {
+      results.push(this.testCase(this.caseFor(row.a, row.b)));
+    }
+    this.updateOperationPlasticityFromCycle(results);
+    return results;
+  }
+
+  testCase(truthCase) {
+    this.clearRuntime();
+    this.lastMode = "test";
+    this.lastCase = truthCase;
+
+    this.injectCase(truthCase, { floodOutput: false, strength: 1.15 });
+    const outputScores = {
+      OUT0: { peak: 0, area: 0, duration: 0 },
+      OUT1: { peak: 0, area: 0, duration: 0 },
+    };
+
+    for (let step = 0; step < SETTLE_STEPS; step += 1) {
+      this.step({ learning: false });
+      this.recordOutputScore(outputScores.OUT0, this.getNode("OUT0").activation);
+      this.recordOutputScore(outputScores.OUT1, this.getNode("OUT1").activation);
+    }
+
+    const peakPrediction = predictFromScores(outputScores.OUT0.peak, outputScores.OUT1.peak, {
+      min: 0.12,
+      margin: 0.08,
+    });
+    const areaPrediction = predictFromScores(outputScores.OUT0.area, outputScores.OUT1.area, {
+      min: 0.4,
+      margin: 0.18,
+    });
+    const durationPrediction = predictFromScores(outputScores.OUT0.duration, outputScores.OUT1.duration, {
+      min: 2,
+      margin: 1,
+    });
+    const hybrid0 = outputScores.OUT0.peak + outputScores.OUT0.area * 0.12 + outputScores.OUT0.duration * 0.035;
+    const hybrid1 = outputScores.OUT1.peak + outputScores.OUT1.area * 0.12 + outputScores.OUT1.duration * 0.035;
+    const hybridPrediction = predictFromScores(hybrid0, hybrid1, {
+      min: 0.16,
+      margin: 0.1,
+    });
+    const predicted = peakPrediction;
+    const correct = predicted === truthCase.expected;
+    const result = {
+      ...truthCase,
+      out0: outputScores.OUT0.peak,
+      out1: outputScores.OUT1.peak,
+      outputScores,
+      predictions: {
+        peak: peakPrediction,
+        area: areaPrediction,
+        duration: durationPrediction,
+        hybrid: hybridPrediction,
+      },
+      predicted,
+      correct,
+      ambiguous: predicted === null,
+    };
+
+    this.lastResult = result;
+    this.testHistory.push(result);
+    if (this.testHistory.length > ROLLING_WINDOW) this.testHistory.shift();
+    this.testSteps += 1;
+    return result;
+  }
+
+  recordOutputScore(score, activation) {
+    score.peak = Math.max(score.peak, activation);
+    score.area += activation;
+    if (activation >= 0.12) score.duration += 1;
+  }
+
+  injectCase(truthCase, { floodOutput, strength, teacherStrength = 1.1 }) {
+    for (const inputId of truthCase.inputIds) {
+      this.getNode(inputId).inject(strength);
+    }
+
+    if (floodOutput) {
+      this.getNode(truthCase.expectedOutputId).inject(strength * teacherStrength);
+    }
+  }
+
+  injectSource(nodeId, strength = 1) {
+    const node = this.getNode(nodeId);
+    if (!node || node.role !== "source") return;
+    node.inject(strength);
+    this.lastMode = "manual";
+  }
+
+  step({
+    learning,
+    learningRate = 0.65,
+    teacherOutputId = null,
+    valveMode = "neutral",
+    thresholdMode = "neutral",
+  } = {}) {
+    this.time += 1;
+
+    for (const valve of this.valves) valve.cool();
+    this.operationRegion.plasticity += (1 - this.operationRegion.plasticity) * 0.002;
+    if (learning) this.applyEcology({ valveMode, thresholdMode, learningRate });
+
+    const conductanceBySource = new Map();
+    for (const valve of this.valves) {
+      if (valve.trainingOnly) continue;
+      const conductance = valve.weight * valve.openness;
+      conductanceBySource.set(valve.from, (conductanceBySource.get(valve.from) ?? 0) + conductance);
+    }
+
+    for (const valve of this.valves) {
+      if (valve.trainingOnly) continue;
+      const from = this.getNode(valve.from);
+      const to = this.getNode(valve.to);
+      const throughput = valve.conduct(from.activation, conductanceBySource.get(valve.from));
+      if (throughput <= 0.001) continue;
+
+      to.pressure += throughput;
+      to.received += throughput;
+      to.pulse = Math.max(to.pulse, throughput);
+
+      if (learning) this.learnValve(valve, from, to, throughput, learningRate, teacherOutputId);
+    }
+
+    for (const node of this.nodes) node.settle();
+  }
+
+  learnValve(valve, from, to, throughput, learningRate, teacherOutputId) {
+    const targetActive = this.isLearningTargetActive(valve, from, to, teacherOutputId);
+    const sourceActive = from.activation > 0.05;
+    const coactive = sourceActive && targetActive;
+    const amount = throughput * (0.006 + learningRate * 0.02) * this.operationRegion.plasticity;
+
+    if (sourceActive && to.role === "output" && teacherOutputId && to.id !== teacherOutputId) {
+      valve.weight = clamp(valve.weight - amount * 0.55, 0.15, 3.2);
+      valve.adjustOpenness(-amount);
+      return;
+    }
+
+    if (coactive) {
+      valve.weight = clamp(valve.weight + amount, 0.15, 3.2);
+      valve.adjustOpenness(amount * 0.7);
+      valve.coactivity = Math.max(valve.coactivity, throughput);
+    } else if (to.role !== "output" && valve.pressure > 0.18 && to.activation <= 0.01) {
+      valve.adjustOpenness(-valve.pressure * (0.0005 + learningRate * 0.0015));
+    }
+  }
+
+  updateOperationPlasticityFromCycle(results) {
+    const correct = results.filter((result) => result.correct).length;
+    const ambiguous = results.filter((result) => result.ambiguous).length;
+    const accuracy = correct / results.length;
+    const ambiguity = ambiguous / results.length;
+    const previous = this.lastCycleAccuracy;
+
+    if (previous === null) {
+      this.lastCycleAccuracy = accuracy;
+      this.perfectCycleStreak = accuracy === 1 ? 1 : 0;
+      this.lastCycleSummary = { accuracy, ambiguity, delta: 0 };
+      return;
+    }
+
+    const delta = accuracy - previous;
+    if (delta > 0.001) {
+      this.adjustOperationPlasticity(-0.05 * delta);
+    } else if (delta < -0.001) {
+      this.adjustOperationPlasticity(0.08 * Math.abs(delta));
+    }
+
+    if (accuracy === 1) {
+      this.perfectCycleStreak += 1;
+      this.adjustOperationPlasticity(-0.02 * Math.min(this.perfectCycleStreak, 5));
+    } else {
+      this.perfectCycleStreak = 0;
+    }
+
+    if (accuracy < 0.5 && ambiguity > 0.5) {
+      this.adjustOperationPlasticity(0.015);
+    }
+
+    this.lastCycleAccuracy = accuracy;
+    this.lastCycleSummary = { accuracy, ambiguity, delta };
+  }
+
+  adjustOperationPlasticity(amount) {
+    this.operationRegion.plasticity = clamp(
+      this.operationRegion.plasticity + amount,
+      MIN_REGION_PLASTICITY,
+      MAX_REGION_PLASTICITY,
+    );
+  }
+
+  applyEcology({ valveMode, thresholdMode, learningRate }) {
+    const valveDirection = valveMode === "seeking" ? 1 : valveMode === "certainty" ? -1 : 0;
+    const thresholdDirection = thresholdMode === "seeking" ? -1 : thresholdMode === "certainty" ? 1 : 0;
+    const valveAmount = valveDirection * VALVE_ECOLOGY_RATE * (0.35 + learningRate);
+    const thresholdAmount = thresholdDirection * THRESHOLD_ECOLOGY_RATE * (0.35 + learningRate);
+
+    if (valveAmount !== 0) {
+      for (const valve of this.valves) valve.adjustOpenness(valveAmount * this.operationRegion.plasticity);
+    }
+
+    if (thresholdAmount !== 0) {
+      for (const node of this.nodes) node.adjustThreshold(thresholdAmount);
+    }
+  }
+
+  isLearningTargetActive(valve, from, to, teacherOutputId) {
+    if (to.role === "output") {
+      return to.id === teacherOutputId && to.activation > 0.05;
+    }
+
+    if (valve.trainingOnly && from.role === "output") {
+      return from.id === teacherOutputId && to.activation > 0.05;
+    }
+
+    if (valve.trainingOnly) {
+      return to.activation > 0.05;
+    }
+
+    return to.activation > 0;
+  }
+
+  clearRuntime() {
+    for (const node of this.nodes) node.resetRuntime();
+    for (const valve of this.valves) valve.resetRuntime();
+  }
+
+  metrics() {
+    const activePressure = this.nodes.reduce((sum, node) => sum + node.pressure + node.activation, 0);
+    const valveChange = this.valves.reduce((sum, valve) => sum + Math.abs(valve.resistance - 0.5), 0);
+    const forwardValves = this.valves.filter((valve) => !valve.trainingOnly);
+    const adaptiveNodes = this.nodes.filter((node) => node.role !== "source");
+    const valveStats = summarize(forwardValves.map((valve) => valve.openness));
+    const thresholdStats = summarize(adaptiveNodes.map((node) => node.threshold));
+    const hiddenActivity = summarize(this.nodes
+      .filter((node) => node.role === "hidden")
+      .map((node) => node.activation));
+
+    return {
+      operation: this.operation,
+      mode: this.lastMode,
+      cycleCount: this.cycleCount,
+      trainSteps: this.trainSteps,
+      testSteps: this.testSteps,
+      truthIndex: this.truthIndex % TRUTH_TABLE.length,
+      activePressure,
+      valveChange,
+      valveStats,
+      plasticity: this.operationRegion.plasticity,
+      regions: [this.operationRegion],
+      lastCycleAccuracy: this.lastCycleAccuracy,
+      perfectCycleStreak: this.perfectCycleStreak,
+      lastCycleSummary: this.lastCycleSummary,
+      thresholdStats,
+      hiddenActivity,
+      rollingAccuracy: this.rollingAccuracy(),
+      lastResult: this.lastResult,
+      lastCase: this.lastCase,
+      lastTeacher: this.lastCase
+        ? {
+          rarity: this.lastCase.outputRarity,
+          strength: this.teacherStrengthFor(this.lastCase),
+          steps: this.trainStepsFor(this.lastCase),
+        }
+        : null,
+      outputPressure: {
+        OUT0: this.getNode("OUT0").activation,
+        OUT1: this.getNode("OUT1").activation,
+      },
+    };
+  }
+
+  rollingAccuracy() {
+    if (!this.testHistory.length) return 0;
+    const correct = this.testHistory.filter((result) => result.correct).length;
+    return correct / this.testHistory.length;
+  }
+
+  hasStableAccuracy() {
+    return this.testHistory.length >= ROLLING_WINDOW && this.testHistory.every((result) => result.correct);
   }
 }
 
@@ -482,4 +622,18 @@ export function evaluateOperation(a, b, operation) {
   if (operation === "or") return a || b;
   if (operation === "nand") return !(a && b);
   return Boolean(a) !== Boolean(b);
+}
+
+function summarize(values) {
+  if (!values.length) return { min: 0, max: 0, avg: 0 };
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const avg = values.reduce((sum, value) => sum + value, 0) / values.length;
+  return { min, max, avg };
+}
+
+function predictFromScores(out0, out1, { min, margin }) {
+  const diff = Math.abs(out1 - out0);
+  if (diff < margin || Math.max(out0, out1) < min) return null;
+  return out1 > out0 ? 1 : 0;
 }
