@@ -31,7 +31,7 @@ For each operation: XOR, AND, OR, NAND.
 6. Click `T`.
 7. Check `Accuracy`.
 
-Expected result: accuracy should reach `100%` for the current small bitwise lab after enough cycles.
+Expected result: the system should recruit and attempt the operation. Accuracy may reach `100%`, but with broad exploratory recruits it may also fail or oscillate. Treat failure as evidence for missing pruning, precision, or better area-boundary dynamics.
 
 ## Recruitment Test
 
@@ -41,7 +41,7 @@ Expected result: accuracy should reach `100%` for the current small bitwise lab 
 4. Train cycles with `C` or `A`.
 5. Watch for recruited hidden nodes appearing between sources and outputs.
 
-Expected result: the main mode starts without fixed `H0` to `H3` pair nodes. Recruited separator nodes should appear only after repeated unresolved pressure.
+Expected result: the main mode starts without fixed `H0` to `H3` pair nodes. Recruited separator nodes should appear only after repeated unresolved pressure. Each recruit should connect broadly inside the operation area while leaving scaffold/meaning nodes out.
 
 ## Teacher Flood Test
 

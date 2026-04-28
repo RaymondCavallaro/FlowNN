@@ -22,8 +22,8 @@ Esta pagina nomeia explicitamente os recursos atuais do FlowNN. Um recurso so de
 | Aprendizagem local de valvulas | Flood altera resistencia e peso por coativacao. | `flood training changes valves` |
 | Diagnosticos de teste | Testes registram pico, area, duracao e predicao hibrida. | `input-only tests produce diagnostic result shape` |
 | Topologia recrutavel | O modo principal comeca sem pares fixos. | `recruitable topology starts without fixed pairs` |
-| Recrutamento de separadores | Pressao nao resolvida repetida pode criar separador fraco. | `recruitment creates separators for repeated ambiguity` |
-| Formacao bitwise fim-a-fim | A topologia recrutavel forma XOR, AND, OR e NAND no laboratorio atual. | `recruitable topology forms bitwise operations` |
+| Recrutamento de separadores | Pressao nao resolvida repetida pode criar separador fraco com links exploratorios amplos dentro da area de operacao. | `recruitment creates separators for repeated ambiguity` |
+| Avaliacao bitwise exploratoria | A topologia recrutavel tenta XOR, AND, OR e NAND com recrutados amplos; sucesso nao e garantido por este recurso. | `recruitable topology attempts bitwise operations` |
 
 ## Ainda Nao Sao Recursos Atuais
 

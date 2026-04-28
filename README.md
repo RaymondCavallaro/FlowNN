@@ -50,7 +50,7 @@ O objetivo e manter um laboratorio pequeno onde seja possivel observar:
 
 - identidade de sinal como estrutura de origem e topologia
 - aprendizagem local por coativacao e pressao
-- crescimento de topologia a partir de pressao nao resolvida
+- crescimento exploratorio de topologia a partir de pressao nao resolvida
 - consolidacao continua em vez de congelamento binario
 - leitura de significado a partir de invariantes estruturais
 

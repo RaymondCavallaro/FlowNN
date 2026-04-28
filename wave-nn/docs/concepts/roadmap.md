@@ -46,7 +46,7 @@ Recruitment should happen when the current network cannot settle cleanly:
 - high unresolved pressure;
 - the same cases interfering across cycles.
 
-The first implementation keeps the bitwise operations as the measuring stick, but removes the fixed pair topology from the main mode. Repeated unresolved source signatures recruit weak separator candidates. A candidate survives only if later cycles improve settling.
+The first implementation keeps the bitwise operations as the measuring stick, but removes the fixed pair topology from the main mode. Repeated unresolved source signatures recruit weak separator candidates with broad exploratory links inside the operation area. A candidate survives only if later cycles improve settling.
 
 ## Separation Of New Source Notes
 
@@ -239,6 +239,8 @@ Implementation guidance:
 
 - detect relation candidates from repeated forward/backward traces;
 - group paths by shared source/target meanings and output role;
+- add primitive set/property intuition: membership, exclusion, co-holding, generalization, specialization, and shared property;
+- test new invariants against similar known concepts and discard explanations already covered before proposing a new concept;
 - keep only relations that are stable, repeated, and high-confidence;
 - avoid storing every path as a relation;
 - expose ambiguity as weak or conflicting invariants.
@@ -248,6 +250,7 @@ Implementation guidance:
 - Active probing: choose the next row, perturbation, or test from current uncertainty.
 - Information-landscape metrics: track uncertainty, margin, drift, calibration quality, and transfer stability.
 - Continuous unresolved-state memory with decay and competition between traces.
+- Primitive set/property intuition before smarter recruitment strategies.
 - Time integration: keep Laplace-like transformation as an early layer, then let routed temporal behavior refine meaning.
 - Bridge-node and concept-node recruitment after separator recruitment is inspectable.
 - Knowledge transfer / reuse: recruit existing basins in new contexts instead of creating new nodes every time.

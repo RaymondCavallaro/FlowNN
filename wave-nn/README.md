@@ -25,7 +25,7 @@ Outputs:
 
 Initial valves start near middle resistance so they are neither fully open nor fully closed.
 
-The main mode now starts without the fixed pair layer. Sources begin with weak direct routes to both outputs. When repeated bitwise cases remain ambiguous or low-margin, the network recruits weak separator nodes around the unresolved source pattern.
+The main mode now starts without the fixed pair layer. Sources begin with weak direct routes to both outputs. When repeated bitwise cases remain ambiguous or low-margin, the network recruits weak separator nodes with broad exploratory links inside the operation area, while keeping scaffold meaning nodes out.
 
 The earlier shaped pair topology is still available as a reference mode in tests.
 

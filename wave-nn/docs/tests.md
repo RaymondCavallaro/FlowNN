@@ -33,8 +33,8 @@ Every test is registered with:
 | feature | flood training changes valves | local co-activation learning |
 | error | input-only tests produce diagnostic result shape | test result schema and diagnostic scores |
 | feature | recruitable topology starts without fixed pairs | under-structured main topology |
-| feature | recruitment creates separators for repeated ambiguity | separator recruitment from unresolved pressure |
-| feature | recruitable topology forms bitwise operations | end-to-end XOR/AND/OR/NAND formation |
+| feature | recruitment creates separators for repeated ambiguity | broad separator recruitment from unresolved pressure |
+| feature | recruitable topology attempts bitwise operations | end-to-end XOR/AND/OR/NAND exploratory evaluation |
 
 ## Why Some Tests Are Error Tests
 

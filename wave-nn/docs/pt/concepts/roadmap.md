@@ -18,6 +18,19 @@ recrutamento sob pressao nao resolvida
 
 Aritmetica continua util como dominio de teste, mas trabalho especifico de aritmetica deve ficar separado ate as dinamicas gerais ficarem mais claras.
 
+## Base Conceitual Necessaria
+
+Antes de tornar o recrutamento mais inteligente, o sistema precisa de intuicoes primitivas de conjunto/propriedade:
+
+- pertencimento;
+- exclusao mutua;
+- co-presenca;
+- propriedade compartilhada;
+- generalizacao;
+- especializacao.
+
+Ao procurar um novo conceito, ele deve comparar invariantes candidatos com conceitos similares ja conhecidos, descartar explicacoes ja cobertas, e aceitar apenas o invariante estavel que sobra.
+
 ## Proximo Recurso
 
 A proxima linha principal e crescimento de topologia:

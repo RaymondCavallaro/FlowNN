@@ -14,7 +14,7 @@ O arquivo de codigo deve ficar relativamente limpo. Esta pagina carrega a explic
 - atualizar plasticidade regional;
 - registrar metricas;
 - observar pressao nao resolvida;
-- recrutar separadores quando ha ambiguidade repetida;
+- recrutar separadores exploratorios quando ha ambiguidade repetida;
 - produzir explicacoes para o inspector.
 
 ## Regra Importante
@@ -24,3 +24,7 @@ O arquivo de codigo deve ficar relativamente limpo. Esta pagina carrega a explic
 ## Teste
 
 `testCase` injeta apenas fontes de entrada. Ele mede as saidas durante a janela de assentamento porque o pulso significativo pode acontecer antes do quadro final.
+
+## Recrutamento
+
+Quando uma assinatura nao resolvida persiste, a rede cria um separador fraco. A estrategia atual conecta o separador de forma ampla dentro da area de operacao e exclui nos de scaffold/significado. Rotas de saida para o recrutado sao `trainingOnly`, para que teste somente com entradas nao comece injetando pressao de resposta para tras.

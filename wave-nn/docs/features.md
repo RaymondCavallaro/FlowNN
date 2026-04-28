@@ -22,8 +22,8 @@ This page names the current FlowNN features explicitly. A feature is considered 
 | Local valve learning | Flood training changes valve resistance and weight through co-activation. | `flood training changes valves` |
 | Input-only diagnostics | Test cycles report peak, area, duration, and hybrid predictions. | `input-only tests produce diagnostic result shape` |
 | Recruitable topology | The main topology starts without fixed pair nodes. | `recruitable topology starts without fixed pairs` |
-| Separator recruitment | Repeated unresolved pressure can recruit a weak separator node. | `recruitment creates separators for repeated ambiguity` |
-| End-to-end bitwise formation | Recruitable topology can form XOR, AND, OR, and NAND behavior in the current lab. | `recruitable topology forms bitwise operations` |
+| Separator recruitment | Repeated unresolved pressure can recruit a weak separator node with broad exploratory links inside the operation area. | `recruitment creates separators for repeated ambiguity` |
+| Bitwise exploratory evaluation | Recruitable topology attempts XOR, AND, OR, and NAND with broad recruits; success is not guaranteed by this feature. | `recruitable topology attempts bitwise operations` |
 
 ## Not Current Features Yet
 

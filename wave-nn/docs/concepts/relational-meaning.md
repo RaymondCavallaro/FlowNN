@@ -102,6 +102,73 @@ Only keep relation candidates that are:
 
 Ambiguity means the invariant is weak, under-exposed, or conflicting with another invariant.
 
+## Set And Property Intuition
+
+The current broad recruitment experiment exposes a missing foundation: before the system can choose good recruitment strategies, it needs primitive set/property intuition.
+
+This does not need to start as formal set theory. It needs operational distinctions such as:
+
+```text
+input axis
+input option
+membership
+mutual exclusion
+co-holding
+shared property
+generalization
+specialization
+```
+
+In the current bitwise lab:
+
+```text
+A0 and A1 belong to input axis A
+B0 and B1 belong to input axis B
+A0 and A1 are mutually exclusive options
+A0 and B1 can co-hold in one case
+A0 and B0 share VALUE_0
+A1 and B1 share VALUE_1
+```
+
+Those distinctions matter because recruitment should not treat every co-visible node as the same kind of neighbor. A valid case context, an alternative option, a shared property, and an output role require different strategies.
+
+## Invariant By Exclusion
+
+To arrive at an invariant that correctly points to a new concept, the system should not accept the first shared pattern it sees.
+
+It should compare the candidate against similar concepts it already has:
+
+```text
+candidate paths
+-> extract shared properties
+-> test against known similar concepts
+-> discard explanations already covered
+-> keep the remaining stable invariant
+-> propose a new concept only if one explanation remains
+```
+
+Example:
+
+```text
+A0 + B1 -> OUT1
+A1 + B0 -> OUT1
+```
+
+Possible explanations might include:
+
+- both are valid input cases;
+- both contain one option from A and one option from B;
+- both mix `VALUE_0` and `VALUE_1`;
+- both activate `OUT1`.
+
+The first two are too general if the system already knows input-axis membership. `OUT1` is a role, not the source-side concept. After those are discarded, the remaining explanatory invariant is closer to:
+
+```text
+mixed-value across different input axes
+```
+
+That is the kind of invariant that can become a new concept. The important part is not just finding similarity, but subtracting known similarities until the leftover explanation is specific enough.
+
 ## Noether-Style Analogy
 
 The useful analogy is:

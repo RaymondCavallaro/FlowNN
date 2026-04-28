@@ -18,6 +18,8 @@ const MAX_REGION_PLASTICITY = 1.8;
 const LOCKED_REGION_PLASTICITY = 0.18;
 const RECRUITMENT_OBSERVATION_THRESHOLD = 2;
 const LOW_MARGIN_THRESHOLD = 0.16;
+const RECRUIT_EXPLORATORY_RESISTANCE = 0.72;
+const RECRUIT_EXPLORATORY_WEIGHT = 0.42;
 
 function sigmoid(value) {
   if (value > 40) return 1 - 1e-12;
@@ -567,6 +569,10 @@ export class PressureNetwork {
     return this.nodes.find((node) => node.recruitment?.signature === signature);
   }
 
+  solvingAreaNodes() {
+    return this.nodes.filter((node) => node.role !== "meaning");
+  }
+
   recruitSeparator(observation) {
     const id = `R${this.recruitment.nextId}`;
     this.recruitment.nextId += 1;
@@ -589,19 +595,29 @@ export class PressureNetwork {
     });
 
     this.nodes.splice(Math.max(0, this.nodes.length - 2), 0, node);
-    for (const inputId of observation.inputIds) {
-      this.addValve({ from: inputId, to: id, resistance: 0.35, weight: 1.3 });
+    for (const peer of this.solvingAreaNodes()) {
+      if (peer.id === id) continue;
+      this.addValve({
+        from: peer.id,
+        to: id,
+        resistance: RECRUIT_EXPLORATORY_RESISTANCE,
+        weight: RECRUIT_EXPLORATORY_WEIGHT,
+        trainingOnly: peer.role === "output",
+      });
+      this.addValve({
+        from: id,
+        to: peer.id,
+        resistance: RECRUIT_EXPLORATORY_RESISTANCE,
+        weight: RECRUIT_EXPLORATORY_WEIGHT,
+      });
     }
-    this.addValve({ from: id, to: "OUT0", resistance: 0.55, weight: 0.82 });
-    this.addValve({ from: id, to: "OUT1", resistance: 0.55, weight: 0.82 });
-    this.addValve({ from: observation.expectedOutputId, to: id, resistance: 0.72, weight: 0.58, trainingOnly: true });
 
     const event = {
       type: "separator",
       nodeId: id,
       signature: observation.signature,
       evidence: observation.count,
-      expectedOutputId: observation.expectedOutputId,
+      strategy: "broad-operation-area",
       createdAt: this.time,
     };
     this.recruitment.events.push(event);

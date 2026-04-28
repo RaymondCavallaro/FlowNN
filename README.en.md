@@ -50,7 +50,7 @@ The goal is to keep a small lab where it is possible to observe:
 
 - signal identity as source structure and topology
 - local learning through co-activation and pressure
-- topology growth from unresolved pressure
+- exploratory topology growth from unresolved pressure
 - continuous consolidation instead of binary freezing
 - meaning read from structural invariants
 

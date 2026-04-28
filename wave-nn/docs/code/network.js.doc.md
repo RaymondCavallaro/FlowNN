@@ -124,15 +124,15 @@ A result is unresolved when it is ambiguous, incorrect, or has a low output marg
 When a signature persists, the network recruits a weak separator node:
 
 ```text
-active sources -> separator candidate -> OUT0/OUT1
+operation-area nodes <-> separator candidate
 ```
 
-The candidate is not a symbolic label. It is a pressure structure attached where unresolved co-pressure kept appearing. Later test cycles update its survival state:
+The candidate is not a symbolic label. It is a pressure structure born from unresolved pressure. The current strategy connects it broadly inside the operation area and excludes scaffold/meaning nodes. Later test cycles update its survival state:
 
 - stable when it improves margin and correctness;
 - fading when it continues to fail.
 
-In recruitable mode, direct source-to-output operation routes learn slowly. Separator routes learn more strongly while they are candidates, then slow down after they become stable. Recruited separator nodes start with symmetric forward routes to both outputs; during supervised flood, the currently flooded teacher output can conduct through its training-only valve into the separator as attention pressure. The forward answer edge still has to form through local learning.
+In recruitable mode, direct source-to-output operation routes learn slowly. Separator routes learn more strongly while they are candidates, then slow down after they become stable. Recruited separator nodes start with broad weak exploratory routes; output-to-recruit routes are training-only so normal input-only testing does not begin by injecting answer pressure backward.
 
 ## Explanation
 

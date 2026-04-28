@@ -33,8 +33,8 @@ Cada teste e registrado com:
 | feature | flood training changes valves | aprendizagem local por coativacao |
 | error | input-only tests produce diagnostic result shape | schema de resultado e diagnosticos |
 | feature | recruitable topology starts without fixed pairs | topologia principal subestruturada |
-| feature | recruitment creates separators for repeated ambiguity | separador por pressao nao resolvida |
-| feature | recruitable topology forms bitwise operations | formacao XOR/AND/OR/NAND fim-a-fim |
+| feature | recruitment creates separators for repeated ambiguity | recrutamento amplo por pressao nao resolvida |
+| feature | recruitable topology attempts bitwise operations | avaliacao exploratoria XOR/AND/OR/NAND fim-a-fim |
 
 ## Por Que Existem Testes `error`
 
