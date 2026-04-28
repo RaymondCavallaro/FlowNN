@@ -12,6 +12,7 @@ nav:
       - Pressure Network: concepts/pressure-network.md
       - Learning Dynamics: concepts/learning-dynamics.md
       - Topology: concepts/topology.md
+      - Roadmap: concepts/roadmap.md
   - Code Notes:
       - network.js: code/network.js.doc.md
       - main.js: code/main.js.doc.md
