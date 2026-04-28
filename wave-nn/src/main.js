@@ -30,6 +30,9 @@ const controls = {
   mathAPressure: document.querySelector("#mathAPressure"),
   mathBPressure: document.querySelector("#mathBPressure"),
   mathConductance: document.querySelector("#mathConductance"),
+  mathChamberPressure: document.querySelector("#mathChamberPressure"),
+  mathReadiness: document.querySelector("#mathReadiness"),
+  mathPassage: document.querySelector("#mathPassage"),
   mathOutputPressure: document.querySelector("#mathOutputPressure"),
   mathReadValue: document.querySelector("#mathReadValue"),
   mathExplanation: document.querySelector("#mathExplanation"),
@@ -170,6 +173,9 @@ function updateArithmetic(result) {
   controls.mathAPressure.textContent = result.aPressure.toFixed(3);
   controls.mathBPressure.textContent = result.bPressure.toFixed(3);
   controls.mathConductance.textContent = result.conductance === null ? "--" : result.conductance.toFixed(3);
+  controls.mathChamberPressure.textContent = result.chamberPressure === undefined ? "--" : result.chamberPressure.toFixed(3);
+  controls.mathReadiness.textContent = result.readiness === undefined ? "--" : result.readiness.toFixed(3);
+  controls.mathPassage.textContent = result.plasticPassage === undefined ? "--" : result.plasticPassage.toFixed(3);
   controls.mathOutputPressure.textContent = result.outputPressure.toFixed(3);
   controls.mathReadValue.textContent = result.readValue.toFixed(3);
   controls.mathExplanation.textContent = result.explanation;

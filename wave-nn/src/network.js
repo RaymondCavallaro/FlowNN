@@ -193,6 +193,10 @@ export class PressureArithmetic {
     });
   }
 
+  chamberMultiply(a, b, options = {}) {
+    return new PressureChamberMultiplier(options).run(a, b);
+  }
+
   gatedConductance(gatePressure) {
     return this.converter.fromPressure(gatePressure);
   }
@@ -212,8 +216,82 @@ export class PressureArithmetic {
   }
 
   run({ operation, a, b }) {
+    if (operation === "chamber-multiply") return this.chamberMultiply(a, b);
     if (operation === "multiply") return this.multiply(a, b);
     return this.add(a, b);
+  }
+}
+
+export class PressureChamberMultiplier {
+  constructor({
+    converter = new SignalPressureConverter(),
+    chamberDecay = 0.62,
+    chamberThreshold = 1,
+    basePassage = 1,
+    plasticPassage = 0.35,
+    plasticity = 0.18,
+    trainingSteps = 6,
+  } = {}) {
+    this.converter = converter;
+    this.chamberDecay = chamberDecay;
+    this.chamberThreshold = chamberThreshold;
+    this.basePassage = basePassage;
+    this.plasticPassage = plasticPassage;
+    this.plasticity = plasticity;
+    this.trainingSteps = trainingSteps;
+    this.chamberPressure = 0;
+  }
+
+  run(a, b) {
+    this.chamberPressure = 0;
+    const aPressure = this.converter.toPressure(a);
+    const bPressure = this.converter.toPressure(b);
+    const initialPassage = this.plasticPassage;
+
+    for (let step = 0; step < this.trainingSteps; step += 1) {
+      this.fillChamber(bPressure);
+      this.plasticPassage = this.adaptPassage(this.plasticPassage, aPressure, this.chamberPressure);
+      this.chamberPressure *= this.chamberDecay;
+    }
+
+    this.fillChamber(bPressure);
+    const readiness = this.readiness();
+    const passage = this.basePassage * this.plasticPassage;
+    const outputPressure = aPressure * readiness * passage;
+
+    return {
+      operation: "chamber-multiply",
+      a,
+      b,
+      aPressure,
+      bPressure,
+      chamberPressure: this.chamberPressure,
+      readiness,
+      conductance: readiness * passage,
+      initialPassage,
+      plasticPassage: this.plasticPassage,
+      outputPressure,
+      readValue: this.converter.fromPressure(outputPressure),
+      explanation: "B fills a chamber that prepares the passage; A flows through the prepared route",
+    };
+  }
+
+  fillChamber(pressure) {
+    this.chamberPressure += pressure;
+  }
+
+  readiness() {
+    return this.chamberPressure / (this.chamberPressure + this.chamberThreshold);
+  }
+
+  adaptPassage(passage, aPressure, chamberPressure) {
+    const coPressure = aPressure * this.readinessFrom(chamberPressure);
+    const next = passage + coPressure * this.plasticity * 0.05;
+    return clamp(next, 0.05, 3.5);
+  }
+
+  readinessFrom(chamberPressure) {
+    return chamberPressure / (chamberPressure + this.chamberThreshold);
   }
 }
 

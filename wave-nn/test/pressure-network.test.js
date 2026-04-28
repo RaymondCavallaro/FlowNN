@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import {
   PressureArithmetic,
+  PressureChamberMultiplier,
   PressureNetwork,
   Signal,
   SignalPressureConverter,
@@ -239,6 +240,36 @@ function testArithmeticMultiplicationUsesPressureGatedConductance() {
   assert.equal(result.readValue, 3);
 }
 
+function testChamberMultiplicationScalesWithGatePressure() {
+  const arithmetic = new PressureArithmetic();
+  const low = arithmetic.chamberMultiply(2, 0.5, { trainingSteps: 0, plasticPassage: 1 });
+  const high = arithmetic.chamberMultiply(2, 2, { trainingSteps: 0, plasticPassage: 1 });
+
+  assert.ok(high.readiness > low.readiness);
+  assert.ok(high.outputPressure > low.outputPressure);
+}
+
+function testChamberMultiplicationScalesWithSignalPressure() {
+  const arithmetic = new PressureArithmetic();
+  const low = arithmetic.chamberMultiply(1, 2, { trainingSteps: 0, plasticPassage: 1 });
+  const high = arithmetic.chamberMultiply(2, 2, { trainingSteps: 0, plasticPassage: 1 });
+
+  assert.equal(high.readiness, low.readiness);
+  assert.ok(high.outputPressure > low.outputPressure);
+}
+
+function testChamberPlasticityCarvesPassage() {
+  const chamber = new PressureChamberMultiplier({
+    trainingSteps: 8,
+    plasticPassage: 0.35,
+    plasticity: 0.3,
+  });
+  const result = chamber.run(2, 2);
+
+  assert.ok(result.plasticPassage > result.initialPassage);
+  assert.ok(result.outputPressure > 0);
+}
+
 function testFloodTrainingChangesValves() {
   const network = new PressureNetwork();
   const before = network.valves.map((valve) => valve.resistance);
@@ -307,6 +338,9 @@ testRelationReaderExtractsOperationMeanings();
 testSignalPressureConverterRoundTrips();
 testArithmeticAdditionCombinesPressure();
 testArithmeticMultiplicationUsesPressureGatedConductance();
+testChamberMultiplicationScalesWithGatePressure();
+testChamberMultiplicationScalesWithSignalPressure();
+testChamberPlasticityCarvesPassage();
 testFloodTrainingChangesValves();
 testInputOnlyProducesResultShape();
 

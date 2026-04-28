@@ -62,6 +62,31 @@ readValue = converter.fromPressure(outputPressure)
 
 This is explicit and intentionally simple. It gives us a target behavior before asking whether the pressure network can learn a converter or a pressure-gated valve internally.
 
+## Chamber Multiplication
+
+The chamber variant is closer to the pressure-network intuition.
+
+```text
+B pressure -> chamber pressure
+chamber pressure -> route readiness
+A pressure -> flows through prepared route
+```
+
+The passage has two parts:
+
+```text
+short-term readiness = chamber_pressure / (chamber_pressure + threshold)
+long-term passage = plastic path carved by repeated A/B co-activation
+```
+
+The output is:
+
+```text
+outputPressure = A_pressure * readiness * passage
+```
+
+This is still a designed experiment, but the control is less direct than the explicit multiplication gate. `B` does not set the conductance variable directly. It fills a chamber, the chamber prepares the medium, and `A` flows through whatever readiness and passage exist.
+
 ## Why This Belongs Here
 
 This extends meaning-first pressure routing toward numeric operations without abandoning the concept:
