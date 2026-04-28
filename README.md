@@ -15,7 +15,7 @@ Feito em grande parte com IA.
 
 ## Demo
 
-- GitHub Pages: [raymondcavallaro.github.io/FlowNN/wave-nn](https://raymondcavallaro.github.io/FlowNN/wave-nn)
+- GitHub Pages: [raymondcavallaro.github.io/FlowNN/wave-nn/](https://raymondcavallaro.github.io/FlowNN/wave-nn/)
 
 ## O que e
 
