@@ -110,6 +110,66 @@ therefore H1 can be read as cross-origin + mixed-value
 
 The scaffold is allowed to teach origin and value. It should not teach operation meanings such as `same`, `different`, `xor`, or `and`.
 
+## Relational Meaning And Invariants
+
+The direction from `5.txt` and `6.txt` changes meaning reading from node-centric to relation-centric.
+
+Earlier framing:
+
+```text
+relation = compressed path
+```
+
+Better framing:
+
+```text
+relation = invariant across stable paths under variation
+```
+
+This means a direct reading between arbitrary layers, such as layer `1 -> 3`, should not merely store every `1 -> 2 -> 3` path. It should extract what remains stable across the valid paths connecting those layers.
+
+Example for XOR:
+
+```text
+A0 -> H1 -> OUT1
+A1 -> H2 -> OUT1
+```
+
+The paths vary in concrete value and pair node. The invariant is:
+
+```text
+cross-origin + mixed-value -> VALUE_1
+```
+
+That invariant is the relational meaning.
+
+This gives a cleaner hierarchy:
+
+```text
+1. node meaning        -> what activates one node
+2. group meaning       -> shared structure across nodes
+3. relation meaning    -> stable mapping between sets
+4. path meaning        -> how a mapping is realized
+5. compressed relation -> invariant across stable paths
+6. pattern matching    -> reuse invariants across contexts
+```
+
+The Noether-style intuition from `6.txt` is useful but should remain an analogy:
+
+```text
+variation -> invariant -> meaning
+```
+
+In this system, invariants are learned/statistical rather than exact physical conservation laws.
+
+Implementation guidance:
+
+- detect relation candidates from repeated forward/backward traces;
+- group paths by shared source/target meanings and output role;
+- keep only relations that are stable, repeated, and high-confidence;
+- avoid storing every path as a relation;
+- expose ambiguity as weak or conflicting invariants.
+
 ## Later Ideas
 
 - Time integration from `2.txt`: keep Laplace-like transformation as an early layer, then let routed temporal behavior refine meaning.
