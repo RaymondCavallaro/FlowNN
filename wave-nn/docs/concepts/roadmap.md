@@ -31,6 +31,61 @@ The first implementation should be observational and inspectable:
 
 The purpose is not to teach the answer directly. The purpose is to see when the network is doing prediction-like flow versus target-seeking flow.
 
+## Meaning Extraction Direction
+
+The direction from `3.txt` and `4.txt` is to use forward and backward reasoning to extract meanings from internal structure.
+
+An intermediate node or group should be explainable through two complementary signatures:
+
+```text
+meaning = what activates it
+role = what it contributes to
+```
+
+Input/structural meaning:
+
+```text
+which source patterns consistently activate this node?
+```
+
+Example:
+
+```text
+H1 -> A0 + B1
+H2 -> A1 + B0
+```
+
+Functional role:
+
+```text
+which output behavior does this node help produce?
+```
+
+Example in XOR:
+
+```text
+H1 and H2 both contribute to OUT1
+H0 and H3 both contribute to OUT0
+```
+
+This lets the inspector derive explanations like:
+
+```text
+H1/H2:
+  structural meaning = opposite input pairs
+  functional role = drives OUT1
+  derived concept = difference
+```
+
+The important distinction:
+
+```text
+structure explains what the concept is
+function explains what the concept does
+```
+
+Forward reasoning should gather activation signatures from inputs toward outputs. Backward reasoning should gather role signatures from outputs or targets back toward candidate causes. The extracted meaning is a projection of learned structure, not an explicit label stored inside the signal.
+
 ## Later Ideas
 
 - Time integration from `2.txt`: keep Laplace-like transformation as an early layer, then let routed temporal behavior refine meaning.
