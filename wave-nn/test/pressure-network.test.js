@@ -300,6 +300,31 @@ function testRecruitmentCreatesSeparatorForRepeatedAmbiguity() {
   assert.ok(network.getValve("R0->OUT1"));
 }
 
+function testRecruitableTopologyFormsBitwiseOperations() {
+  for (const operation of ["xor", "and", "or", "nand"]) {
+    const network = new PressureNetwork();
+    network.reset(operation);
+    network.trainScaffold({ cycles: 3, lock: true });
+
+    for (let cycle = 0; cycle < 20; cycle += 1) {
+      network.trainCycle({
+        learning: 0.7,
+        strengthBalance: 0.5,
+        durationBalance: 0.15,
+      });
+      network.testCycle();
+    }
+
+    const results = network.testCycle();
+    assert.equal(
+      results.filter((result) => result.correct).length,
+      4,
+      `${operation} should form through recruitment`,
+    );
+    assert.ok(network.metrics().recruitment.nodeCount > 0);
+  }
+}
+
 testTruthTable();
 testSignalHasNoTypeMeaning();
 testThresholdActivation();
@@ -319,5 +344,6 @@ testFloodTrainingChangesValves();
 testInputOnlyProducesResultShape();
 testRecruitableTopologyStartsWithoutFixedPairs();
 testRecruitmentCreatesSeparatorForRepeatedAmbiguity();
+testRecruitableTopologyFormsBitwiseOperations();
 
 console.log("pressure-network tests passed");

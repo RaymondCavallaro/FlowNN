@@ -268,8 +268,8 @@ export class PressureNetwork {
         to,
         region,
         trainingOnly,
-        resistance: 0.5,
-        weight: 1,
+        resistance: this.topology === "recruitable" && region === "operation" ? 0.72 : 0.5,
+        weight: this.topology === "recruitable" && region === "operation" ? 0.55 : 1,
       });
     });
   }
@@ -576,7 +576,7 @@ export class PressureNetwork {
       role: "hidden",
       x: 0.42,
       y: yForSignature(observation.signature),
-      threshold: 0.82,
+      threshold: 0.75,
       decay: 0.52,
       recruitment: {
         kind: "separator",
@@ -590,10 +590,11 @@ export class PressureNetwork {
 
     this.nodes.splice(Math.max(0, this.nodes.length - 2), 0, node);
     for (const inputId of observation.inputIds) {
-      this.addValve({ from: inputId, to: id, resistance: 0.68, weight: 0.72 });
+      this.addValve({ from: inputId, to: id, resistance: 0.35, weight: 1.3 });
     }
-    this.addValve({ from: id, to: "OUT0", resistance: 0.62, weight: 0.78 });
-    this.addValve({ from: id, to: "OUT1", resistance: 0.62, weight: 0.78 });
+    const otherOutputId = observation.expectedOutputId === "OUT1" ? "OUT0" : "OUT1";
+    this.addValve({ from: id, to: observation.expectedOutputId, resistance: 0.35, weight: 1.15 });
+    this.addValve({ from: id, to: otherOutputId, resistance: 0.78, weight: 0.45 });
     this.addValve({ from: observation.expectedOutputId, to: id, resistance: 0.72, weight: 0.58, trainingOnly: true });
 
     const event = {
@@ -686,7 +687,10 @@ export class PressureNetwork {
     const targetActive = this.isLearningTargetActive(valve, from, to, teacherOutputId, teacherNodeId);
     const sourceActive = from.activation > 0.05;
     const coactive = sourceActive && targetActive;
-    const amount = throughput * (0.006 + learningRate * 0.02) * this.regionPlasticity(valve.region);
+    const amount = throughput
+      * (0.006 + learningRate * 0.02)
+      * this.regionPlasticity(valve.region)
+      * this.learningScaleForValve(valve, from, to);
 
     if (sourceActive && to.role === "output" && teacherOutputId && to.id !== teacherOutputId) {
       valve.weight = clamp(valve.weight - amount * 0.55, 0.15, 3.2);
@@ -701,6 +705,20 @@ export class PressureNetwork {
     } else if (to.role !== "output" && valve.pressure > 0.18 && to.activation <= 0.01) {
       valve.adjustOpenness(-valve.pressure * (0.0005 + learningRate * 0.0015));
     }
+  }
+
+  learningScaleForValve(valve, from, to) {
+    if (this.topology !== "recruitable" || valve.region !== "operation") return 1;
+
+    const touchesRecruit = from.recruitment || to.recruitment;
+    const stableRecruit = [from.recruitment, to.recruitment].some((recruitment) => {
+      return recruitment?.status === "stable";
+    });
+
+    if (stableRecruit) return 0.18;
+    if (touchesRecruit) return 1.35;
+    if (from.role === "source" && to.role === "output") return 0.2;
+    return 1;
   }
 
   updateOperationPlasticityFromCycle(results) {

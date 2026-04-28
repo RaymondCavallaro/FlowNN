@@ -130,6 +130,8 @@ The candidate is not a symbolic label. It is a pressure structure attached where
 - stable when it improves margin and correctness;
 - fading when it continues to fail.
 
+In recruitable mode, direct source-to-output operation routes learn slowly. Separator routes learn more strongly while they are candidates, then slow down after they become stable. This lets the recruited structure form without drifting apart under continued training.
+
 ## Explanation
 
 `explainNode` exposes forward and backward signatures:
