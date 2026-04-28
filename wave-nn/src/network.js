@@ -730,7 +730,7 @@ export class PressureNetwork {
         strength: valve.weight * valve.openness,
       }))
       .sort((a, b) => b.strength - a.strength);
-    return { id: nodeId, inputs };
+    return { id: nodeId, kind: "meaning", inputs };
   }
 
   explainNode(nodeId) {
@@ -770,6 +770,7 @@ export class PressureNetwork {
 
     return {
       id: nodeId,
+      kind: "pair",
       direction: "mixed",
       sources,
       structuralMeaning: structure,
@@ -790,9 +791,11 @@ export class PressureNetwork {
 
     return {
       id: outputId,
+      kind: "output",
       direction: "backward",
       valueMeaning: this.strongestMeaningFor(outputId),
       supporters,
+      relationReading: this.readOutputRelation(outputId),
     };
   }
 
@@ -808,9 +811,44 @@ export class PressureNetwork {
   }
 
   explainOperation() {
+    const relations = this.readOperationRelations();
     return {
       forward: ["H0", "H1", "H2", "H3"].map((id) => this.explainPairNode(id)),
       backward: ["OUT0", "OUT1"].map((id) => this.explainOutput(id)),
+      relations,
+    };
+  }
+
+  readOperationRelations() {
+    return ["OUT0", "OUT1"].map((outputId) => this.readOutputRelation(outputId));
+  }
+
+  readOutputRelation(outputId, { supportRatio = 0.72 } = {}) {
+    const valueMeaning = this.strongestMeaningFor(outputId);
+    const candidates = this.valves
+      .filter((valve) => valve.to === outputId && this.getNode(valve.from)?.role === "hidden")
+      .map((valve) => {
+        const pair = this.explainPairNode(valve.from);
+        return {
+          id: valve.from,
+          strength: valve.weight * valve.openness,
+          sources: pair.sources,
+          relation: pair.relation,
+        };
+      })
+      .sort((a, b) => b.strength - a.strength);
+    const strongest = candidates[0]?.strength ?? 0;
+    const pathSet = candidates.filter((candidate) => {
+      return strongest > 0 && candidate.strength >= strongest * supportRatio;
+    });
+
+    return {
+      sourceSet: Array.from(new Set(pathSet.flatMap((path) => path.sources))).sort(),
+      targetSet: [outputId, valueMeaning?.id].filter(Boolean),
+      pathSet,
+      strength: pathSet.reduce((sum, path) => sum + path.strength, 0),
+      invariants: invariantsFromPaths(pathSet),
+      role: valueMeaning ? `produces ${valueMeaning.id}` : `produces ${outputId}`,
     };
   }
 }
@@ -829,7 +867,50 @@ function relationFromSources(structuralMeaning) {
   return {
     origin: origins.size > 1 ? "cross-origin" : "same-origin",
     value: new Set(values).size > 1 ? "mixed-value" : "same-value",
+    values,
+    signature: valueSignature(values),
   };
+}
+
+function invariantsFromPaths(paths) {
+  if (!paths.length) return [];
+  const invariants = [];
+  const relations = paths.map((path) => path.relation);
+  const signatures = relations.map((relation) => relation.signature).filter(Boolean);
+
+  if (relations.every((relation) => relation.origin === "cross-origin")) {
+    invariants.push("cross-origin");
+  }
+
+  if (relations.every((relation) => relation.value === "mixed-value")) {
+    invariants.push("mixed-value");
+  }
+
+  if (relations.every((relation) => relation.value === "same-value")) {
+    invariants.push("same-value");
+  }
+
+  if (signatures.length && signatures.every((signature) => signature === "00")) {
+    invariants.push("all-value-0");
+  }
+
+  if (signatures.length && signatures.every((signature) => signature === "11")) {
+    invariants.push("all-value-1");
+  }
+
+  if (signatures.length && !signatures.includes("00")) {
+    invariants.push("at-least-one-value-1");
+  }
+
+  if (signatures.length && !signatures.includes("11")) {
+    invariants.push("not-all-value-1");
+  }
+
+  return Array.from(new Set(invariants));
+}
+
+function valueSignature(values) {
+  return values.map((value) => value.replace("VALUE_", "")).join("");
 }
 
 export function evaluateOperation(a, b, operation) {

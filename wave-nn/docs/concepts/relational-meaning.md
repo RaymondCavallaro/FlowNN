@@ -39,7 +39,7 @@ That invariant is the relational meaning.
 
 ## Relation Candidate
 
-A future relation object should stay compact:
+The relation object should stay compact:
 
 ```text
 Relation {
@@ -53,6 +53,39 @@ Relation {
 ```
 
 The `pathSet` is evidence, not the meaning itself. The meaning is the invariant extracted from the path set.
+
+## Current Reader
+
+The current implementation reads operation relations from the learned hidden-to-output valves:
+
+```text
+pair nodes -> output node -> value meaning
+```
+
+For each output, it selects the strongest supporting pair paths and extracts invariants from their scaffold meanings.
+
+Examples:
+
+```text
+XOR OUT1:
+  H1 = A0 + B1
+  H2 = A1 + B0
+  invariant = mixed-value
+
+AND OUT1:
+  H3 = A1 + B1
+  invariant = all-value-1
+
+OR OUT1:
+  H1, H2, H3
+  invariant = at-least-one-value-1
+
+NAND OUT1:
+  H0, H1, H2
+  invariant = not-all-value-1
+```
+
+This is still a reader, not a new learning rule. It asks whether the learned routes can be explained through the scaffold meanings already inside the system.
 
 ## Stability Rule
 

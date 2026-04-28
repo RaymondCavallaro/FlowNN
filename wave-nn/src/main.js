@@ -188,10 +188,13 @@ function renderInspector() {
 
 function formatExplanation(explanation) {
   if (!explanation) return "";
+  if (explanation.kind === "meaning") {
+    return `<h3>Meaning inputs</h3><p>${formatWeighted(explanation.inputs)}</p>`;
+  }
   if (explanation.meanings) {
     return `<h3>Forward meaning</h3><p>${formatWeighted(explanation.meanings)}</p>`;
   }
-  if (explanation.inputs) {
+  if (explanation.kind === "pair") {
     const sources = explanation.sources.join(" + ");
     const meanings = explanation.structuralMeaning
       .map((source) => `${source.id}: ${formatWeighted(source.meanings)}`)
@@ -209,19 +212,20 @@ function formatExplanation(explanation) {
       </dl>
     `;
   }
-  if (explanation.supporters) {
+  if (explanation.kind === "output") {
     const supporters = explanation.supporters
       .map((supporter) => `${supporter.id}: ${supporter.relation.origin}, ${supporter.relation.value} (${supporter.strength.toFixed(2)})`)
       .join("<br />");
+    const invariants = explanation.relationReading.invariants.join(", ") || "none";
     return `
       <h3>Backward role</h3>
       <p>${explanation.valueMeaning?.id ?? "no value meaning"}</p>
       <dl>
         <dt>Supported by</dt><dd>${supporters}</dd>
+        <dt>Invariants</dt><dd>${invariants}</dd>
       </dl>
     `;
   }
-  if (explanation.inputs) return `<h3>Meaning</h3><p>${formatWeighted(explanation.inputs)}</p>`;
   return "";
 }
 

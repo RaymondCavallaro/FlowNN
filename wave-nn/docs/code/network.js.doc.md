@@ -118,6 +118,14 @@ The default prediction still uses peak while the other modes are diagnostic.
 
 This is observational. It reads learned structure after training instead of adding labels to signals or giving route-level credit.
 
+`readOperationRelations` reads compressed relational meaning from operation routes. For each output, it:
+
+1. finds the strongest hidden-node supporters;
+2. reads each supporter's origin/value scaffold meaning;
+3. extracts invariants across those support paths.
+
+Examples of extracted invariants are `mixed-value`, `same-value`, `all-value-1`, `all-value-0`, `at-least-one-value-1`, and `not-all-value-1`.
+
 ## Important Constraint
 
 Reverse output valves are marked `trainingOnly`. In the current shaped pair-node experiment they are reserved but not conductive. Output flood participates by activating the desired output node; learning then happens locally where active pair pressure reaches that active output.

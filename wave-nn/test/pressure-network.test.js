@@ -56,7 +56,9 @@ function testPairTopologyIsStructural() {
 
 function testReverseOutputValvesAreTrainingOnly() {
   const network = new PressureNetwork();
-  const reverseOutputValves = network.valves.filter((valve) => valve.from.startsWith("OUT"));
+  const reverseOutputValves = network.valves.filter((valve) => {
+    return valve.from.startsWith("OUT") && network.getNode(valve.to)?.role === "hidden";
+  });
 
   assert.ok(reverseOutputValves.length > 0);
   assert.ok(reverseOutputValves.every((valve) => valve.trainingOnly));
@@ -164,12 +166,75 @@ function testMeaningExplanationUsesScaffold() {
   assert.deepEqual(explanation.sources.sort(), ["A0", "B1"]);
 }
 
+function testRelationReaderExtractsOperationMeanings() {
+  const cases = {
+    xor: {
+      OUT0: ["same-value"],
+      OUT1: ["mixed-value"],
+    },
+    and: {
+      OUT0: ["not-all-value-1"],
+      OUT1: ["all-value-1"],
+    },
+    or: {
+      OUT0: ["all-value-0"],
+      OUT1: ["at-least-one-value-1"],
+    },
+    nand: {
+      OUT0: ["all-value-1"],
+      OUT1: ["not-all-value-1"],
+    },
+  };
+
+  for (const [operation, expected] of Object.entries(cases)) {
+    const network = new PressureNetwork();
+    imprintOperation(network, operation);
+    const relations = Object.fromEntries(
+      network.readOperationRelations().map((relation) => [relation.targetSet[0], relation]),
+    );
+
+    for (const [outputId, invariants] of Object.entries(expected)) {
+      for (const invariant of invariants) {
+        assert.ok(
+          relations[outputId].invariants.includes(invariant),
+          `${operation} ${outputId} should include ${invariant}; got ${relations[outputId].invariants.join(", ")}`,
+        );
+      }
+    }
+  }
+}
+
 function testFloodTrainingChangesValves() {
   const network = new PressureNetwork();
   const before = network.valves.map((valve) => valve.resistance);
   for (let index = 0; index < 8; index += 1) network.trainCycle();
   const after = network.valves.map((valve) => valve.resistance);
   assert.ok(after.some((resistance, index) => Math.abs(resistance - before[index]) > 0.001));
+}
+
+function imprintOperation(network, operation) {
+  network.reset(operation);
+  network.trainScaffold({ cycles: 2, lock: true });
+  const pairByCase = {
+    "0,0": "H0",
+    "0,1": "H1",
+    "1,0": "H2",
+    "1,1": "H3",
+  };
+
+  for (const row of [
+    { a: 0, b: 0 },
+    { a: 0, b: 1 },
+    { a: 1, b: 0 },
+    { a: 1, b: 1 },
+  ]) {
+    const hiddenId = pairByCase[`${row.a},${row.b}`];
+    const expected = evaluateOperation(Boolean(row.a), Boolean(row.b), operation) ? 1 : 0;
+    const correct = network.getValve(`${hiddenId}->OUT${expected}`);
+    const wrong = network.getValve(`${hiddenId}->OUT${1 - expected}`);
+    correct.weight = 3;
+    wrong.weight = 0.2;
+  }
 }
 
 function testInputOnlyProducesResultShape() {
@@ -203,6 +268,7 @@ testTeacherDurationBalancesRareOutputs();
 testSemanticScaffoldTopology();
 testScaffoldTrainingLocksPrimitiveRegions();
 testMeaningExplanationUsesScaffold();
+testRelationReaderExtractsOperationMeanings();
 testFloodTrainingChangesValves();
 testInputOnlyProducesResultShape();
 
