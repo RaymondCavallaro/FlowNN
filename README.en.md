@@ -15,7 +15,7 @@ Made largely with AI.
 
 ## Demo
 
-- GitHub Pages: [raymondcavallaro.github.io/FlowNN](https://raymondcavallaro.github.io/FlowNN/)
+- GitHub Pages: [raymondcavallaro.github.io/FlowNN/wave-nn/](https://raymondcavallaro.github.io/FlowNN/wave-nn/)
 
 ## What This Is
 
@@ -61,7 +61,7 @@ Arithmetic experiments are parked on the `v0.0.4` branch while `main` stays focu
 - `wave-nn/index.html` is the browser entry point
 - `wave-nn/src/` contains simulation, visualizer, and styles
 - `wave-nn/test/` contains network model tests
-- `wave-nn/docs/` contains concepts, features, tests, and the manual testing guide
+- [`wave-nn/docs/`](https://raymondcavallaro.github.io/FlowNN/wave-nn/docs) contains concepts, features, tests, and the manual testing guide
 - `.github/workflows/pages.yml` publishes the app to GitHub Pages
 
 ## Branches And Slices
