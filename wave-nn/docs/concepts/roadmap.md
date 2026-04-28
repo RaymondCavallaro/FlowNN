@@ -33,8 +33,22 @@ The purpose is not to teach the answer directly. The purpose is to see when the 
 
 ## Later Ideas
 
+- Time integration from `2.txt`: keep Laplace-like transformation as an early layer, then let routed temporal behavior refine meaning.
 - Dynamic node recruiting when the current topology cannot separate a meaning cleanly.
 - Separate operation regions for input translation, pair/concept formation, output assignment, and target seeking.
 - More intrinsic ambiguity and basin-depth metrics, reducing dependence on external accuracy.
 - A controlled reverse-flood experiment that does not activate every hidden node at once.
 - A math/field implementation path, preserved on `v0.0.3`, if performance or clarity calls for it later.
+
+Possible time chain:
+
+```text
+raw sensorial signal
+-> Laplace-like transform
+-> first time layer
+-> meaning
+-> temporal routing
+-> second meaning
+```
+
+The goal is not only to extract meaning from time. It is also to let meaning move through routes over repetitions, delays, and stable activations so the network can form a second-order meaning about what kind of temporal thing happened.
