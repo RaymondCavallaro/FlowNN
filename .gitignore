@@ -1,2 +1,4 @@
 .codex
 .codex/
+.personal/
+__pycache__/
