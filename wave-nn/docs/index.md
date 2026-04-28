@@ -16,6 +16,6 @@ The implementation is intentionally small. The main topology now starts under-st
 
 ## Reading Path
 
-Start with [Pressure Network](concepts/pressure-network.md), then [Topology](concepts/topology.md), then [Relational Meaning](concepts/relational-meaning.md), then the implementation notes for [network.js](code/network.js.doc.md).
+Start with [Pressure Network](concepts/pressure-network.md), then [Topology](concepts/topology.md), then [Relational Meaning](concepts/relational-meaning.md), then [Information Landscape](concepts/information-landscape.md), then [System Dynamics](concepts/system-dynamics.md), then the implementation notes for [network.js](code/network.js.doc.md).
 
 For upcoming work, see [Roadmap](concepts/roadmap.md).

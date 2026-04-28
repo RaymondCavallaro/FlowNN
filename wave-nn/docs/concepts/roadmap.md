@@ -28,6 +28,33 @@ Recruitment should happen when the current network cannot settle cleanly:
 
 The first implementation keeps the bitwise operations as the measuring stick, but removes the fixed pair topology from the main mode. Repeated unresolved source signatures recruit weak separator candidates. A candidate survives only if later cycles improve settling.
 
+## Separation Of New Source Notes
+
+The newer source notes split into different lanes:
+
+- active inference and information-space notes belong in [Information Landscape](information-landscape.md);
+- brain-like convergence requirements belong in [System Dynamics](system-dynamics.md);
+- active sensing / landscape probing is a next main-line feature after recruitment is stable;
+- knowledge transfer / reuse belongs after concept-node recruitment exists;
+- modular arithmetic and grokking-style arithmetic tests belong on `v0.0.4`, not `main`;
+- grokking as an evaluation idea belongs on `main` only as a generalization/memorization distinction.
+
+Immediate main-line use:
+
+```text
+recruitment traces
+-> uncertainty / margin / drift metrics
+-> survival and pruning
+```
+
+Next main-line use:
+
+```text
+uncertainty
+-> choose a probe row or perturbation
+-> update recruitment/consolidation
+```
+
 ## Next Feature: Step Reasoning Identity
 
 The next feature should let the system and the UI identify which kind of reasoning a step is expressing.
@@ -198,8 +225,12 @@ Implementation guidance:
 
 ## Later Ideas
 
-- Time integration from `2.txt`: keep Laplace-like transformation as an early layer, then let routed temporal behavior refine meaning.
+- Active probing: choose the next row, perturbation, or test from current uncertainty.
+- Information-landscape metrics: track uncertainty, margin, drift, calibration quality, and transfer stability.
+- Continuous unresolved-state memory with decay and competition between traces.
+- Time integration: keep Laplace-like transformation as an early layer, then let routed temporal behavior refine meaning.
 - Bridge-node and concept-node recruitment after separator recruitment is inspectable.
+- Knowledge transfer / reuse: recruit existing basins in new contexts instead of creating new nodes every time.
 - Separate operation regions for input translation, pair/concept formation, output assignment, and target seeking.
 - More intrinsic ambiguity and basin-depth metrics, reducing dependence on external accuracy.
 - A controlled reverse-flood experiment that does not activate every hidden node at once.

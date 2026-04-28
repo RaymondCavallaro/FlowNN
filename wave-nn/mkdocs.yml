@@ -13,6 +13,8 @@ nav:
       - Learning Dynamics: concepts/learning-dynamics.md
       - Topology: concepts/topology.md
       - Relational Meaning: concepts/relational-meaning.md
+      - Information Landscape: concepts/information-landscape.md
+      - System Dynamics: concepts/system-dynamics.md
       - Roadmap: concepts/roadmap.md
   - Code Notes:
       - network.js: code/network.js.doc.md
