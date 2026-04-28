@@ -61,7 +61,7 @@ Experimentos de aritmetica ficam separados no branch `v0.0.4`.
 - `wave-nn/index.html` e a entrada da aplicacao no navegador
 - `wave-nn/src/` contem simulacao, visualizador e estilos
 - `wave-nn/test/` contem testes do modelo de rede
-- `wave-nn/docs/` contem notas conceituais e de implementacao
+- [`wave-nn/docs/`](https://raymondcavallaro.github.io/FlowNN/wave-nn/docs) contem notas conceituais e de implementacao
 - `.github/workflows/pages.yml` publica o app no GitHub Pages
 
 ## Branches
