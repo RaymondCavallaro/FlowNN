@@ -1,10 +1,9 @@
-import { PressureArithmetic, PressureNetwork, TRUTH_TABLE } from "./network.js";
+import { PressureNetwork, TRUTH_TABLE } from "./network.js";
 import { Visualizer } from "./visualizer.js";
 
 const canvas = document.querySelector("#stage");
 const visualizer = new Visualizer(canvas);
 const network = new PressureNetwork();
-const arithmetic = new PressureArithmetic();
 
 const controls = {
   autoToggle: document.querySelector("#autoToggle"),
@@ -23,19 +22,6 @@ const controls = {
   valveModeSelect: document.querySelector("#valveModeSelect"),
   thresholdModeSelect: document.querySelector("#thresholdModeSelect"),
   autoTest: document.querySelector("#autoTest"),
-  mathAInput: document.querySelector("#mathAInput"),
-  mathBInput: document.querySelector("#mathBInput"),
-  mathOperationSelect: document.querySelector("#mathOperationSelect"),
-  mathRunButton: document.querySelector("#mathRunButton"),
-  mathAPressure: document.querySelector("#mathAPressure"),
-  mathBPressure: document.querySelector("#mathBPressure"),
-  mathConductance: document.querySelector("#mathConductance"),
-  mathChamberPressure: document.querySelector("#mathChamberPressure"),
-  mathReadiness: document.querySelector("#mathReadiness"),
-  mathPassage: document.querySelector("#mathPassage"),
-  mathOutputPressure: document.querySelector("#mathOutputPressure"),
-  mathReadValue: document.querySelector("#mathReadValue"),
-  mathExplanation: document.querySelector("#mathExplanation"),
   pressureMetric: document.querySelector("#pressureMetric"),
   changeMetric: document.querySelector("#changeMetric"),
   openMetric: document.querySelector("#openMetric"),
@@ -56,7 +42,6 @@ const state = {
   autoClock: 0,
   selection: null,
   metrics: network.metrics(),
-  arithmeticResult: arithmetic.add(1, 1),
 };
 
 function settings() {
@@ -98,17 +83,6 @@ function testCycle() {
   renderInspector();
 }
 
-function runArithmetic() {
-  const a = Number(controls.mathAInput.value);
-  const b = Number(controls.mathBInput.value);
-  state.arithmeticResult = arithmetic.run({
-    operation: controls.mathOperationSelect.value,
-    a,
-    b,
-  });
-  updateArithmetic(state.arithmeticResult);
-}
-
 controls.autoToggle.addEventListener("click", () => {
   state.running = !state.running;
   controls.autoIcon.textContent = state.running ? "II" : "A";
@@ -119,10 +93,6 @@ controls.trainRowButton.addEventListener("click", () => trainRow());
 controls.trainCycleButton.addEventListener("click", () => trainCycle());
 controls.trainScaffoldButton.addEventListener("click", () => trainScaffold());
 controls.testCycleButton.addEventListener("click", () => testCycle());
-controls.mathRunButton.addEventListener("click", () => runArithmetic());
-controls.mathAInput.addEventListener("input", () => runArithmetic());
-controls.mathBInput.addEventListener("input", () => runArithmetic());
-controls.mathOperationSelect.addEventListener("change", () => runArithmetic());
 
 controls.resetButton.addEventListener("click", () => {
   network.reset(controls.operationSelect.value);
@@ -167,18 +137,6 @@ function updateMetrics(metrics) {
   controls.opMetric.textContent = metrics.operation.toUpperCase();
   controls.modeMetric.textContent = metrics.mode;
   controls.lastMetric.textContent = formatLast(metrics.lastResult);
-}
-
-function updateArithmetic(result) {
-  controls.mathAPressure.textContent = result.aPressure.toFixed(3);
-  controls.mathBPressure.textContent = result.bPressure.toFixed(3);
-  controls.mathConductance.textContent = result.conductance === null ? "--" : result.conductance.toFixed(3);
-  controls.mathChamberPressure.textContent = result.chamberPressure === undefined ? "--" : result.chamberPressure.toFixed(3);
-  controls.mathReadiness.textContent = result.readiness === undefined ? "--" : result.readiness.toFixed(3);
-  controls.mathPassage.textContent = result.plasticPassage === undefined ? "--" : result.plasticPassage.toFixed(3);
-  controls.mathOutputPressure.textContent = result.outputPressure.toFixed(3);
-  controls.mathReadValue.textContent = result.readValue.toFixed(3);
-  controls.mathExplanation.textContent = result.explanation;
 }
 
 function renderInspector() {
@@ -308,5 +266,4 @@ function frame(now) {
 }
 
 renderInspector();
-updateArithmetic(state.arithmeticResult);
 requestAnimationFrame(frame);

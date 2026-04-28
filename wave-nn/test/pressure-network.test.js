@@ -1,10 +1,7 @@
 import assert from "node:assert/strict";
 import {
-  PressureArithmetic,
-  PressureChamberMultiplier,
   PressureNetwork,
   Signal,
-  SignalPressureConverter,
   evaluateOperation,
 } from "../src/network.js";
 
@@ -211,65 +208,6 @@ function testRelationReaderExtractsOperationMeanings() {
   }
 }
 
-function testSignalPressureConverterRoundTrips() {
-  const converter = new SignalPressureConverter({ scale: 2, bias: 0.5 });
-  const pressure = converter.toPressure(1.25);
-  assert.equal(pressure, 3);
-  assert.equal(converter.fromPressure(pressure), 1.25);
-}
-
-function testArithmeticAdditionCombinesPressure() {
-  const arithmetic = new PressureArithmetic();
-  const result = arithmetic.add(1.5, 2.25);
-
-  assert.equal(result.operation, "add");
-  assert.equal(result.outputPressure, 3.75);
-  assert.equal(result.readValue, 3.75);
-  assert.equal(result.conductance, null);
-}
-
-function testArithmeticMultiplicationUsesPressureGatedConductance() {
-  const arithmetic = new PressureArithmetic();
-  const result = arithmetic.multiply(1.5, 2);
-
-  assert.equal(result.operation, "multiply");
-  assert.equal(result.aPressure, 1.5);
-  assert.equal(result.bPressure, 2);
-  assert.equal(result.conductance, 2);
-  assert.equal(result.outputPressure, 3);
-  assert.equal(result.readValue, 3);
-}
-
-function testChamberMultiplicationScalesWithGatePressure() {
-  const arithmetic = new PressureArithmetic();
-  const low = arithmetic.chamberMultiply(2, 0.5, { trainingSteps: 0, plasticPassage: 1 });
-  const high = arithmetic.chamberMultiply(2, 2, { trainingSteps: 0, plasticPassage: 1 });
-
-  assert.ok(high.readiness > low.readiness);
-  assert.ok(high.outputPressure > low.outputPressure);
-}
-
-function testChamberMultiplicationScalesWithSignalPressure() {
-  const arithmetic = new PressureArithmetic();
-  const low = arithmetic.chamberMultiply(1, 2, { trainingSteps: 0, plasticPassage: 1 });
-  const high = arithmetic.chamberMultiply(2, 2, { trainingSteps: 0, plasticPassage: 1 });
-
-  assert.equal(high.readiness, low.readiness);
-  assert.ok(high.outputPressure > low.outputPressure);
-}
-
-function testChamberPlasticityCarvesPassage() {
-  const chamber = new PressureChamberMultiplier({
-    trainingSteps: 8,
-    plasticPassage: 0.35,
-    plasticity: 0.3,
-  });
-  const result = chamber.run(2, 2);
-
-  assert.ok(result.plasticPassage > result.initialPassage);
-  assert.ok(result.outputPressure > 0);
-}
-
 function testFloodTrainingChangesValves() {
   const network = new PressureNetwork();
   const before = network.valves.map((valve) => valve.resistance);
@@ -335,12 +273,6 @@ testSemanticScaffoldTopology();
 testScaffoldTrainingLocksPrimitiveRegions();
 testMeaningExplanationUsesScaffold();
 testRelationReaderExtractsOperationMeanings();
-testSignalPressureConverterRoundTrips();
-testArithmeticAdditionCombinesPressure();
-testArithmeticMultiplicationUsesPressureGatedConductance();
-testChamberMultiplicationScalesWithGatePressure();
-testChamberMultiplicationScalesWithSignalPressure();
-testChamberPlasticityCarvesPassage();
 testFloodTrainingChangesValves();
 testInputOnlyProducesResultShape();
 

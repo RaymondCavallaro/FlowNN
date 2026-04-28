@@ -172,18 +172,11 @@ Implementation guidance:
 
 ## Later Ideas
 
-- Arithmetic intuition experiments:
-  - addition as pressure composition: convert input signal values into pressure, combine pressure, then read the combined pressure at an output;
-  - signal-to-pressure converters as a first explicit bridge from symbolic/numeric input into pressure strength;
-  - later try to emulate those converters through the same pressure/valve network instead of hardcoding them;
-  - multiplication as pressure-gated conductance: one input pressure tunes the valve/conductance used by another input pressure.
-  - function intuition sweeps: feed increasing pressure windows through a function and gather output variation as first intuitions for integral, proportional growth, and derivative.
 - Time integration from `2.txt`: keep Laplace-like transformation as an early layer, then let routed temporal behavior refine meaning.
 - Dynamic node recruiting when the current topology cannot separate a meaning cleanly.
 - Separate operation regions for input translation, pair/concept formation, output assignment, and target seeking.
 - More intrinsic ambiguity and basin-depth metrics, reducing dependence on external accuracy.
 - A controlled reverse-flood experiment that does not activate every hidden node at once.
-- A math/field implementation path, preserved on `v0.0.3`, if performance or clarity calls for it later.
 
 Possible time chain:
 
