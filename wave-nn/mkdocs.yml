@@ -13,6 +13,7 @@ nav:
       - Learning Dynamics: concepts/learning-dynamics.md
       - Topology: concepts/topology.md
       - Relational Meaning: concepts/relational-meaning.md
+      - Arithmetic Pressure: concepts/arithmetic-pressure.md
       - Roadmap: concepts/roadmap.md
   - Code Notes:
       - network.js: code/network.js.doc.md
