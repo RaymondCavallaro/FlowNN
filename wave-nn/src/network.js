@@ -592,9 +592,8 @@ export class PressureNetwork {
     for (const inputId of observation.inputIds) {
       this.addValve({ from: inputId, to: id, resistance: 0.35, weight: 1.3 });
     }
-    const otherOutputId = observation.expectedOutputId === "OUT1" ? "OUT0" : "OUT1";
-    this.addValve({ from: id, to: observation.expectedOutputId, resistance: 0.35, weight: 1.15 });
-    this.addValve({ from: id, to: otherOutputId, resistance: 0.78, weight: 0.45 });
+    this.addValve({ from: id, to: "OUT0", resistance: 0.55, weight: 0.82 });
+    this.addValve({ from: id, to: "OUT1", resistance: 0.55, weight: 0.82 });
     this.addValve({ from: observation.expectedOutputId, to: id, resistance: 0.72, weight: 0.58, trainingOnly: true });
 
     const event = {
@@ -659,14 +658,14 @@ export class PressureNetwork {
 
     const conductanceBySource = new Map();
     for (const valve of this.valves) {
-      if (valve.trainingOnly) continue;
+      if (!this.canConductValve(valve, { learning, teacherOutputId })) continue;
       if (!activeRegions.includes(valve.region)) continue;
       const conductance = valve.weight * valve.openness;
       conductanceBySource.set(valve.from, (conductanceBySource.get(valve.from) ?? 0) + conductance);
     }
 
     for (const valve of this.valves) {
-      if (valve.trainingOnly) continue;
+      if (!this.canConductValve(valve, { learning, teacherOutputId })) continue;
       if (!activeRegions.includes(valve.region)) continue;
       const from = this.getNode(valve.from);
       const to = this.getNode(valve.to);
@@ -681,6 +680,11 @@ export class PressureNetwork {
     }
 
     for (const node of this.nodes) node.settle();
+  }
+
+  canConductValve(valve, { learning, teacherOutputId }) {
+    if (!valve.trainingOnly) return true;
+    return learning && teacherOutputId && valve.from === teacherOutputId;
   }
 
   learnValve(valve, from, to, throughput, learningRate, teacherOutputId, teacherNodeId) {
