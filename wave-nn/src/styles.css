@@ -121,6 +121,15 @@ input[type="range"] {
   accent-color: var(--accent);
 }
 
+input[type="number"] {
+  width: 86px;
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
 select {
   width: 94px;
   min-height: 34px;
@@ -207,7 +216,25 @@ canvas {
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
 }
 
+.arithmetic-panel {
+  position: absolute;
+  left: 18px;
+  top: 18px;
+  width: min(300px, calc(100vw - 36px));
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+}
+
 .inspector h2 {
+  margin: 0;
+  font-size: 15px;
+  letter-spacing: 0;
+}
+
+.arithmetic-panel h2 {
   margin: 0;
   font-size: 15px;
   letter-spacing: 0;
@@ -217,7 +244,12 @@ canvas {
   margin-top: 5px;
 }
 
-.inspector dl {
+.arithmetic-panel p {
+  margin-top: 10px;
+}
+
+.inspector dl,
+.arithmetic-panel dl {
   display: grid;
   grid-template-columns: 88px 1fr;
   gap: 7px 10px;
@@ -225,11 +257,13 @@ canvas {
   font-size: 12px;
 }
 
-.inspector dt {
+.inspector dt,
+.arithmetic-panel dt {
   color: var(--muted);
 }
 
-.inspector dd {
+.inspector dd,
+.arithmetic-panel dd {
   margin: 0;
   color: var(--text);
 }

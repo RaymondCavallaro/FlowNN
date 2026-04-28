@@ -77,6 +77,22 @@
             <input id="autoTest" type="checkbox" checked />
             <span>Test cycles</span>
           </label>
+          <label>
+            <span>Math A</span>
+            <input id="mathAInput" type="number" min="0" max="4" value="1" step="0.25" />
+          </label>
+          <label>
+            <span>Math B</span>
+            <input id="mathBInput" type="number" min="0" max="4" value="1" step="0.25" />
+          </label>
+          <label>
+            <span>Math</span>
+            <select id="mathOperationSelect">
+              <option value="add">Add</option>
+              <option value="multiply">Multiply</option>
+            </select>
+          </label>
+          <button id="mathRunButton" class="icon-button" title="Run arithmetic pressure" aria-label="Run arithmetic pressure">=</button>
         </div>
       </section>
 
@@ -131,6 +147,17 @@
         <aside id="inspector" class="inspector" aria-label="Node and valve inspection">
           <h2>Inspector</h2>
           <p>Click a node or valve.</p>
+        </aside>
+        <aside class="arithmetic-panel" aria-label="Arithmetic pressure experiment">
+          <h2>Arithmetic</h2>
+          <dl>
+            <dt>A pressure</dt><dd id="mathAPressure">1.00</dd>
+            <dt>B pressure</dt><dd id="mathBPressure">1.00</dd>
+            <dt>Conductance</dt><dd id="mathConductance">--</dd>
+            <dt>Output pressure</dt><dd id="mathOutputPressure">2.00</dd>
+            <dt>Read value</dt><dd id="mathReadValue">2.00</dd>
+          </dl>
+          <p id="mathExplanation">addition combines pressure directly</p>
         </aside>
       </section>
     </main>

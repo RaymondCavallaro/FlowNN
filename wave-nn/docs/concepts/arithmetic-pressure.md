@@ -21,6 +21,15 @@ symbol/value input -> learned pressure converter -> pressure arithmetic
 
 The experiment asks whether a combined pressure field can preserve enough magnitude information to be read as an arithmetic sum.
 
+Current implementation:
+
+```text
+aPressure = converter.toPressure(a)
+bPressure = converter.toPressure(b)
+outputPressure = aPressure + bPressure
+readValue = converter.fromPressure(outputPressure)
+```
+
 ## Multiplication
 
 Multiplication needs a different mechanism.
@@ -40,6 +49,18 @@ flow = input_pressure * valve_conductance(other_input_pressure)
 ```
 
 This is not a normal fixed valve anymore. It is a valve whose openness is temporarily modulated by another pressure source.
+
+Current implementation:
+
+```text
+aPressure = converter.toPressure(a)
+bPressure = converter.toPressure(b)
+conductance = converter.fromPressure(bPressure)
+outputPressure = aPressure * conductance
+readValue = converter.fromPressure(outputPressure)
+```
+
+This is explicit and intentionally simple. It gives us a target behavior before asking whether the pressure network can learn a converter or a pressure-gated valve internally.
 
 ## Why This Belongs Here
 

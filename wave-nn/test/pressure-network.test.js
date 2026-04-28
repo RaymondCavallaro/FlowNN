@@ -1,5 +1,11 @@
 import assert from "node:assert/strict";
-import { PressureNetwork, Signal, evaluateOperation } from "../src/network.js";
+import {
+  PressureArithmetic,
+  PressureNetwork,
+  Signal,
+  SignalPressureConverter,
+  evaluateOperation,
+} from "../src/network.js";
 
 function testTruthTable() {
   assert.equal(evaluateOperation(false, false, "xor"), false);
@@ -204,6 +210,35 @@ function testRelationReaderExtractsOperationMeanings() {
   }
 }
 
+function testSignalPressureConverterRoundTrips() {
+  const converter = new SignalPressureConverter({ scale: 2, bias: 0.5 });
+  const pressure = converter.toPressure(1.25);
+  assert.equal(pressure, 3);
+  assert.equal(converter.fromPressure(pressure), 1.25);
+}
+
+function testArithmeticAdditionCombinesPressure() {
+  const arithmetic = new PressureArithmetic();
+  const result = arithmetic.add(1.5, 2.25);
+
+  assert.equal(result.operation, "add");
+  assert.equal(result.outputPressure, 3.75);
+  assert.equal(result.readValue, 3.75);
+  assert.equal(result.conductance, null);
+}
+
+function testArithmeticMultiplicationUsesPressureGatedConductance() {
+  const arithmetic = new PressureArithmetic();
+  const result = arithmetic.multiply(1.5, 2);
+
+  assert.equal(result.operation, "multiply");
+  assert.equal(result.aPressure, 1.5);
+  assert.equal(result.bPressure, 2);
+  assert.equal(result.conductance, 2);
+  assert.equal(result.outputPressure, 3);
+  assert.equal(result.readValue, 3);
+}
+
 function testFloodTrainingChangesValves() {
   const network = new PressureNetwork();
   const before = network.valves.map((valve) => valve.resistance);
@@ -269,6 +304,9 @@ testSemanticScaffoldTopology();
 testScaffoldTrainingLocksPrimitiveRegions();
 testMeaningExplanationUsesScaffold();
 testRelationReaderExtractsOperationMeanings();
+testSignalPressureConverterRoundTrips();
+testArithmeticAdditionCombinesPressure();
+testArithmeticMultiplicationUsesPressureGatedConductance();
 testFloodTrainingChangesValves();
 testInputOnlyProducesResultShape();
 

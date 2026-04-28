@@ -140,6 +140,83 @@ export class InputValve {
   }
 }
 
+export class SignalPressureConverter {
+  constructor({ scale = 1, bias = 0 } = {}) {
+    this.scale = scale;
+    this.bias = bias;
+  }
+
+  toPressure(value) {
+    return this.bias + value * this.scale;
+  }
+
+  fromPressure(pressure) {
+    return (pressure - this.bias) / this.scale;
+  }
+}
+
+export class PressureArithmetic {
+  constructor({ converter = new SignalPressureConverter() } = {}) {
+    this.converter = converter;
+  }
+
+  add(a, b) {
+    const aPressure = this.converter.toPressure(a);
+    const bPressure = this.converter.toPressure(b);
+    const outputPressure = aPressure + bPressure;
+    return this.result({
+      operation: "add",
+      a,
+      b,
+      aPressure,
+      bPressure,
+      outputPressure,
+      conductance: null,
+      explanation: "addition combines pressure directly",
+    });
+  }
+
+  multiply(a, b) {
+    const aPressure = this.converter.toPressure(a);
+    const bPressure = this.converter.toPressure(b);
+    const conductance = this.gatedConductance(bPressure);
+    const outputPressure = aPressure * conductance;
+    return this.result({
+      operation: "multiply",
+      a,
+      b,
+      aPressure,
+      bPressure,
+      outputPressure,
+      conductance,
+      explanation: "multiplication routes one pressure through conductance tuned by the other pressure",
+    });
+  }
+
+  gatedConductance(gatePressure) {
+    return this.converter.fromPressure(gatePressure);
+  }
+
+  result({ operation, a, b, aPressure, bPressure, outputPressure, conductance, explanation }) {
+    return {
+      operation,
+      a,
+      b,
+      aPressure,
+      bPressure,
+      conductance,
+      outputPressure,
+      readValue: this.converter.fromPressure(outputPressure),
+      explanation,
+    };
+  }
+
+  run({ operation, a, b }) {
+    if (operation === "multiply") return this.multiply(a, b);
+    return this.add(a, b);
+  }
+}
+
 export class PressureNetwork {
   constructor() {
     this.operation = "xor";
