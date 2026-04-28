@@ -295,6 +295,110 @@ export class PressureChamberMultiplier {
   }
 }
 
+export class PressureField {
+  constructor(nodes, valves) {
+    this.rebuild(nodes, valves);
+  }
+
+  rebuild(nodes, valves) {
+    this.nodes = nodes;
+    this.valves = valves;
+    this.nodeIndex = new Map(nodes.map((node, index) => [node.id, index]));
+    this.from = new Int16Array(valves.length);
+    this.to = new Int16Array(valves.length);
+    this.trainingOnly = new Uint8Array(valves.length);
+    this.throughput = new Float64Array(valves.length);
+    this.targetInput = new Float64Array(nodes.length);
+    this.outgoingConductance = new Float64Array(nodes.length);
+
+    valves.forEach((valve, index) => {
+      this.from[index] = this.nodeIndex.get(valve.from);
+      this.to[index] = this.nodeIndex.get(valve.to);
+      this.trainingOnly[index] = valve.trainingOnly ? 1 : 0;
+    });
+  }
+
+  clearVectors() {
+    this.throughput.fill(0);
+    this.targetInput.fill(0);
+    this.outgoingConductance.fill(0);
+  }
+
+  conductanceFor(index) {
+    const valve = this.valves[index];
+    return valve.weight * valve.openness;
+  }
+
+  coolValves() {
+    for (const valve of this.valves) valve.cool();
+  }
+
+  isActiveValve(index, activeRegions, includeTrainingOnly) {
+    const valve = this.valves[index];
+    if (!includeTrainingOnly && this.trainingOnly[index]) return false;
+    return activeRegions.includes(valve.region);
+  }
+
+  solveFlow({ activeRegions = ["operation"], includeTrainingOnly = false } = {}) {
+    this.clearVectors();
+
+    for (let index = 0; index < this.valves.length; index += 1) {
+      if (!this.isActiveValve(index, activeRegions, includeTrainingOnly)) continue;
+      this.outgoingConductance[this.from[index]] += this.conductanceFor(index);
+    }
+
+    for (let index = 0; index < this.valves.length; index += 1) {
+      if (!this.isActiveValve(index, activeRegions, includeTrainingOnly)) continue;
+      const sourceIndex = this.from[index];
+      const targetIndex = this.to[index];
+      const sourceActivation = this.nodes[sourceIndex].activation;
+      const conductance = this.conductanceFor(index);
+      const totalConductance = Math.max(1, this.outgoingConductance[sourceIndex]);
+      const throughput = sourceActivation * conductance / totalConductance;
+
+      this.throughput[index] = throughput;
+      this.targetInput[targetIndex] += throughput;
+    }
+
+    return this;
+  }
+
+  applyFlow({ learning = false, learnValve = null } = {}) {
+    for (let index = 0; index < this.valves.length; index += 1) {
+      const throughput = this.throughput[index];
+      if (throughput <= 0.001) continue;
+
+      const valve = this.valves[index];
+      const from = this.nodes[this.from[index]];
+      const to = this.nodes[this.to[index]];
+
+      valve.pressure += throughput;
+      valve.activity = Math.max(valve.activity, throughput);
+      to.pressure += throughput;
+      to.received += throughput;
+      to.pulse = Math.max(to.pulse, throughput);
+
+      if (learning && learnValve) learnValve(valve, from, to, throughput);
+    }
+  }
+
+  settleNodes() {
+    for (const node of this.nodes) node.settle();
+  }
+
+  matrixSnapshot() {
+    return {
+      pressure: this.nodes.map((node) => node.pressure),
+      activation: this.nodes.map((node) => node.activation),
+      threshold: this.nodes.map((node) => node.threshold),
+      valveOpenness: this.valves.map((valve) => valve.openness),
+      valveWeight: this.valves.map((valve) => valve.weight),
+      throughput: Array.from(this.throughput),
+      targetInput: Array.from(this.targetInput),
+    };
+  }
+}
+
 export class PressureNetwork {
   constructor() {
     this.operation = "xor";
@@ -315,6 +419,7 @@ export class PressureNetwork {
     this.perfectCycleStreak = 0;
     this.lastCycleSummary = null;
     this.time = 0;
+    this.field = null;
     this.reset();
   }
 
@@ -398,6 +503,8 @@ export class PressureNetwork {
         weight: 1,
       });
     });
+
+    this.field = new PressureField(this.nodes, this.valves);
   }
 
   getNode(id) {
@@ -676,36 +783,21 @@ export class PressureNetwork {
   } = {}) {
     this.time += 1;
 
-    for (const valve of this.valves) valve.cool();
+    this.field.coolValves();
     for (const region of this.regions) {
       if (!region.locked) region.plasticity += (1 - region.plasticity) * 0.002;
     }
     if (learning) this.applyEcology({ valveMode, thresholdMode, learningRate });
 
-    const conductanceBySource = new Map();
-    for (const valve of this.valves) {
-      if (valve.trainingOnly) continue;
-      if (!activeRegions.includes(valve.region)) continue;
-      const conductance = valve.weight * valve.openness;
-      conductanceBySource.set(valve.from, (conductanceBySource.get(valve.from) ?? 0) + conductance);
-    }
+    this.field.solveFlow({ activeRegions });
+    this.field.applyFlow({
+      learning,
+      learnValve: (valve, from, to, throughput) => {
+        this.learnValve(valve, from, to, throughput, learningRate, teacherOutputId, teacherNodeId);
+      },
+    });
 
-    for (const valve of this.valves) {
-      if (valve.trainingOnly) continue;
-      if (!activeRegions.includes(valve.region)) continue;
-      const from = this.getNode(valve.from);
-      const to = this.getNode(valve.to);
-      const throughput = valve.conduct(from.activation, conductanceBySource.get(valve.from));
-      if (throughput <= 0.001) continue;
-
-      to.pressure += throughput;
-      to.received += throughput;
-      to.pulse = Math.max(to.pulse, throughput);
-
-      if (learning) this.learnValve(valve, from, to, throughput, learningRate, teacherOutputId, teacherNodeId);
-    }
-
-    for (const node of this.nodes) node.settle();
+    this.field.settleNodes();
   }
 
   learnValve(valve, from, to, throughput, learningRate, teacherOutputId, teacherNodeId) {
@@ -857,6 +949,12 @@ export class PressureNetwork {
       outputPressure: {
         OUT0: this.getNode("OUT0").activation,
         OUT1: this.getNode("OUT1").activation,
+      },
+      field: {
+        nodeCount: this.nodes.length,
+        valveCount: this.valves.length,
+        activeValves: this.field.throughput.filter((throughput) => throughput > 0.001).length,
+        inputEnergy: Array.from(this.field.targetInput).reduce((sum, value) => sum + value, 0),
       },
     };
   }

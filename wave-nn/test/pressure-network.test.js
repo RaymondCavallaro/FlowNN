@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import {
   PressureArithmetic,
   PressureChamberMultiplier,
+  PressureField,
   PressureNetwork,
   Signal,
   SignalPressureConverter,
@@ -278,6 +279,22 @@ function testFloodTrainingChangesValves() {
   assert.ok(after.some((resistance, index) => Math.abs(resistance - before[index]) > 0.001));
 }
 
+function testFieldSolvesFlowAsVectors() {
+  const network = new PressureNetwork();
+  const source = network.getNode("A0");
+  source.activation = 1;
+
+  network.field.solveFlow();
+  const snapshot = network.field.matrixSnapshot();
+
+  assert.equal(network.field instanceof PressureField, true);
+  assert.equal(snapshot.throughput.length, network.valves.length);
+  assert.equal(snapshot.targetInput.length, network.nodes.length);
+  assert.ok(snapshot.targetInput[network.field.nodeIndex.get("H0")] > 0);
+  assert.ok(snapshot.targetInput[network.field.nodeIndex.get("H1")] > 0);
+  assert.equal(snapshot.targetInput[network.field.nodeIndex.get("H2")], 0);
+}
+
 function imprintOperation(network, operation) {
   network.reset(operation);
   network.trainScaffold({ cycles: 2, lock: true });
@@ -342,6 +359,7 @@ testChamberMultiplicationScalesWithGatePressure();
 testChamberMultiplicationScalesWithSignalPressure();
 testChamberPlasticityCarvesPassage();
 testFloodTrainingChangesValves();
+testFieldSolvesFlowAsVectors();
 testInputOnlyProducesResultShape();
 
 console.log("pressure-network tests passed");
