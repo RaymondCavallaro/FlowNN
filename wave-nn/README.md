@@ -25,7 +25,9 @@ Outputs:
 
 Initial valves start near middle resistance so they are neither fully open nor fully closed.
 
-The first hidden layer is intentionally simple: `H0` receives `A0+B0`, `H1` receives `A0+B1`, `H2` receives `A1+B0`, and `H3` receives `A1+B1`. Reverse valves from outputs are currently reserved for later experiments; the shaped topology learns from active output pressure at the pair-to-output boundary.
+The main mode now starts without the fixed pair layer. Sources begin with weak direct routes to both outputs. When repeated bitwise cases remain ambiguous or low-margin, the network recruits weak separator nodes around the unresolved source pattern.
+
+The earlier shaped pair topology is still available as a reference mode in tests.
 
 ## Training
 

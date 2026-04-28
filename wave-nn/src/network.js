@@ -16,6 +16,8 @@ const THRESHOLD_ECOLOGY_RATE = 0.01;
 const MIN_REGION_PLASTICITY = 0.12;
 const MAX_REGION_PLASTICITY = 1.8;
 const LOCKED_REGION_PLASTICITY = 0.18;
+const RECRUITMENT_OBSERVATION_THRESHOLD = 2;
+const LOW_MARGIN_THRESHOLD = 0.16;
 
 function sigmoid(value) {
   if (value > 40) return 1 - 1e-12;
@@ -35,10 +37,11 @@ export class Signal {
 }
 
 export class PressureNode {
-  constructor({ id, label, role, x, y, threshold = 1, decay = 0.72 }) {
+  constructor({ id, label, role, x, y, threshold = 1, decay = 0.72, recruitment = null }) {
     this.id = id;
     this.label = label;
     this.role = role;
+    this.recruitment = recruitment;
     this.x = x;
     this.y = y;
     this.minThreshold = role === "source" ? threshold : threshold * 0.45;
@@ -141,7 +144,8 @@ export class InputValve {
 }
 
 export class PressureNetwork {
-  constructor() {
+  constructor({ topology = "recruitable" } = {}) {
+    this.topology = topology;
     this.operation = "xor";
     this.nodes = [];
     this.valves = [];
@@ -159,11 +163,13 @@ export class PressureNetwork {
     this.lastCycleAccuracy = null;
     this.perfectCycleStreak = 0;
     this.lastCycleSummary = null;
+    this.recruitment = null;
     this.time = 0;
     this.reset();
   }
 
-  reset(operation = this.operation) {
+  reset(operation = this.operation, { topology = this.topology } = {}) {
+    this.topology = topology;
     this.operation = operation;
     this.truthIndex = 0;
     this.cycleCount = 0;
@@ -183,6 +189,12 @@ export class PressureNetwork {
     this.lastCycleAccuracy = null;
     this.perfectCycleStreak = 0;
     this.lastCycleSummary = null;
+    this.recruitment = {
+      enabled: this.topology === "recruitable",
+      nextId: 0,
+      observations: new Map(),
+      events: [],
+    };
     this.time = 0;
 
     this.nodes = [
@@ -194,13 +206,17 @@ export class PressureNetwork {
       new PressureNode({ id: "ORIGIN_B", label: "origin B", role: "meaning", x: 0.26, y: 0.90, threshold: 0.75, decay: 0.58 }),
       new PressureNode({ id: "VALUE_0", label: "value 0", role: "meaning", x: 0.55, y: 0.12, threshold: 0.75, decay: 0.58 }),
       new PressureNode({ id: "VALUE_1", label: "value 1", role: "meaning", x: 0.55, y: 0.90, threshold: 0.75, decay: 0.58 }),
+      new PressureNode({ id: "OUT0", label: "output 0", role: "output", x: 0.88, y: 0.38, threshold: 0.8 }),
+      new PressureNode({ id: "OUT1", label: "output 1", role: "output", x: 0.88, y: 0.64, threshold: 0.8 }),
+    ];
+
+    const pairNodes = [
       new PressureNode({ id: "H0", label: "pair 00", role: "hidden", x: 0.38, y: 0.26, threshold: 1, decay: 0.5 }),
       new PressureNode({ id: "H1", label: "pair 01", role: "hidden", x: 0.38, y: 0.44, threshold: 1, decay: 0.5 }),
       new PressureNode({ id: "H2", label: "pair 10", role: "hidden", x: 0.38, y: 0.62, threshold: 1, decay: 0.5 }),
       new PressureNode({ id: "H3", label: "pair 11", role: "hidden", x: 0.38, y: 0.80, threshold: 1, decay: 0.5 }),
-      new PressureNode({ id: "OUT0", label: "output 0", role: "output", x: 0.88, y: 0.38, threshold: 0.8 }),
-      new PressureNode({ id: "OUT1", label: "output 1", role: "output", x: 0.88, y: 0.64, threshold: 0.8 }),
     ];
+    if (this.topology === "shaped") this.nodes.splice(8, 0, ...pairNodes);
 
     const originLinks = [
       ["A0", "ORIGIN_A"], ["A1", "ORIGIN_A"],
@@ -212,7 +228,7 @@ export class PressureNetwork {
       ["A1", "VALUE_1"], ["B1", "VALUE_1"], ["OUT1", "VALUE_1"],
     ];
 
-    const sourceLinks = [
+    const pairSourceLinks = [
       ["A0", "H0"], ["B0", "H0"],
       ["A0", "H1"], ["B1", "H1"],
       ["A1", "H2"], ["B0", "H2"],
@@ -224,12 +240,25 @@ export class PressureNetwork {
       ["H2", "OUT0"], ["H2", "OUT1"], ["H3", "OUT0"], ["H3", "OUT1"],
     ];
 
+    const directOperationLinks = [
+      ["A0", "OUT0"], ["A0", "OUT1"],
+      ["A1", "OUT0"], ["A1", "OUT1"],
+      ["B0", "OUT0"], ["B0", "OUT1"],
+      ["B1", "OUT0"], ["B1", "OUT1"],
+    ];
+
+    const operationLinks = this.topology === "shaped"
+      ? [
+        ...pairSourceLinks.map(([from, to]) => ({ from, to, region: "operation" })),
+        ...reversibleLinks.map(([from, to]) => ({ from, to, region: "operation" })),
+        ...reversibleLinks.map(([from, to]) => ({ from: to, to: from, region: "operation", trainingOnly: true })),
+      ]
+      : directOperationLinks.map(([from, to]) => ({ from, to, region: "operation" }));
+
     const links = [
       ...originLinks.map(([from, to]) => ({ from, to, region: "origin" })),
       ...valueLinks.map(([from, to]) => ({ from, to, region: "value" })),
-      ...sourceLinks.map(([from, to]) => ({ from, to, region: "operation" })),
-      ...reversibleLinks.map(([from, to]) => ({ from, to, region: "operation" })),
-      ...reversibleLinks.map(([from, to]) => ({ from: to, to: from, region: "operation", trainingOnly: true })),
+      ...operationLinks,
     ];
 
     this.valves = links.map(({ from, to, region = "operation", trainingOnly = false }) => {
@@ -424,6 +453,7 @@ export class PressureNetwork {
       results.push(this.testCase(this.caseFor(row.a, row.b)));
     }
     this.updateOperationPlasticityFromCycle(results);
+    this.observeRecruitmentFromCycle(results);
     return results;
   }
 
@@ -458,6 +488,7 @@ export class PressureNetwork {
     });
     const hybrid0 = outputScores.OUT0.peak + outputScores.OUT0.area * 0.12 + outputScores.OUT0.duration * 0.035;
     const hybrid1 = outputScores.OUT1.peak + outputScores.OUT1.area * 0.12 + outputScores.OUT1.duration * 0.035;
+    const peakMargin = Math.abs(outputScores.OUT1.peak - outputScores.OUT0.peak);
     const hybridPrediction = predictFromScores(hybrid0, hybrid1, {
       min: 0.16,
       margin: 0.1,
@@ -468,6 +499,7 @@ export class PressureNetwork {
       ...truthCase,
       out0: outputScores.OUT0.peak,
       out1: outputScores.OUT1.peak,
+      margin: peakMargin,
       outputScores,
       predictions: {
         peak: peakPrediction,
@@ -485,6 +517,103 @@ export class PressureNetwork {
     if (this.testHistory.length > ROLLING_WINDOW) this.testHistory.shift();
     this.testSteps += 1;
     return result;
+  }
+
+  observeRecruitmentFromCycle(results) {
+    if (!this.recruitment.enabled) return;
+
+    for (const result of results) {
+      this.updateRecruitmentSurvival(result);
+      if (!this.shouldRecruitFromResult(result)) continue;
+      const signature = `${result.a}${result.b}`;
+      const observation = this.recruitment.observations.get(signature) ?? {
+        signature,
+        count: 0,
+        inputIds: result.inputIds,
+        expectedOutputId: result.expectedOutputId,
+        pressure: 0,
+        lastMargin: 0,
+      };
+      observation.count += 1;
+      observation.expectedOutputId = result.expectedOutputId;
+      observation.pressure += result.out0 + result.out1;
+      observation.lastMargin = result.margin;
+      this.recruitment.observations.set(signature, observation);
+
+      if (
+        observation.count >= RECRUITMENT_OBSERVATION_THRESHOLD
+        && !this.recruitedNodeFor(signature)
+      ) {
+        this.recruitSeparator(observation);
+      }
+    }
+  }
+
+  updateRecruitmentSurvival(result) {
+    const node = this.recruitedNodeFor(`${result.a}${result.b}`);
+    if (!node) return;
+
+    const delta = result.correct && result.margin >= LOW_MARGIN_THRESHOLD ? 1 : -0.5;
+    node.recruitment.survival = clamp(node.recruitment.survival + delta, -3, 6);
+    if (node.recruitment.survival >= 3) node.recruitment.status = "stable";
+    if (node.recruitment.survival <= -2) node.recruitment.status = "fading";
+  }
+
+  shouldRecruitFromResult(result) {
+    return result.ambiguous || !result.correct || result.margin < LOW_MARGIN_THRESHOLD;
+  }
+
+  recruitedNodeFor(signature) {
+    return this.nodes.find((node) => node.recruitment?.signature === signature);
+  }
+
+  recruitSeparator(observation) {
+    const id = `R${this.recruitment.nextId}`;
+    this.recruitment.nextId += 1;
+    const node = new PressureNode({
+      id,
+      label: `sep ${observation.signature}`,
+      role: "hidden",
+      x: 0.42,
+      y: yForSignature(observation.signature),
+      threshold: 0.82,
+      decay: 0.52,
+      recruitment: {
+        kind: "separator",
+        signature: observation.signature,
+        status: "candidate",
+        evidence: observation.count,
+        survival: 0,
+        createdAt: this.time,
+      },
+    });
+
+    this.nodes.splice(Math.max(0, this.nodes.length - 2), 0, node);
+    for (const inputId of observation.inputIds) {
+      this.addValve({ from: inputId, to: id, resistance: 0.68, weight: 0.72 });
+    }
+    this.addValve({ from: id, to: "OUT0", resistance: 0.62, weight: 0.78 });
+    this.addValve({ from: id, to: "OUT1", resistance: 0.62, weight: 0.78 });
+    this.addValve({ from: observation.expectedOutputId, to: id, resistance: 0.72, weight: 0.58, trainingOnly: true });
+
+    const event = {
+      type: "separator",
+      nodeId: id,
+      signature: observation.signature,
+      evidence: observation.count,
+      expectedOutputId: observation.expectedOutputId,
+      createdAt: this.time,
+    };
+    this.recruitment.events.push(event);
+    this.lastRecruitment = event;
+  }
+
+  addValve({ from, to, region = "operation", trainingOnly = false, resistance = 0.5, weight = 1 }) {
+    const id = `${from}->${to}`;
+    if (this.getValve(id)) return this.getValve(id);
+    const valve = new InputValve({ id, from, to, region, trainingOnly, resistance, weight });
+    this.valves.push(valve);
+    return valve;
   }
 
   recordOutputScore(score, activation) {
@@ -682,6 +811,8 @@ export class PressureNetwork {
       valveStats,
       plasticity: this.operationRegion.plasticity,
       regions: this.regions,
+      topology: this.topology,
+      recruitment: this.recruitmentSummary(),
       scaffold: this.scaffoldSummary(),
       explanation: this.explainOperation(),
       lastCycleAccuracy: this.lastCycleAccuracy,
@@ -714,6 +845,27 @@ export class PressureNetwork {
 
   hasStableAccuracy() {
     return this.testHistory.length >= ROLLING_WINDOW && this.testHistory.every((result) => result.correct);
+  }
+
+  recruitmentSummary() {
+    const recruited = this.nodes.filter((node) => node.recruitment);
+    const latestEvent = this.recruitment.events[this.recruitment.events.length - 1] ?? null;
+    return {
+      enabled: this.recruitment.enabled,
+      nodeCount: recruited.length,
+      pending: Array.from(this.recruitment.observations.values())
+        .filter((observation) => !this.recruitedNodeFor(observation.signature))
+        .map((observation) => ({
+          signature: observation.signature,
+          count: observation.count,
+          lastMargin: observation.lastMargin,
+        })),
+      latest: latestEvent,
+      nodes: recruited.map((node) => ({
+        id: node.id,
+        ...node.recruitment,
+      })),
+    };
   }
 
   scaffoldSummary() {
@@ -755,6 +907,7 @@ export class PressureNetwork {
   }
 
   explainPairNode(nodeId) {
+    const node = this.getNode(nodeId);
     const sources = this.valves
       .filter((valve) => valve.to === nodeId && this.getNode(valve.from)?.role === "source")
       .map((valve) => valve.from);
@@ -770,8 +923,9 @@ export class PressureNetwork {
 
     return {
       id: nodeId,
-      kind: "pair",
+      kind: node?.recruitment?.kind ?? "pair",
       direction: "mixed",
+      recruitment: node?.recruitment ?? null,
       sources,
       structuralMeaning: structure,
       functionalRole: outputs,
@@ -811,9 +965,12 @@ export class PressureNetwork {
   }
 
   explainOperation() {
+    const hiddenIds = this.nodes
+      .filter((node) => node.role === "hidden")
+      .map((node) => node.id);
     const relations = this.readOperationRelations();
     return {
-      forward: ["H0", "H1", "H2", "H3"].map((id) => this.explainPairNode(id)),
+      forward: hiddenIds.map((id) => this.explainPairNode(id)),
       backward: ["OUT0", "OUT1"].map((id) => this.explainOutput(id)),
       relations,
     };
@@ -911,6 +1068,16 @@ function invariantsFromPaths(paths) {
 
 function valueSignature(values) {
   return values.map((value) => value.replace("VALUE_", "")).join("");
+}
+
+function yForSignature(signature) {
+  const positions = {
+    "00": 0.28,
+    "01": 0.44,
+    "10": 0.62,
+    "11": 0.78,
+  };
+  return positions[signature] ?? 0.52;
 }
 
 export function evaluateOperation(a, b, operation) {

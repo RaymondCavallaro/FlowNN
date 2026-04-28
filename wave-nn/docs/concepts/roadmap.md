@@ -2,6 +2,32 @@
 
 This branch keeps the `v0.0.2` object engine as the main development base. The math compression work is saved separately on `v0.0.3`.
 
+## Current Feature: Recruitment Under Unresolved Pressure
+
+The next main-line step is topology growth.
+
+Earlier work tested:
+
+```text
+given topology -> tune valves -> learn mapping
+```
+
+The current experiment tests:
+
+```text
+insufficient topology -> recruit nodes/concepts -> form topology
+```
+
+Recruitment should happen when the current network cannot settle cleanly:
+
+- persistent ambiguity;
+- low output margin;
+- repeated drift;
+- high unresolved pressure;
+- the same cases interfering across cycles.
+
+The first implementation keeps the bitwise operations as the measuring stick, but removes the fixed pair topology from the main mode. Repeated unresolved source signatures recruit weak separator candidates. A candidate survives only if later cycles improve settling.
+
 ## Next Feature: Step Reasoning Identity
 
 The next feature should let the system and the UI identify which kind of reasoning a step is expressing.
@@ -173,7 +199,7 @@ Implementation guidance:
 ## Later Ideas
 
 - Time integration from `2.txt`: keep Laplace-like transformation as an early layer, then let routed temporal behavior refine meaning.
-- Dynamic node recruiting when the current topology cannot separate a meaning cleanly.
+- Bridge-node and concept-node recruitment after separator recruitment is inspectable.
 - Separate operation regions for input translation, pair/concept formation, output assignment, and target seeking.
 - More intrinsic ambiguity and basin-depth metrics, reducing dependence on external accuracy.
 - A controlled reverse-flood experiment that does not activate every hidden node at once.

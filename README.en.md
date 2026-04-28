@@ -35,6 +35,8 @@ The current version is a plain browser app with:
 
 - visual pressure-network simulation
 - truth-table training for XOR, AND, OR, and NAND
+- main mode without a fixed pair layer
+- separator recruitment when repeated cases do not settle cleanly
 - origin/value meaning scaffold
 - relational reading of learned invariants
 - ecology controls for valves and thresholds
@@ -48,6 +50,7 @@ The goal is to keep a small lab where it is possible to observe:
 
 - signal identity as source structure and topology
 - local learning through co-activation and pressure
+- topology growth from unresolved pressure
 - continuous consolidation instead of binary freezing
 - meaning read from structural invariants
 

@@ -32,6 +32,8 @@ const controls = {
   accuracyMetric: document.querySelector("#accuracyMetric"),
   opMetric: document.querySelector("#opMetric"),
   modeMetric: document.querySelector("#modeMetric"),
+  topologyMetric: document.querySelector("#topologyMetric"),
+  recruitmentMetric: document.querySelector("#recruitmentMetric"),
   lastMetric: document.querySelector("#lastMetric"),
   inspector: document.querySelector("#inspector"),
 };
@@ -136,6 +138,8 @@ function updateMetrics(metrics) {
   controls.accuracyMetric.textContent = `${Math.round(metrics.rollingAccuracy * 100)}%`;
   controls.opMetric.textContent = metrics.operation.toUpperCase();
   controls.modeMetric.textContent = metrics.mode;
+  controls.topologyMetric.textContent = metrics.topology === "recruitable" ? "Grow" : "Fixed";
+  controls.recruitmentMetric.textContent = String(metrics.recruitment.nodeCount);
   controls.lastMetric.textContent = formatLast(metrics.lastResult);
 }
 
@@ -153,6 +157,7 @@ function renderInspector() {
       <p>${node.label}</p>
       <dl>
         <dt>Role</dt><dd>${node.role}</dd>
+        <dt>Recruitment</dt><dd>${formatRecruitment(node.recruitment)}</dd>
         <dt>Pressure</dt><dd>${node.pressure.toFixed(3)}</dd>
         <dt>Threshold</dt><dd>${node.threshold.toFixed(3)}</dd>
         <dt>Threshold state</dt><dd>${node.thresholdState.toFixed(3)}</dd>
@@ -212,6 +217,22 @@ function formatExplanation(explanation) {
       </dl>
     `;
   }
+  if (explanation.kind === "separator") {
+    const sources = explanation.sources.join(" + ");
+    const roles = explanation.functionalRole
+      .map((role) => `${role.id} (${role.strength.toFixed(2)})`)
+      .join("<br />");
+    return `
+      <h3>Recruitment</h3>
+      <p>${explanation.recruitment.signature}: ${sources}</p>
+      <dl>
+        <dt>Kind</dt><dd>${explanation.recruitment.kind}</dd>
+        <dt>Status</dt><dd>${explanation.recruitment.status}</dd>
+        <dt>Evidence</dt><dd>${explanation.recruitment.evidence}</dd>
+        <dt>Role</dt><dd>${roles}</dd>
+      </dl>
+    `;
+  }
   if (explanation.kind === "output") {
     const supporters = explanation.supporters
       .map((supporter) => `${supporter.id}: ${supporter.relation.origin}, ${supporter.relation.value} (${supporter.strength.toFixed(2)})`)
@@ -235,6 +256,11 @@ function formatWeighted(items) {
     .slice(0, 4)
     .map((item) => `${item.id} ${item.strength.toFixed(2)}`)
     .join(", ");
+}
+
+function formatRecruitment(recruitment) {
+  if (!recruitment) return "none";
+  return `${recruitment.kind} ${recruitment.signature}`;
 }
 
 function formatLast(result) {

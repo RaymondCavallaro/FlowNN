@@ -1,8 +1,8 @@
 # Topology
 
-The topology is deliberately constructed toward the current truth-table task.
+The main topology now starts without the fixed truth-table pair layer.
 
-That is a design choice. Before asking the network to recruit nodes dynamically, we want a stable minimal graph where the intended solution is reachable.
+The earlier shaped topology is still available as a reference mode, but the main experiment asks whether unresolved pressure can recruit the missing intermediate structure.
 
 ## Source Nodes
 
@@ -11,7 +11,27 @@ That is a design choice. Before asking the network to recruit nodes dynamically,
 - `B0`
 - `B1`
 
-## Pair Nodes
+## Recruitable Operation Layer
+
+In recruitable mode, operation flow starts with direct weak routes:
+
+```text
+A0/A1/B0/B1 -> OUT0/OUT1
+```
+
+This is intentionally under-structured for operations such as XOR. When repeated test cycles show ambiguity, low output margin, or wrong settling, the network records the active source pattern as an unresolved pressure signature.
+
+After repeated unresolved signatures, the network recruits a weak separator node:
+
+```text
+active sources -> recruited separator -> competing outputs
+```
+
+The candidate starts with high resistance and high plasticity. It survives by improving the case that recruited it.
+
+## Shaped Reference Mode
+
+The previous hand-shaped pair nodes remain useful as a baseline:
 
 - `H0`: receives `A0 + B0`
 - `H1`: receives `A0 + B1`
@@ -41,10 +61,10 @@ These meanings are trained in separate regions, then consolidated by lowering th
 - `OUT0`: operation result with value-0 meaning
 - `OUT1`: operation result with value-1 meaning
 
-Every pair node has a forward valve to each output. Each output also has reserved reverse training-only valves back to pair nodes, but those reverse valves are not conductive in the current shaped experiment.
+In shaped mode, every pair node has a forward valve to each output. Each output also has reserved reverse training-only valves back to pair nodes, but those reverse valves are not conductive in the current shaped experiment.
 
-## Deferred Idea
+## Recruitment Principle
 
-Dynamic node recruitment should come after this shaped network can demonstrate reliable learning. Otherwise topology discovery and learning dynamics become tangled too early.
+Complexity should be recruited by failure to resolve, not designed in advance.
 
-Another deferred idea is a translation operation: a constructed or learned layer can translate raw structural inputs into composed meanings such as `00`, `01`, `10`, and `11`. The current pair nodes are a manual version of that idea.
+The first implementation only recruits separator nodes. Later versions can add bridge nodes for missing route continuity and concept nodes for reusable basins across tasks.

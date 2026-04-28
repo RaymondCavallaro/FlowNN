@@ -35,6 +35,8 @@ A versao atual e um app de navegador simples com:
 
 - simulacao visual de uma rede de pressao
 - treino de tabelas-verdade para XOR, AND, OR e NAND
+- topologia inicial sem camada fixa de pares no modo principal
+- recrutamento de separadores quando casos repetidos nao assentam bem
 - scaffold de significado para origem e valor
 - leitura relacional de invariantes aprendidos
 - controles de ecologia para valvulas e limiares
@@ -48,6 +50,7 @@ O objetivo e manter um laboratorio pequeno onde seja possivel observar:
 
 - identidade de sinal como estrutura de origem e topologia
 - aprendizagem local por coativacao e pressao
+- crescimento de topologia a partir de pressao nao resolvida
 - consolidacao continua em vez de congelamento binario
 - leitura de significado a partir de invariantes estruturais
 

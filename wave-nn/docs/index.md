@@ -4,12 +4,12 @@ Pressure NN is an experiment in meaning-first routing.
 
 The current prototype asks a narrow question: can pressure, thresholds, local valve adaptation, and flood-style training learn a tiny truth-table task without explicit signal labels, path traces, or backprop-style route credit?
 
-The implementation is intentionally small. The network is shaped toward the desired solution first, so we can study the learning behavior before trying dynamic node recruitment.
+The implementation is intentionally small. The main topology now starts under-structured and recruits weak separator nodes when repeated bitwise cases cannot settle cleanly.
 
 ## Current Shape
 
 - Four source nodes: `A0`, `A1`, `B0`, `B1`.
-- Four pair nodes: `H0`, `H1`, `H2`, `H3`.
+- Recruitable hidden nodes created from repeated unresolved pressure signatures.
 - Two output nodes: `OUT0`, `OUT1`.
 - Forward valves for input-only testing.
 - Reserved reverse valves from outputs for later teacher-flood experiments.

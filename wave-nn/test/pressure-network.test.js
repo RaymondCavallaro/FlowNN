@@ -21,7 +21,7 @@ function testSignalHasNoTypeMeaning() {
 }
 
 function testThresholdActivation() {
-  const network = new PressureNetwork();
+  const network = new PressureNetwork({ topology: "shaped" });
   const node = network.getNode("H0");
   node.inject(node.threshold * 0.5);
   node.settle();
@@ -46,7 +46,7 @@ function testOutputFloodsSignal() {
 }
 
 function testPairTopologyIsStructural() {
-  const network = new PressureNetwork();
+  const network = new PressureNetwork({ topology: "shaped" });
   const sourceTargets = (sourceId) => network.valves
     .filter((valve) => valve.from === sourceId && valve.region === "operation" && !valve.trainingOnly)
     .map((valve) => valve.to)
@@ -59,7 +59,7 @@ function testPairTopologyIsStructural() {
 }
 
 function testReverseOutputValvesAreTrainingOnly() {
-  const network = new PressureNetwork();
+  const network = new PressureNetwork({ topology: "shaped" });
   const reverseOutputValves = network.valves.filter((valve) => {
     return valve.from.startsWith("OUT") && network.getNode(valve.to)?.role === "hidden";
   });
@@ -161,7 +161,7 @@ function testScaffoldTrainingLocksPrimitiveRegions() {
 }
 
 function testMeaningExplanationUsesScaffold() {
-  const network = new PressureNetwork();
+  const network = new PressureNetwork({ topology: "shaped" });
   network.trainScaffold({ cycles: 2, lock: true });
 
   const explanation = network.explainPairNode("H1");
@@ -191,7 +191,7 @@ function testRelationReaderExtractsOperationMeanings() {
   };
 
   for (const [operation, expected] of Object.entries(cases)) {
-    const network = new PressureNetwork();
+    const network = new PressureNetwork({ topology: "shaped" });
     imprintOperation(network, operation);
     const relations = Object.fromEntries(
       network.readOperationRelations().map((relation) => [relation.targetSet[0], relation]),
@@ -217,7 +217,7 @@ function testFloodTrainingChangesValves() {
 }
 
 function imprintOperation(network, operation) {
-  network.reset(operation);
+  network.reset(operation, { topology: "shaped" });
   network.trainScaffold({ cycles: 2, lock: true });
   const pairByCase = {
     "0,0": "H0",
@@ -258,6 +258,48 @@ function testInputOnlyProducesResultShape() {
   }
 }
 
+function testRecruitableTopologyStartsWithoutFixedPairs() {
+  const network = new PressureNetwork();
+
+  assert.equal(network.topology, "recruitable");
+  assert.equal(network.getNode("H0"), undefined);
+  assert.deepEqual(
+    network.nodes.filter((node) => node.role === "hidden").map((node) => node.id),
+    [],
+  );
+  assert.ok(network.getValve("A0->OUT0"));
+  assert.ok(network.getValve("A0->OUT1"));
+}
+
+function testRecruitmentCreatesSeparatorForRepeatedAmbiguity() {
+  const network = new PressureNetwork();
+  const ambiguous = {
+    a: 0,
+    b: 1,
+    inputIds: ["A0", "B1"],
+    expected: 1,
+    expectedOutputId: "OUT1",
+    out0: 0.2,
+    out1: 0.22,
+    margin: 0.02,
+    correct: false,
+    ambiguous: true,
+  };
+
+  network.observeRecruitmentFromCycle([ambiguous]);
+  assert.equal(network.metrics().recruitment.nodeCount, 0);
+
+  network.observeRecruitmentFromCycle([ambiguous]);
+  const recruited = network.nodes.find((node) => node.recruitment?.signature === "01");
+
+  assert.ok(recruited);
+  assert.equal(recruited.recruitment.kind, "separator");
+  assert.ok(network.getValve("A0->R0"));
+  assert.ok(network.getValve("B1->R0"));
+  assert.ok(network.getValve("R0->OUT0"));
+  assert.ok(network.getValve("R0->OUT1"));
+}
+
 testTruthTable();
 testSignalHasNoTypeMeaning();
 testThresholdActivation();
@@ -275,5 +317,7 @@ testMeaningExplanationUsesScaffold();
 testRelationReaderExtractsOperationMeanings();
 testFloodTrainingChangesValves();
 testInputOnlyProducesResultShape();
+testRecruitableTopologyStartsWithoutFixedPairs();
+testRecruitmentCreatesSeparatorForRepeatedAmbiguity();
 
 console.log("pressure-network tests passed");

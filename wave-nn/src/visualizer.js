@@ -201,6 +201,7 @@ function nodeFill(node, active) {
   if (node.role === "source") return active > 0.02 ? "#d9fff5" : "#b9cad2";
   if (node.role === "meaning") return active > 0.02 ? "#dce9ff" : "#b8c1dc";
   if (node.role === "output") return active > 0.02 ? "#fff0b8" : "#d2bea1";
+  if (node.recruitment) return active > 0.02 ? "#f7dfc8" : "#cdb9a8";
   return active > 0.02 ? "#c8f7df" : "#b9cad2";
 }
 

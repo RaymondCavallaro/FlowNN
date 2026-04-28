@@ -13,6 +13,11 @@ The source file should stay mostly clean. This document carries the explanatory 
 - `InputValve`: directed pressure connection.
 - `PressureNetwork`: graph construction, training, testing, and metrics.
 
+`PressureNetwork` supports two topology modes:
+
+- `recruitable`: the main mode; starts without fixed pair nodes and recruits separator nodes from repeated unresolved pressure;
+- `shaped`: reference mode with the earlier `H0`-`H3` pair topology.
+
 Valves now belong to a region:
 
 - `origin`: source-to-origin scaffold meanings;
@@ -108,12 +113,29 @@ It also records alternative output scores:
 
 The default prediction still uses peak while the other modes are diagnostic.
 
+## Recruitment
+
+In recruitable mode, `testCycle` also feeds results into the recruitment monitor.
+
+A result is unresolved when it is ambiguous, incorrect, or has a low output margin. The monitor groups repeated unresolved results by source signature such as `00`, `01`, `10`, or `11`.
+
+When a signature persists, the network recruits a weak separator node:
+
+```text
+active sources -> separator candidate -> OUT0/OUT1
+```
+
+The candidate is not a symbolic label. It is a pressure structure attached where unresolved co-pressure kept appearing. Later test cycles update its survival state:
+
+- stable when it improves margin and correctness;
+- fading when it continues to fail.
+
 ## Explanation
 
 `explainNode` exposes forward and backward signatures:
 
 - source nodes report which scaffold meanings they support;
-- pair nodes report source structure, origin/value composition, and output role;
+- hidden nodes report source structure, origin/value composition, output role, and recruitment state when present;
 - output nodes report value meaning and hidden-node supporters.
 
 This is observational. It reads learned structure after training instead of adding labels to signals or giving route-level credit.
@@ -128,4 +150,4 @@ Examples of extracted invariants are `mixed-value`, `same-value`, `all-value-1`,
 
 ## Important Constraint
 
-Reverse output valves are marked `trainingOnly`. In the current shaped pair-node experiment they are reserved but not conductive. Output flood participates by activating the desired output node; learning then happens locally where active pair pressure reaches that active output.
+Reverse output valves are marked `trainingOnly`. In the shaped pair-node experiment they are reserved but not conductive. Output flood participates by activating the desired output node; learning then happens locally where active hidden pressure reaches that active output.
