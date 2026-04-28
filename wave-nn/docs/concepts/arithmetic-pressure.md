@@ -96,3 +96,39 @@ This extends meaning-first pressure routing toward numeric operations without ab
 - learned relations can later explain what transformation occurred.
 
 The first implementation can use explicit converters and gates. A later experiment can ask whether the same network can learn or emulate those converters and gates internally.
+
+## Function Intuitions
+
+The next math direction is to feed a function with an increasing pressure window and observe how output pressure varies.
+
+Integral first intuition:
+
+```text
+increasing pressure window -> function output pressure samples -> accumulated pressure area
+```
+
+So integration can begin as gathered proportional pressure over a sweep:
+
+```text
+integral ~= sum(function_pressure(x) * window_step)
+```
+
+Derivative first intuition:
+
+```text
+nearby pressure samples -> output pressure change -> local growth relation
+```
+
+So derivation can begin as proportional growth:
+
+```text
+derivative ~= change_in_output_pressure / change_in_input_pressure
+```
+
+Multiplication helps here because it gives a pressure-native way to represent proportionality:
+
+```text
+growth proportionality = input pressure routed through a scaling relation
+```
+
+This can become the basis for reading growth, slope, acceleration, and rate-like meanings later.
