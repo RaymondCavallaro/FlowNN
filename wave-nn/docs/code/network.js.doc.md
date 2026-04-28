@@ -13,14 +13,20 @@ The source file should stay mostly clean. This document carries the explanatory 
 - `InputValve`: directed pressure connection.
 - `PressureNetwork`: graph construction, training, testing, and metrics.
 
+Valves now belong to a region:
+
+- `origin`: source-to-origin scaffold meanings;
+- `value`: source/output-to-value scaffold meanings;
+- `operation`: source-to-pair and pair-to-output operation flow.
+
 ## Runtime Loop
 
 Each step:
 
 1. cools valve activity;
 2. applies global ecology drift when training is active;
-3. computes total outgoing conductance per source node;
-4. sends source activation through outgoing valves;
+3. computes total outgoing conductance per source node for the active regions;
+4. sends source activation through active-region valves;
 5. applies local valve learning if training is active;
 6. settles every node.
 
@@ -32,27 +38,42 @@ Valves keep an internal `aperture` value. `openness` is derived with a sigmoid c
 
 This makes plasticity naturally asymptotic: changes near the extremes have less visible effect, and valves do not intentionally become absolutely open or closed.
 
-## Operation Region Plasticity
+## Regional Plasticity
 
-The network tracks `operationRegion.plasticity`.
+The network tracks region plasticity values.
 
-Plasticity is a continuous regional value, not a binary frozen/unfrozen state. It multiplies valve updates across the current operation area:
+Plasticity is continuous, not a binary frozen/unfrozen state. It multiplies valve updates inside a region:
 
-- lower plasticity means the operation area is consolidated and harder to disturb;
-- higher plasticity means the operation area remains easier to reshape;
-- plasticity slowly relaxes toward `1`.
+- lower plasticity means the region is consolidated and harder to disturb;
+- higher plasticity means the region remains easier to reshape;
+- unlocked regions slowly relax toward `1`.
 
-Plasticity is updated by `updateOperationPlasticityFromCycle`, which receives a full input-only truth-table test cycle. Local valve events do not directly change regional plasticity.
+The current regions are `origin`, `value`, and `operation`.
+
+`trainScaffold` trains the primitive origin/value meanings and then lowers plasticity for those scaffold regions. Operation training can then learn truth-table behavior while the primitive meanings remain relatively stable.
+
+Operation plasticity is updated by `updateOperationPlasticityFromCycle`, which receives a full input-only truth-table test cycle. Local valve events do not directly change operation plasticity.
 
 When cycle accuracy improves or remains perfect, regional plasticity drops. When cycle accuracy falls, regional plasticity rises.
-
-The current prototype has one operation region covering the whole network. Later versions can split this into multiple regions.
 
 Adaptive nodes keep an internal `thresholdState`. The visible threshold is also derived through a bounded curve between a node-specific minimum and maximum.
 
 This lets threshold ecology move nodes toward sensitivity or selectivity without hard-clamping every small update.
 
 ## Training
+
+`trainScaffold` injects primitive meaning cases:
+
+```text
+A0 -> ORIGIN_A
+A1 -> ORIGIN_A
+B0 -> ORIGIN_B
+B1 -> ORIGIN_B
+A0/B0/OUT0 -> VALUE_0
+A1/B1/OUT1 -> VALUE_1
+```
+
+Those scaffold cases conduct only through their scaffold region.
 
 `trainCase` injects the row inputs and the desired output repeatedly.
 
@@ -86,6 +107,16 @@ It also records alternative output scores:
 - `hybrid`: peak plus small area and duration terms.
 
 The default prediction still uses peak while the other modes are diagnostic.
+
+## Explanation
+
+`explainNode` exposes forward and backward signatures:
+
+- source nodes report which scaffold meanings they support;
+- pair nodes report source structure, origin/value composition, and output role;
+- output nodes report value meaning and hidden-node supporters.
+
+This is observational. It reads learned structure after training instead of adding labels to signals or giving route-level credit.
 
 ## Important Constraint
 

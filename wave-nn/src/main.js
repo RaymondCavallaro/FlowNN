@@ -10,6 +10,7 @@ const controls = {
   autoIcon: document.querySelector("#autoIcon"),
   trainRowButton: document.querySelector("#trainRowButton"),
   trainCycleButton: document.querySelector("#trainCycleButton"),
+  trainScaffoldButton: document.querySelector("#trainScaffoldButton"),
   testCycleButton: document.querySelector("#testCycleButton"),
   resetButton: document.querySelector("#resetButton"),
   operationSelect: document.querySelector("#operationSelect"),
@@ -70,6 +71,12 @@ function trainCycle() {
   renderInspector();
 }
 
+function trainScaffold() {
+  network.trainScaffold({ learning: settings().learning, cycles: 4, lock: true });
+  state.metrics = network.metrics();
+  renderInspector();
+}
+
 function testCycle() {
   network.testCycle();
   state.metrics = network.metrics();
@@ -84,6 +91,7 @@ controls.autoToggle.addEventListener("click", () => {
 
 controls.trainRowButton.addEventListener("click", () => trainRow());
 controls.trainCycleButton.addEventListener("click", () => trainCycle());
+controls.trainScaffoldButton.addEventListener("click", () => trainScaffold());
 controls.testCycleButton.addEventListener("click", () => testCycle());
 
 controls.resetButton.addEventListener("click", () => {
@@ -119,7 +127,9 @@ function updateMetrics(metrics) {
   controls.pressureMetric.textContent = metrics.activePressure.toFixed(2);
   controls.changeMetric.textContent = metrics.valveChange.toFixed(2);
   controls.openMetric.textContent = metrics.valveStats.avg.toFixed(2);
-  controls.plasticMetric.textContent = metrics.plasticity.toFixed(2);
+  controls.plasticMetric.textContent = metrics.regions
+    .map((region) => `${region.id[0]}:${region.plasticity.toFixed(2)}`)
+    .join(" ");
   controls.thresholdMetric.textContent = metrics.thresholdStats.avg.toFixed(2);
   controls.cycleMetric.textContent = String(metrics.cycleCount);
   controls.rowMetric.textContent = `${metrics.truthIndex + 1}/${TRUTH_TABLE.length}`;
@@ -137,6 +147,7 @@ function renderInspector() {
 
   if (state.selection.kind === "node") {
     const node = network.getNode(state.selection.id);
+    const explanation = formatExplanation(network.explainNode(node.id));
     controls.inspector.innerHTML = `
       <h2>${node.id}</h2>
       <p>${node.label}</p>
@@ -149,6 +160,7 @@ function renderInspector() {
         <dt>Received</dt><dd>${node.received.toFixed(3)}</dd>
         <dt>Output</dt><dd>${node.role === "output" ? node.activation.toFixed(3) : "no"}</dd>
       </dl>
+      ${explanation}
     `;
     return;
   }
@@ -160,17 +172,65 @@ function renderInspector() {
     <dl>
       <dt>Source</dt><dd>${valve.from}</dd>
       <dt>Target</dt><dd>${valve.to}</dd>
+      <dt>Region</dt><dd>${valve.region}</dd>
       <dt>Training only</dt><dd>${valve.trainingOnly ? "yes" : "no"}</dd>
       <dt>Openness</dt><dd>${valve.openness.toFixed(3)}</dd>
       <dt>Resistance</dt><dd>${valve.resistance.toFixed(3)}</dd>
       <dt>Aperture</dt><dd>${valve.aperture.toFixed(3)}</dd>
-      <dt>Region plasticity</dt><dd>${network.metrics().plasticity.toFixed(3)}</dd>
+      <dt>Region plasticity</dt><dd>${network.regionPlasticity(valve.region).toFixed(3)}</dd>
       <dt>Weight</dt><dd>${valve.weight.toFixed(3)}</dd>
       <dt>Pressure</dt><dd>${valve.pressure.toFixed(3)}</dd>
       <dt>Activity</dt><dd>${valve.activity.toFixed(3)}</dd>
       <dt>Co-active</dt><dd>${valve.coactivity.toFixed(3)}</dd>
     </dl>
   `;
+}
+
+function formatExplanation(explanation) {
+  if (!explanation) return "";
+  if (explanation.meanings) {
+    return `<h3>Forward meaning</h3><p>${formatWeighted(explanation.meanings)}</p>`;
+  }
+  if (explanation.inputs) {
+    const sources = explanation.sources.join(" + ");
+    const meanings = explanation.structuralMeaning
+      .map((source) => `${source.id}: ${formatWeighted(source.meanings)}`)
+      .join("<br />");
+    const roles = explanation.functionalRole
+      .map((role) => `${role.id} (${role.valueMeaning?.id ?? "no value"} ${role.strength.toFixed(2)})`)
+      .join("<br />");
+    return `
+      <h3>Reasoning</h3>
+      <p>mixed: ${sources}</p>
+      <p>${explanation.relation.origin}, ${explanation.relation.value}</p>
+      <dl>
+        <dt>Structure</dt><dd>${meanings}</dd>
+        <dt>Role</dt><dd>${roles}</dd>
+      </dl>
+    `;
+  }
+  if (explanation.supporters) {
+    const supporters = explanation.supporters
+      .map((supporter) => `${supporter.id}: ${supporter.relation.origin}, ${supporter.relation.value} (${supporter.strength.toFixed(2)})`)
+      .join("<br />");
+    return `
+      <h3>Backward role</h3>
+      <p>${explanation.valueMeaning?.id ?? "no value meaning"}</p>
+      <dl>
+        <dt>Supported by</dt><dd>${supporters}</dd>
+      </dl>
+    `;
+  }
+  if (explanation.inputs) return `<h3>Meaning</h3><p>${formatWeighted(explanation.inputs)}</p>`;
+  return "";
+}
+
+function formatWeighted(items) {
+  if (!items?.length) return "none";
+  return items
+    .slice(0, 4)
+    .map((item) => `${item.id} ${item.strength.toFixed(2)}`)
+    .join(", ");
 }
 
 function formatLast(result) {

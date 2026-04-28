@@ -44,7 +44,7 @@ function testOutputFloodsSignal() {
 function testPairTopologyIsStructural() {
   const network = new PressureNetwork();
   const sourceTargets = (sourceId) => network.valves
-    .filter((valve) => valve.from === sourceId && !valve.trainingOnly)
+    .filter((valve) => valve.from === sourceId && valve.region === "operation" && !valve.trainingOnly)
     .map((valve) => valve.to)
     .sort();
 
@@ -132,6 +132,38 @@ function testTeacherDurationBalancesRareOutputs() {
   assert.ok(network.trainStepsFor(rareCase, 1) > network.trainStepsFor(commonCase, 1));
 }
 
+function testSemanticScaffoldTopology() {
+  const network = new PressureNetwork();
+
+  assert.ok(network.getNode("ORIGIN_A"));
+  assert.ok(network.getNode("ORIGIN_B"));
+  assert.ok(network.getNode("VALUE_0"));
+  assert.ok(network.getNode("VALUE_1"));
+  assert.equal(network.getValve("OUT0->VALUE_0").region, "value");
+  assert.equal(network.getValve("A0->ORIGIN_A").region, "origin");
+}
+
+function testScaffoldTrainingLocksPrimitiveRegions() {
+  const network = new PressureNetwork();
+  network.trainScaffold({ cycles: 2, lock: true });
+
+  assert.ok(network.regionPlasticity("origin") < network.regionPlasticity("operation"));
+  assert.ok(network.regionPlasticity("value") < network.regionPlasticity("operation"));
+  assert.ok(network.getRegion("origin").locked);
+  assert.ok(network.getValve("A0->ORIGIN_A").weight > 1);
+  assert.ok(network.getValve("OUT1->VALUE_1").weight > 1);
+}
+
+function testMeaningExplanationUsesScaffold() {
+  const network = new PressureNetwork();
+  network.trainScaffold({ cycles: 2, lock: true });
+
+  const explanation = network.explainPairNode("H1");
+  assert.equal(explanation.relation.origin, "cross-origin");
+  assert.equal(explanation.relation.value, "mixed-value");
+  assert.deepEqual(explanation.sources.sort(), ["A0", "B1"]);
+}
+
 function testFloodTrainingChangesValves() {
   const network = new PressureNetwork();
   const before = network.valves.map((valve) => valve.resistance);
@@ -168,6 +200,9 @@ testSeparateEcologyModes();
 testOperationRegionPlasticityConsolidates();
 testTeacherStrengthBalancesRareOutputs();
 testTeacherDurationBalancesRareOutputs();
+testSemanticScaffoldTopology();
+testScaffoldTrainingLocksPrimitiveRegions();
+testMeaningExplanationUsesScaffold();
 testFloodTrainingChangesValves();
 testInputOnlyProducesResultShape();
 

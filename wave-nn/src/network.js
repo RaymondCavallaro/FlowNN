@@ -15,6 +15,7 @@ const VALVE_ECOLOGY_RATE = 0.006;
 const THRESHOLD_ECOLOGY_RATE = 0.01;
 const MIN_REGION_PLASTICITY = 0.12;
 const MAX_REGION_PLASTICITY = 1.8;
+const LOCKED_REGION_PLASTICITY = 0.18;
 
 function sigmoid(value) {
   if (value > 40) return 1 - 1e-12;
@@ -93,10 +94,11 @@ export class PressureNode {
 }
 
 export class InputValve {
-  constructor({ id, from, to, resistance = 0.5, weight = 1, trainingOnly = false }) {
+  constructor({ id, from, to, resistance = 0.5, weight = 1, region = "operation", trainingOnly = false }) {
     this.id = id;
     this.from = from;
     this.to = to;
+    this.region = region;
     this.trainingOnly = trainingOnly;
     this.aperture = logit(1 - resistance);
     this.weight = weight;
@@ -147,11 +149,13 @@ export class PressureNetwork {
     this.cycleCount = 0;
     this.trainSteps = 0;
     this.testSteps = 0;
+    this.scaffoldTrainSteps = 0;
     this.lastMode = "idle";
     this.lastCase = null;
     this.lastResult = null;
     this.testHistory = [];
-    this.operationRegion = { id: "operation", label: "operation", plasticity: 1 };
+    this.regions = [];
+    this.operationRegion = null;
     this.lastCycleAccuracy = null;
     this.perfectCycleStreak = 0;
     this.lastCycleSummary = null;
@@ -165,11 +169,17 @@ export class PressureNetwork {
     this.cycleCount = 0;
     this.trainSteps = 0;
     this.testSteps = 0;
+    this.scaffoldTrainSteps = 0;
     this.lastMode = "idle";
     this.lastCase = null;
     this.lastResult = null;
     this.testHistory = [];
-    this.operationRegion = { id: "operation", label: "operation", plasticity: 1 };
+    this.regions = [
+      { id: "origin", label: "origin", plasticity: 1, locked: false },
+      { id: "value", label: "value", plasticity: 1, locked: false },
+      { id: "operation", label: "operation", plasticity: 1, locked: false },
+    ];
+    this.operationRegion = this.getRegion("operation");
     this.lastCycleAccuracy = null;
     this.perfectCycleStreak = 0;
     this.lastCycleSummary = null;
@@ -180,12 +190,26 @@ export class PressureNetwork {
       new PressureNode({ id: "A1", label: "A = 1", role: "source", x: 0.08, y: 0.40 }),
       new PressureNode({ id: "B0", label: "B = 0", role: "source", x: 0.08, y: 0.60 }),
       new PressureNode({ id: "B1", label: "B = 1", role: "source", x: 0.08, y: 0.78 }),
-      new PressureNode({ id: "H0", label: "pair 00", role: "hidden", x: 0.34, y: 0.20, threshold: 1, decay: 0.5 }),
-      new PressureNode({ id: "H1", label: "pair 01", role: "hidden", x: 0.34, y: 0.42, threshold: 1, decay: 0.5 }),
-      new PressureNode({ id: "H2", label: "pair 10", role: "hidden", x: 0.34, y: 0.64, threshold: 1, decay: 0.5 }),
-      new PressureNode({ id: "H3", label: "pair 11", role: "hidden", x: 0.34, y: 0.84, threshold: 1, decay: 0.5 }),
+      new PressureNode({ id: "ORIGIN_A", label: "origin A", role: "meaning", x: 0.26, y: 0.14, threshold: 0.75, decay: 0.58 }),
+      new PressureNode({ id: "ORIGIN_B", label: "origin B", role: "meaning", x: 0.26, y: 0.90, threshold: 0.75, decay: 0.58 }),
+      new PressureNode({ id: "VALUE_0", label: "value 0", role: "meaning", x: 0.55, y: 0.12, threshold: 0.75, decay: 0.58 }),
+      new PressureNode({ id: "VALUE_1", label: "value 1", role: "meaning", x: 0.55, y: 0.90, threshold: 0.75, decay: 0.58 }),
+      new PressureNode({ id: "H0", label: "pair 00", role: "hidden", x: 0.38, y: 0.26, threshold: 1, decay: 0.5 }),
+      new PressureNode({ id: "H1", label: "pair 01", role: "hidden", x: 0.38, y: 0.44, threshold: 1, decay: 0.5 }),
+      new PressureNode({ id: "H2", label: "pair 10", role: "hidden", x: 0.38, y: 0.62, threshold: 1, decay: 0.5 }),
+      new PressureNode({ id: "H3", label: "pair 11", role: "hidden", x: 0.38, y: 0.80, threshold: 1, decay: 0.5 }),
       new PressureNode({ id: "OUT0", label: "output 0", role: "output", x: 0.88, y: 0.38, threshold: 0.8 }),
       new PressureNode({ id: "OUT1", label: "output 1", role: "output", x: 0.88, y: 0.64, threshold: 0.8 }),
+    ];
+
+    const originLinks = [
+      ["A0", "ORIGIN_A"], ["A1", "ORIGIN_A"],
+      ["B0", "ORIGIN_B"], ["B1", "ORIGIN_B"],
+    ];
+
+    const valueLinks = [
+      ["A0", "VALUE_0"], ["B0", "VALUE_0"], ["OUT0", "VALUE_0"],
+      ["A1", "VALUE_1"], ["B1", "VALUE_1"], ["OUT1", "VALUE_1"],
     ];
 
     const sourceLinks = [
@@ -201,16 +225,19 @@ export class PressureNetwork {
     ];
 
     const links = [
-      ...sourceLinks.map(([from, to]) => ({ from, to })),
-      ...reversibleLinks.map(([from, to]) => ({ from, to })),
-      ...reversibleLinks.map(([from, to]) => ({ from: to, to: from, trainingOnly: true })),
+      ...originLinks.map(([from, to]) => ({ from, to, region: "origin" })),
+      ...valueLinks.map(([from, to]) => ({ from, to, region: "value" })),
+      ...sourceLinks.map(([from, to]) => ({ from, to, region: "operation" })),
+      ...reversibleLinks.map(([from, to]) => ({ from, to, region: "operation" })),
+      ...reversibleLinks.map(([from, to]) => ({ from: to, to: from, region: "operation", trainingOnly: true })),
     ];
 
-    this.valves = links.map(({ from, to, trainingOnly = false }) => {
+    this.valves = links.map(({ from, to, region = "operation", trainingOnly = false }) => {
       return new InputValve({
         id: `${from}->${to}`,
         from,
         to,
+        region,
         trainingOnly,
         resistance: 0.5,
         weight: 1,
@@ -224,6 +251,66 @@ export class PressureNetwork {
 
   getValve(id) {
     return this.valves.find((valve) => valve.id === id);
+  }
+
+  getRegion(id) {
+    return this.regions.find((region) => region.id === id);
+  }
+
+  regionPlasticity(id) {
+    return this.getRegion(id)?.plasticity ?? 1;
+  }
+
+  trainScaffold({ learning = 0.65, cycles = 1, lock = true } = {}) {
+    const scaffoldCases = [
+      { inputs: ["A0"], target: "ORIGIN_A" },
+      { inputs: ["A1"], target: "ORIGIN_A" },
+      { inputs: ["B0"], target: "ORIGIN_B" },
+      { inputs: ["B1"], target: "ORIGIN_B" },
+      { inputs: ["A0"], target: "VALUE_0" },
+      { inputs: ["B0"], target: "VALUE_0" },
+      { inputs: ["OUT0"], target: "VALUE_0" },
+      { inputs: ["A1"], target: "VALUE_1" },
+      { inputs: ["B1"], target: "VALUE_1" },
+      { inputs: ["OUT1"], target: "VALUE_1" },
+    ];
+
+    this.lastMode = "scaffold";
+    for (let cycle = 0; cycle < cycles; cycle += 1) {
+      for (const scaffoldCase of scaffoldCases) {
+        this.trainScaffoldCase(scaffoldCase, { learning });
+      }
+    }
+
+    if (lock) this.lockScaffoldRegions();
+    return this.metrics();
+  }
+
+  trainScaffoldCase(scaffoldCase, { learning = 0.65 } = {}) {
+    this.clearRuntime();
+    this.lastMode = "scaffold";
+    this.lastCase = null;
+
+    for (let step = 0; step < Math.round(TRAIN_STEPS * 0.75); step += 1) {
+      for (const inputId of scaffoldCase.inputs) this.getNode(inputId).inject(1.1);
+      this.getNode(scaffoldCase.target).inject(1.25);
+      this.step({
+        learning: true,
+        learningRate: learning,
+        teacherNodeId: scaffoldCase.target,
+        activeRegions: [this.getNode(scaffoldCase.target).id.startsWith("ORIGIN_") ? "origin" : "value"],
+      });
+    }
+
+    this.scaffoldTrainSteps += 1;
+  }
+
+  lockScaffoldRegions() {
+    for (const id of ["origin", "value"]) {
+      const region = this.getRegion(id);
+      region.plasticity = LOCKED_REGION_PLASTICITY;
+      region.locked = true;
+    }
   }
 
   nextTruthCase() {
@@ -427,24 +514,30 @@ export class PressureNetwork {
     learning,
     learningRate = 0.65,
     teacherOutputId = null,
+    teacherNodeId = null,
     valveMode = "neutral",
     thresholdMode = "neutral",
+    activeRegions = ["operation"],
   } = {}) {
     this.time += 1;
 
     for (const valve of this.valves) valve.cool();
-    this.operationRegion.plasticity += (1 - this.operationRegion.plasticity) * 0.002;
+    for (const region of this.regions) {
+      if (!region.locked) region.plasticity += (1 - region.plasticity) * 0.002;
+    }
     if (learning) this.applyEcology({ valveMode, thresholdMode, learningRate });
 
     const conductanceBySource = new Map();
     for (const valve of this.valves) {
       if (valve.trainingOnly) continue;
+      if (!activeRegions.includes(valve.region)) continue;
       const conductance = valve.weight * valve.openness;
       conductanceBySource.set(valve.from, (conductanceBySource.get(valve.from) ?? 0) + conductance);
     }
 
     for (const valve of this.valves) {
       if (valve.trainingOnly) continue;
+      if (!activeRegions.includes(valve.region)) continue;
       const from = this.getNode(valve.from);
       const to = this.getNode(valve.to);
       const throughput = valve.conduct(from.activation, conductanceBySource.get(valve.from));
@@ -454,17 +547,17 @@ export class PressureNetwork {
       to.received += throughput;
       to.pulse = Math.max(to.pulse, throughput);
 
-      if (learning) this.learnValve(valve, from, to, throughput, learningRate, teacherOutputId);
+      if (learning) this.learnValve(valve, from, to, throughput, learningRate, teacherOutputId, teacherNodeId);
     }
 
     for (const node of this.nodes) node.settle();
   }
 
-  learnValve(valve, from, to, throughput, learningRate, teacherOutputId) {
-    const targetActive = this.isLearningTargetActive(valve, from, to, teacherOutputId);
+  learnValve(valve, from, to, throughput, learningRate, teacherOutputId, teacherNodeId) {
+    const targetActive = this.isLearningTargetActive(valve, from, to, teacherOutputId, teacherNodeId);
     const sourceActive = from.activation > 0.05;
     const coactive = sourceActive && targetActive;
-    const amount = throughput * (0.006 + learningRate * 0.02) * this.operationRegion.plasticity;
+    const amount = throughput * (0.006 + learningRate * 0.02) * this.regionPlasticity(valve.region);
 
     if (sourceActive && to.role === "output" && teacherOutputId && to.id !== teacherOutputId) {
       valve.weight = clamp(valve.weight - amount * 0.55, 0.15, 3.2);
@@ -532,7 +625,7 @@ export class PressureNetwork {
     const thresholdAmount = thresholdDirection * THRESHOLD_ECOLOGY_RATE * (0.35 + learningRate);
 
     if (valveAmount !== 0) {
-      for (const valve of this.valves) valve.adjustOpenness(valveAmount * this.operationRegion.plasticity);
+      for (const valve of this.valves) valve.adjustOpenness(valveAmount * this.regionPlasticity(valve.region));
     }
 
     if (thresholdAmount !== 0) {
@@ -540,7 +633,11 @@ export class PressureNetwork {
     }
   }
 
-  isLearningTargetActive(valve, from, to, teacherOutputId) {
+  isLearningTargetActive(valve, from, to, teacherOutputId, teacherNodeId = null) {
+    if (teacherNodeId) {
+      return to.id === teacherNodeId && to.activation > 0.05;
+    }
+
     if (to.role === "output") {
       return to.id === teacherOutputId && to.activation > 0.05;
     }
@@ -578,12 +675,15 @@ export class PressureNetwork {
       cycleCount: this.cycleCount,
       trainSteps: this.trainSteps,
       testSteps: this.testSteps,
+      scaffoldTrainSteps: this.scaffoldTrainSteps,
       truthIndex: this.truthIndex % TRUTH_TABLE.length,
       activePressure,
       valveChange,
       valveStats,
       plasticity: this.operationRegion.plasticity,
-      regions: [this.operationRegion],
+      regions: this.regions,
+      scaffold: this.scaffoldSummary(),
+      explanation: this.explainOperation(),
       lastCycleAccuracy: this.lastCycleAccuracy,
       perfectCycleStreak: this.perfectCycleStreak,
       lastCycleSummary: this.lastCycleSummary,
@@ -615,6 +715,121 @@ export class PressureNetwork {
   hasStableAccuracy() {
     return this.testHistory.length >= ROLLING_WINDOW && this.testHistory.every((result) => result.correct);
   }
+
+  scaffoldSummary() {
+    const origin = ["ORIGIN_A", "ORIGIN_B"].map((id) => this.describeMeaningNode(id));
+    const value = ["VALUE_0", "VALUE_1"].map((id) => this.describeMeaningNode(id));
+    return { origin, value };
+  }
+
+  describeMeaningNode(nodeId) {
+    const inputs = this.valves
+      .filter((valve) => valve.to === nodeId && !valve.trainingOnly)
+      .map((valve) => ({
+        id: valve.from,
+        strength: valve.weight * valve.openness,
+      }))
+      .sort((a, b) => b.strength - a.strength);
+    return { id: nodeId, inputs };
+  }
+
+  explainNode(nodeId) {
+    const node = this.getNode(nodeId);
+    if (!node) return null;
+    if (node.role === "source") return this.explainSource(nodeId);
+    if (node.role === "hidden") return this.explainPairNode(nodeId);
+    if (node.role === "output") return this.explainOutput(nodeId);
+    if (node.role === "meaning") return this.describeMeaningNode(nodeId);
+    return { id: nodeId };
+  }
+
+  explainSource(sourceId) {
+    const meanings = this.valves
+      .filter((valve) => valve.from === sourceId && this.getNode(valve.to)?.role === "meaning")
+      .map((valve) => ({
+        id: valve.to,
+        strength: valve.weight * valve.openness,
+      }))
+      .sort((a, b) => b.strength - a.strength);
+    return { id: sourceId, direction: "forward", meanings };
+  }
+
+  explainPairNode(nodeId) {
+    const sources = this.valves
+      .filter((valve) => valve.to === nodeId && this.getNode(valve.from)?.role === "source")
+      .map((valve) => valve.from);
+    const structure = sources.map((sourceId) => this.explainSource(sourceId));
+    const outputs = this.valves
+      .filter((valve) => valve.from === nodeId && this.getNode(valve.to)?.role === "output")
+      .map((valve) => ({
+        id: valve.to,
+        strength: valve.weight * valve.openness,
+        valueMeaning: this.strongestMeaningFor(valve.to),
+      }))
+      .sort((a, b) => b.strength - a.strength);
+
+    return {
+      id: nodeId,
+      direction: "mixed",
+      sources,
+      structuralMeaning: structure,
+      functionalRole: outputs,
+      relation: relationFromSources(structure),
+    };
+  }
+
+  explainOutput(outputId) {
+    const supporters = this.valves
+      .filter((valve) => valve.to === outputId && this.getNode(valve.from)?.role === "hidden")
+      .map((valve) => ({
+        id: valve.from,
+        strength: valve.weight * valve.openness,
+        relation: this.explainPairNode(valve.from).relation,
+      }))
+      .sort((a, b) => b.strength - a.strength);
+
+    return {
+      id: outputId,
+      direction: "backward",
+      valueMeaning: this.strongestMeaningFor(outputId),
+      supporters,
+    };
+  }
+
+  strongestMeaningFor(nodeId) {
+    const candidates = this.valves
+      .filter((valve) => valve.from === nodeId && this.getNode(valve.to)?.role === "meaning")
+      .map((valve) => ({
+        id: valve.to,
+        strength: valve.weight * valve.openness,
+      }))
+      .sort((a, b) => b.strength - a.strength);
+    return candidates[0] ?? null;
+  }
+
+  explainOperation() {
+    return {
+      forward: ["H0", "H1", "H2", "H3"].map((id) => this.explainPairNode(id)),
+      backward: ["OUT0", "OUT1"].map((id) => this.explainOutput(id)),
+    };
+  }
+}
+
+function relationFromSources(structuralMeaning) {
+  const origins = new Set();
+  const values = [];
+
+  for (const source of structuralMeaning) {
+    const bestOrigin = source.meanings.find((meaning) => meaning.id.startsWith("ORIGIN_"));
+    const bestValue = source.meanings.find((meaning) => meaning.id.startsWith("VALUE_"));
+    if (bestOrigin) origins.add(bestOrigin.id);
+    if (bestValue) values.push(bestValue.id);
+  }
+
+  return {
+    origin: origins.size > 1 ? "cross-origin" : "same-origin",
+    value: new Set(values).size > 1 ? "mixed-value" : "same-value",
+  };
 }
 
 export function evaluateOperation(a, b, operation) {

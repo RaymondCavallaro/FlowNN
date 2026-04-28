@@ -20,10 +20,26 @@ That is a design choice. Before asking the network to recruit nodes dynamically,
 
 The pair nodes are the first structural meaning layer.
 
+## Scaffold Meaning Nodes
+
+The scaffold layer gives the system primitive meanings it can later use to explain operation behavior.
+
+Origin meanings:
+
+- `ORIGIN_A`: trained from `A0` and `A1`
+- `ORIGIN_B`: trained from `B0` and `B1`
+
+Value meanings:
+
+- `VALUE_0`: trained from `A0`, `B0`, and `OUT0`
+- `VALUE_1`: trained from `A1`, `B1`, and `OUT1`
+
+These meanings are trained in separate regions, then consolidated by lowering their regional plasticity. Normal operation flow uses only the operation region, so scaffold valves do not steal pressure from pair nodes during truth-table training/testing.
+
 ## Output Nodes
 
-- `OUT0`
-- `OUT1`
+- `OUT0`: operation result with value-0 meaning
+- `OUT1`: operation result with value-1 meaning
 
 Every pair node has a forward valve to each output. Each output also has reserved reverse training-only valves back to pair nodes, but those reverse valves are not conductive in the current shaped experiment.
 

@@ -86,6 +86,30 @@ function explains what the concept does
 
 Forward reasoning should gather activation signatures from inputs toward outputs. Backward reasoning should gather role signatures from outputs or targets back toward candidate causes. The extracted meaning is a projection of learned structure, not an explicit label stored inside the signal.
 
+## Current Scaffold Experiment
+
+The first implementation trains primitive scaffold meanings before operation learning:
+
+```text
+A0/A1 -> ORIGIN_A
+B0/B1 -> ORIGIN_B
+A0/B0/OUT0 -> VALUE_0
+A1/B1/OUT1 -> VALUE_1
+```
+
+After scaffold training, origin and value regions are locked by lowering their plasticity. Operation training then learns truth-table behavior while the inspector tries to explain pair/output behavior through those prior meanings.
+
+This should let explanations emerge from known internal meanings:
+
+```text
+H1 = A0 + B1
+A0 -> ORIGIN_A + VALUE_0
+B1 -> ORIGIN_B + VALUE_1
+therefore H1 can be read as cross-origin + mixed-value
+```
+
+The scaffold is allowed to teach origin and value. It should not teach operation meanings such as `same`, `different`, `xor`, or `and`.
+
 ## Later Ideas
 
 - Time integration from `2.txt`: keep Laplace-like transformation as an early layer, then let routed temporal behavior refine meaning.

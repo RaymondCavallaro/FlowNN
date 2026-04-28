@@ -132,7 +132,9 @@ export class Visualizer {
       ctx.stroke();
       ctx.shadowBlur = 0;
 
-      if (node.role === "hidden" || node.role === "output") this.drawThresholdRing(ctx, point, node, radius);
+      if (node.role === "hidden" || node.role === "output" || node.role === "meaning") {
+        this.drawThresholdRing(ctx, point, node, radius);
+      }
 
       ctx.fillStyle = "#102126";
       ctx.font = `${12 * this.pixelRatio}px ui-sans-serif, system-ui, sans-serif`;
@@ -197,6 +199,7 @@ export class Visualizer {
 
 function nodeFill(node, active) {
   if (node.role === "source") return active > 0.02 ? "#d9fff5" : "#b9cad2";
+  if (node.role === "meaning") return active > 0.02 ? "#dce9ff" : "#b8c1dc";
   if (node.role === "output") return active > 0.02 ? "#fff0b8" : "#d2bea1";
   return active > 0.02 ? "#c8f7df" : "#b9cad2";
 }
