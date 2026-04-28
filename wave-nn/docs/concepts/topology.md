@@ -1,5 +1,7 @@
 # Topology
 
+[Portugues](../pt/concepts/topology.md)
+
 The main topology now starts without the fixed truth-table pair layer.
 
 The earlier shaped topology is still available as a reference mode, but the main experiment asks whether unresolved pressure can recruit the missing intermediate structure.

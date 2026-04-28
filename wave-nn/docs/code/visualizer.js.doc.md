@@ -1,5 +1,7 @@
 # visualizer.js
 
+[Portugues](../pt/code/visualizer.js.doc.md)
+
 `src/visualizer.js` draws the current network state to the canvas.
 
 The visualization is diagnostic rather than decorative.

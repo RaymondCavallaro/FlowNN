@@ -1,4 +1,4 @@
-site_name: Pressure NN
+site_name: FlowNN
 site_description: Meaning-first pressure network experiment notes.
 docs_dir: docs
 site_dir: site
@@ -8,7 +8,11 @@ theme:
 
 nav:
   - Home: index.md
+  - Features: features.md
+  - Tests: tests.md
+  - Manual Testing: manual-testing.md
   - Concepts:
+      - Core Convergence: concepts/core-convergence.md
       - Pressure Network: concepts/pressure-network.md
       - Learning Dynamics: concepts/learning-dynamics.md
       - Topology: concepts/topology.md
@@ -22,3 +26,23 @@ nav:
       - visualizer.js: code/visualizer.js.doc.md
   - Experiments:
       - Output Flooding: experiments/001-output-flooding.md
+  - Portugues:
+      - Inicio: pt/index.md
+      - Recursos: pt/features.md
+      - Testes: pt/tests.md
+      - Teste Manual: pt/manual-testing.md
+      - Conceitos:
+          - Convergencia do Nucleo: pt/concepts/core-convergence.md
+          - Rede de Pressao: pt/concepts/pressure-network.md
+          - Dinamica de Aprendizagem: pt/concepts/learning-dynamics.md
+          - Topologia: pt/concepts/topology.md
+          - Significado Relacional: pt/concepts/relational-meaning.md
+          - Paisagem de Informacao: pt/concepts/information-landscape.md
+          - Dinamica do Sistema: pt/concepts/system-dynamics.md
+          - Roadmap: pt/concepts/roadmap.md
+      - Codigo:
+          - network.js: pt/code/network.js.doc.md
+          - main.js: pt/code/main.js.doc.md
+          - visualizer.js: pt/code/visualizer.js.doc.md
+      - Experimentos:
+          - Flooding de Saida: pt/experiments/001-output-flooding.md

@@ -1,5 +1,7 @@
 # 001: Output Flooding
 
+[Portugues](../pt/experiments/001-output-flooding.md)
+
 ## Question
 
 Should outputs be passive sinks or active participants during training?

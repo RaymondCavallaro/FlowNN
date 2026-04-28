@@ -1,5 +1,7 @@
 # Pressure Network
 
+[Portugues](../pt/concepts/pressure-network.md)
+
 The pressure network treats meaning as structure rather than as a field carried by each signal.
 
 A signal carries only strength. The identity of a signal comes from where it enters the graph and what local structures it can activate.

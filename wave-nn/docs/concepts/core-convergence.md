@@ -1,0 +1,79 @@
+# Core Convergence
+
+[Portugues](../pt/concepts/core-convergence.md)
+
+FlowNN should not grow into a set of permanent feature modules.
+
+The branch and feature names are temporary study slices. They isolate one capacity at a time so the behavior can be inspected, tested, and simplified. The long-term target is a unified node substrate where timing, prediction, precision, probing, recruitment, and transfer are different capacities of the same pressure dynamics.
+
+```text
+temporary slice -> isolated experiment -> reusable dynamic -> unified node
+```
+
+## Main Principle
+
+The current `main` branch is the convergence line. Version branches are shelves for experiments and history, not a map of final architecture.
+
+That means:
+
+- `v0.0.1` can stay as the time-routing slice;
+- `v0.0.2` should not be treated as the permanent main architecture;
+- `v0.0.3` can keep consolidation or sparse-field work as a shelf;
+- `v0.0.4` can keep arithmetic work while arithmetic is not the main focus.
+
+Those labels can be reused or retired later. The docs should avoid making them sound like fixed subsystems.
+
+## Unified Node Sketch
+
+A mature node should have several local capacities, but they should still be one node dynamic:
+
+```text
+Node {
+  pressure
+  activation
+  expectation
+  observed_input
+  error
+  precision
+  memory_trace
+  routing_state
+  plasticity_state
+}
+```
+
+The intended loop is:
+
+```text
+predict
+-> compare with actual pressure
+-> compute local error
+-> weight error by precision
+-> update state, valves, or thresholds
+-> choose the next probe/action
+```
+
+This is not a license for hidden answer injection. Expected output pressure can be used for supervised experiments only when the route from source state to output state remains inspectable. Learning should still be explainable through local pressure, valve adaptation, recruitment, and perturbation response.
+
+## Capacity Slices
+
+The useful slices right now are:
+
+- topology recruitment from unresolved pressure;
+- expectation and local error;
+- precision and calibrated certainty;
+- landscape probing through perturbation;
+- transfer and reuse of stable relational structure;
+- temporal routing and time-material extraction.
+
+Each slice should answer a small question:
+
+```text
+What local dynamic makes this capacity appear?
+How can we inspect it?
+How can we test it without math magic?
+What part should converge back into the node substrate?
+```
+
+## Documentation Rule
+
+Docs should name branch-specific work as experiments, shelves, or development slices. Core docs should describe the converging dynamics, not the branch layout.

@@ -325,25 +325,133 @@ function testRecruitableTopologyFormsBitwiseOperations() {
   }
 }
 
-testTruthTable();
-testSignalHasNoTypeMeaning();
-testThresholdActivation();
-testOutputFloodsSignal();
-testPairTopologyIsStructural();
-testReverseOutputValvesAreTrainingOnly();
-testValveOpennessIsAsymptotic();
-testSeparateEcologyModes();
-testOperationRegionPlasticityConsolidates();
-testTeacherStrengthBalancesRareOutputs();
-testTeacherDurationBalancesRareOutputs();
-testSemanticScaffoldTopology();
-testScaffoldTrainingLocksPrimitiveRegions();
-testMeaningExplanationUsesScaffold();
-testRelationReaderExtractsOperationMeanings();
-testFloodTrainingChangesValves();
-testInputOnlyProducesResultShape();
-testRecruitableTopologyStartsWithoutFixedPairs();
-testRecruitmentCreatesSeparatorForRepeatedAmbiguity();
-testRecruitableTopologyFormsBitwiseOperations();
+const TEST_CASES = [
+  {
+    name: "truth table oracle matches supported operations",
+    kind: "feature",
+    covers: "truth-table operation definitions",
+    run: testTruthTable,
+  },
+  {
+    name: "signal carries strength only",
+    kind: "error",
+    covers: "no semantic type stored in Signal",
+    run: testSignalHasNoTypeMeaning,
+  },
+  {
+    name: "threshold gates node activation",
+    kind: "feature",
+    covers: "pressure threshold activation",
+    run: testThresholdActivation,
+  },
+  {
+    name: "outputs can flood pressure during training",
+    kind: "feature",
+    covers: "teacher output as active pressure source",
+    run: testOutputFloodsSignal,
+  },
+  {
+    name: "shaped pair topology is structural",
+    kind: "feature",
+    covers: "reference pair-node topology",
+    run: testPairTopologyIsStructural,
+  },
+  {
+    name: "reverse output valves are training-only",
+    kind: "error",
+    covers: "teacher routes do not leak into input-only testing",
+    run: testReverseOutputValvesAreTrainingOnly,
+  },
+  {
+    name: "valve openness stays bounded",
+    kind: "error",
+    covers: "asymptotic valve ecology",
+    run: testValveOpennessIsAsymptotic,
+  },
+  {
+    name: "valves and thresholds use separate ecology modes",
+    kind: "feature",
+    covers: "independent valve/threshold controls",
+    run: testSeparateEcologyModes,
+  },
+  {
+    name: "operation plasticity consolidates after stable cycles",
+    kind: "feature",
+    covers: "regional plasticity consolidation",
+    run: testOperationRegionPlasticityConsolidates,
+  },
+  {
+    name: "teacher strength balances rare outputs",
+    kind: "feature",
+    covers: "rarity-balanced teacher pressure",
+    run: testTeacherStrengthBalancesRareOutputs,
+  },
+  {
+    name: "teacher duration balances rare outputs",
+    kind: "feature",
+    covers: "rarity-balanced teacher duration",
+    run: testTeacherDurationBalancesRareOutputs,
+  },
+  {
+    name: "semantic scaffold topology exists",
+    kind: "feature",
+    covers: "origin/value primitive regions",
+    run: testSemanticScaffoldTopology,
+  },
+  {
+    name: "scaffold training locks primitive regions",
+    kind: "feature",
+    covers: "origin/value consolidation",
+    run: testScaffoldTrainingLocksPrimitiveRegions,
+  },
+  {
+    name: "meaning explanations use scaffold primitives",
+    kind: "feature",
+    covers: "pair-node explanation from primitive meanings",
+    run: testMeaningExplanationUsesScaffold,
+  },
+  {
+    name: "relation reader extracts operation meanings",
+    kind: "feature",
+    covers: "operation invariants from learned structure",
+    run: testRelationReaderExtractsOperationMeanings,
+  },
+  {
+    name: "flood training changes valves",
+    kind: "feature",
+    covers: "local co-activation learning",
+    run: testFloodTrainingChangesValves,
+  },
+  {
+    name: "input-only tests produce diagnostic result shape",
+    kind: "error",
+    covers: "test result schema and diagnostic scores",
+    run: testInputOnlyProducesResultShape,
+  },
+  {
+    name: "recruitable topology starts without fixed pairs",
+    kind: "feature",
+    covers: "under-structured main topology",
+    run: testRecruitableTopologyStartsWithoutFixedPairs,
+  },
+  {
+    name: "recruitment creates separators for repeated ambiguity",
+    kind: "feature",
+    covers: "separator recruitment from unresolved pressure",
+    run: testRecruitmentCreatesSeparatorForRepeatedAmbiguity,
+  },
+  {
+    name: "recruitable topology forms bitwise operations",
+    kind: "feature",
+    covers: "end-to-end XOR/AND/OR/NAND formation",
+    run: testRecruitableTopologyFormsBitwiseOperations,
+  },
+];
+
+for (const testCase of TEST_CASES) {
+  assert.ok(testCase.kind === "feature" || testCase.kind === "error");
+  assert.ok(testCase.covers);
+  testCase.run();
+}
 
 console.log("pressure-network tests passed");

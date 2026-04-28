@@ -1,5 +1,7 @@
 # main.js
 
+[Portugues](../pt/code/main.js.doc.md)
+
 `src/main.js` wires the pressure engine to the browser UI.
 
 It owns:

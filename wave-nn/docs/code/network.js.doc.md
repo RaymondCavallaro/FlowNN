@@ -1,5 +1,7 @@
 # network.js
 
+[Portugues](../pt/code/network.js.doc.md)
+
 `src/network.js` contains the pressure engine.
 
 The source file should stay mostly clean. This document carries the explanatory comments that would otherwise clutter the engine.

@@ -54,23 +54,25 @@ The goal is to keep a small lab where it is possible to observe:
 - continuous consolidation instead of binary freezing
 - meaning read from structural invariants
 
-Arithmetic experiments live separately on the `v0.0.4` branch.
+Arithmetic experiments are parked on the `v0.0.4` branch while `main` stays focused on core convergence.
 
 ## Project Structure
 
 - `wave-nn/index.html` is the browser entry point
 - `wave-nn/src/` contains simulation, visualizer, and styles
 - `wave-nn/test/` contains network model tests
-- `wave-nn/docs/` contains conceptual and implementation notes
+- `wave-nn/docs/` contains concepts, features, tests, and the manual testing guide
 - `.github/workflows/pages.yml` publishes the app to GitHub Pages
 
-## Branches
+## Branches And Slices
 
-- `main`: pressure-network demo and public project files
-- `v0.0.1`: time working line
-- `v0.0.2`: main pressure-network line
-- `v0.0.3`: consolidation and sparse field work
-- `v0.0.4`: arithmetic experiments
+- `main`: current pressure-network convergence line
+- `v0.0.1`: time and temporal-routing study slice
+- `v0.0.2`: historical checkpoint available for reuse or retirement
+- `v0.0.3`: consolidation and sparse-field shelf
+- `v0.0.4`: arithmetic experiment shelf
+
+These branches are experiment shelves, not permanent modules in the final architecture.
 
 ## Run Locally
 

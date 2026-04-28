@@ -1,4 +1,4 @@
-# Pressure NN
+# FlowNN
 
 A meaning-first pressure network experiment.
 
@@ -82,3 +82,5 @@ http://127.0.0.1:4173/
 ```bash
 npm test
 ```
+
+See `docs/features.md`, `docs/tests.md`, and `docs/manual-testing.md` for the explicit feature map, automated test map, and browser reproduction guide.

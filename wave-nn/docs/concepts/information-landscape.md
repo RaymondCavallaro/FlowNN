@@ -1,8 +1,10 @@
 # Information Landscape
 
-Information landscape is the observer-side map of uncertainty, fit, and transfer behavior.
+[Portugues](../pt/concepts/information-landscape.md)
 
-It should not be treated as a full loss landscape. The practical object is a proxy built from local network behavior:
+Information landscape is the observer-side map of possible beliefs, uncertainty, fit, and transfer behavior.
+
+It should not be treated as a full loss landscape or as a literal complete map of the system. The practical object is a proxy built from local network behavior:
 
 ```text
 state of belief
@@ -11,6 +13,8 @@ state of belief
 -> calibration / margin
 -> transfer under perturbation
 ```
+
+The purpose is to ask which interpretation the current network state supports, where it is uncertain, and what probe would reveal the most about the next useful structure.
 
 ## Core Framing
 
@@ -33,7 +37,16 @@ The active-inference direction is useful as an analogy and as a scoring pattern:
 free-energy proxy =
   prediction error
 + complexity / fragmentation
-- useful uncertainty reduction
++ uncertainty cost
+```
+
+Useful uncertainty reduction can be tracked as a separate benefit:
+
+```text
+probe_value =
+  uncertainty_before
+- uncertainty_after
+- probe_cost
 ```
 
 For this project, that can become:
@@ -49,7 +62,23 @@ F =
 
 This is not thermodynamic free energy. It is a compact score for deciding whether the network has a stable enough explanation or needs more probing/recruitment.
 
-## Good Certainty
+## Precision And Certainty
+
+Precision is not just confidence. It is the local weight given to a signal or error:
+
+```text
+precision = how much this node/route should trust this pressure or mismatch
+```
+
+Certainty should mean calibrated confidence that survives perturbation:
+
+```text
+certainty =
+  high margin
++ correct settling
++ low drift
++ stable response under perturbation
+```
 
 Low entropy alone is not enough.
 
@@ -57,15 +86,6 @@ Bad certainty:
 
 ```text
 high confidence + wrong output
-```
-
-Good certainty:
-
-```text
-high margin
-+ correct settling
-+ low drift
-+ survives perturbation
 ```
 
 The next version should use this distinction when deciding whether a recruited structure is stable.
@@ -78,6 +98,17 @@ Landscape probing means choosing the next test from the current uncertainty:
 uncertainty -> probe design -> new evidence -> belief update
 ```
 
+A concrete protocol:
+
+```text
+observe uncertainty
+-> choose probe
+-> perturb input, state, route, or schedule
+-> measure response
+-> classify regime
+-> update the map
+```
+
 In the bitwise lab, probes can be simple:
 
 - repeat the most ambiguous row;
@@ -85,6 +116,13 @@ In the bitwise lab, probes can be simple:
 - test rows in a different order;
 - withhold one row and see whether structure transfers;
 - compare direct routes against recruited routes.
+
+Useful regimes:
+
+- confused basin: low margin, high drift, no stable explanation;
+- memorization basin: correct known rows, weak transfer;
+- rule basin: stable behavior under row order changes and withheld tests;
+- overcompressed basin: high confidence that fails under perturbation.
 
 ## Grokking Connection
 
@@ -102,4 +140,14 @@ vs.
 reusable concept / relation basin
 ```
 
-This belongs in evaluation and later transfer experiments. It should not pull modular arithmetic work back into `main`; arithmetic remains on `v0.0.4`.
+The useful vocabulary for later experiments is:
+
+```text
+memorization basin
+-> complexity pressure / noise / temperature
+-> slow drift
+-> phase transition
+-> rule basin
+```
+
+This belongs in evaluation and later transfer experiments. It should not pull modular arithmetic work back into `main`; arithmetic can stay parked on its own branch while the convergence line studies the general dynamic.

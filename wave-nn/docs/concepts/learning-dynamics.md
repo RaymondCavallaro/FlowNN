@@ -1,5 +1,7 @@
 # Learning Dynamics
 
+[Portugues](../pt/concepts/learning-dynamics.md)
+
 Training uses flooding. For a truth-table row, the input sources and the desired output are injected together.
 
 For XOR row `A0 + B1 -> OUT1`, training injects:

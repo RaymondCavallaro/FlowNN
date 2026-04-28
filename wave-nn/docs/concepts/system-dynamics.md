@@ -1,8 +1,10 @@
 # System Dynamics
 
+[Portugues](../pt/concepts/system-dynamics.md)
+
 This project should avoid implementing brain-like properties as isolated modules.
 
-The useful direction is to define dynamics that make those properties appear naturally:
+The useful direction is to define dynamics that make those properties appear naturally. See [Core Convergence](core-convergence.md) for the rule that temporary feature slices should converge back into one node substrate.
 
 ```text
 continuous state
@@ -55,6 +57,17 @@ continuous unresolved-state memory
 ```
 
 That means recruitment should be driven by traces that persist across cycles, decay when not reinforced, and compete with other traces.
+
+After that, the next local state to add is expectation/error:
+
+```text
+expected_pressure
+actual_pressure
+error = actual_pressure - expected_pressure
+precision = trust assigned to that error
+```
+
+The active-inference idea should enter as local node and route dynamics, not as a separate controller that knows the answer from outside the current pressure state.
 
 ## Later Translation
 

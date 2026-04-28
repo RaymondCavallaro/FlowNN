@@ -54,23 +54,25 @@ O objetivo e manter um laboratorio pequeno onde seja possivel observar:
 - consolidacao continua em vez de congelamento binario
 - leitura de significado a partir de invariantes estruturais
 
-Experimentos de aritmetica ficam separados no branch `v0.0.4`.
+Experimentos de aritmetica ficam estacionados no branch `v0.0.4` enquanto `main` continua focado na convergencia do nucleo.
 
 ## Estrutura do Projeto
 
 - `wave-nn/index.html` e a entrada da aplicacao no navegador
 - `wave-nn/src/` contem simulacao, visualizador e estilos
 - `wave-nn/test/` contem testes do modelo de rede
-- [`wave-nn/docs/`](https://raymondcavallaro.github.io/FlowNN/wave-nn/docs) contem notas conceituais e de implementacao
+- [`wave-nn/docs/`](https://raymondcavallaro.github.io/FlowNN/wave-nn/docs) contem notas conceituais, recursos, testes e guia manual
 - `.github/workflows/pages.yml` publica o app no GitHub Pages
 
-## Branches
+## Branches e fatias
 
-- `main`: demo da rede de pressao e arquivos publicos do projeto
-- `v0.0.1`: linha de trabalho sobre tempo
-- `v0.0.2`: linha principal da rede de pressao
-- `v0.0.3`: consolidacao e trabalho de campo esparso
-- `v0.0.4`: experimentos de aritmetica
+- `main`: linha atual de convergencia da rede de pressao
+- `v0.0.1`: fatia de estudo sobre tempo e roteamento temporal
+- `v0.0.2`: checkpoint historico disponivel para reuso ou aposentadoria
+- `v0.0.3`: prateleira de consolidacao e campo esparso
+- `v0.0.4`: prateleira de experimentos de aritmetica
+
+Esses branches sao prateleiras de experimento, nao modulos permanentes da arquitetura final.
 
 ## Rodar localmente
 

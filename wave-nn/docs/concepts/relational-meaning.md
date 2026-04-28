@@ -1,5 +1,7 @@
 # Relational Meaning
 
+[Portugues](../pt/concepts/relational-meaning.md)
+
 The current scaffold work lets the system explain nodes through known primitive meanings. The next step is to make meaning relational.
 
 ## Core Definition

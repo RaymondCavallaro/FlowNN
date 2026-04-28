@@ -1,6 +1,26 @@
 # Roadmap
 
-This branch keeps the `v0.0.2` object engine as the main development base. The math compression work is saved separately on `v0.0.3`.
+[Portugues](../pt/concepts/roadmap.md)
+
+The current `main` branch is the convergence line for the pressure-network experiment.
+
+Version branches are experimental shelves and historical checkpoints, not permanent modules in the architecture. The docs should describe the converging node dynamics first, and only mention branches when a piece of work is parked outside `main`.
+
+See [Core Convergence](core-convergence.md) for the naming rule.
+
+## Current Direction
+
+The immediate direction is:
+
+```text
+recruitment under unresolved pressure
+-> expectation/error state
+-> precision/certainty metrics
+-> perturbation-based landscape probing
+-> transfer/reuse of stable relational structure
+```
+
+Arithmetic remains useful as a test domain, but arithmetic-specific work should stay separate until the general dynamics are clearer.
 
 ## Current Feature: Recruitment Under Unresolved Pressure
 
@@ -36,7 +56,7 @@ The newer source notes split into different lanes:
 - brain-like convergence requirements belong in [System Dynamics](system-dynamics.md);
 - active sensing / landscape probing is a next main-line feature after recruitment is stable;
 - knowledge transfer / reuse belongs after concept-node recruitment exists;
-- modular arithmetic and grokking-style arithmetic tests belong on `v0.0.4`, not `main`;
+- modular arithmetic and grokking-style arithmetic tests can stay parked outside `main`;
 - grokking as an evaluation idea belongs on `main` only as a generalization/memorization distinction.
 
 Immediate main-line use:
