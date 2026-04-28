@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { PressureNetwork, Signal, evaluateOperation } from "../src/network.js";
+import { PressureNetwork, PressureField, Signal, evaluateOperation } from "../src/network.js";
 
 function testTruthTable() {
   assert.equal(evaluateOperation(false, false, "xor"), false);
@@ -140,6 +140,22 @@ function testFloodTrainingChangesValves() {
   assert.ok(after.some((resistance, index) => Math.abs(resistance - before[index]) > 0.001));
 }
 
+function testFieldSolvesFlowAsVectors() {
+  const network = new PressureNetwork();
+  const source = network.getNode("A0");
+  source.activation = 1;
+
+  network.field.solveFlow();
+  const snapshot = network.field.matrixSnapshot();
+
+  assert.equal(network.field instanceof PressureField, true);
+  assert.equal(snapshot.throughput.length, network.valves.length);
+  assert.equal(snapshot.targetInput.length, network.nodes.length);
+  assert.ok(snapshot.targetInput[network.field.nodeIndex.get("H0")] > 0);
+  assert.ok(snapshot.targetInput[network.field.nodeIndex.get("H1")] > 0);
+  assert.equal(snapshot.targetInput[network.field.nodeIndex.get("H2")], 0);
+}
+
 function testInputOnlyProducesResultShape() {
   const network = new PressureNetwork();
   for (let index = 0; index < 12; index += 1) network.trainCycle();
@@ -169,6 +185,7 @@ testOperationRegionPlasticityConsolidates();
 testTeacherStrengthBalancesRareOutputs();
 testTeacherDurationBalancesRareOutputs();
 testFloodTrainingChangesValves();
+testFieldSolvesFlowAsVectors();
 testInputOnlyProducesResultShape();
 
 console.log("pressure-network tests passed");

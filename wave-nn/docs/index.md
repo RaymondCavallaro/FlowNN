@@ -16,4 +16,4 @@ The implementation is intentionally small. The network is shaped toward the desi
 
 ## Reading Path
 
-Start with [Pressure Network](concepts/pressure-network.md), then [Topology](concepts/topology.md), then the implementation notes for [network.js](code/network.js.doc.md).
+Start with [Pressure Network](concepts/pressure-network.md), then [Field Math](concepts/field-math.md), then [Topology](concepts/topology.md), then the implementation notes for [network.js](code/network.js.doc.md).

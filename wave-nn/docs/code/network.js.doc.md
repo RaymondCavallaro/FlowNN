@@ -17,14 +17,35 @@ The source file should stay mostly clean. This document carries the explanatory 
 
 Each step:
 
-1. cools valve activity;
+1. asks `PressureField` to cool valve activity;
 2. applies global ecology drift when training is active;
-3. computes total outgoing conductance per source node;
-4. sends source activation through outgoing valves;
-5. applies local valve learning if training is active;
-6. settles every node.
+3. asks `PressureField` to solve the sparse flow vector;
+4. applies that flow vector to receiving node pressures;
+5. applies local valve learning from the same flow vector if training is active;
+6. asks `PressureField` to settle every node.
 
 Outgoing pressure is shared across open valves instead of copied into every valve. This keeps loops from amplifying energy without bound.
+
+## Field Layer
+
+`PressureField` is the math surface introduced in `v0.0.3`.
+
+It indexes nodes and valves, then stores the current tick as arrays:
+
+- source node index per valve;
+- target node index per valve;
+- outgoing conductance per source node;
+- throughput per valve;
+- summed target input per receiving node.
+
+The object graph remains the public and visual model. The field layer is the compressed computation model:
+
+```text
+flow[valve] = activation[source] * conductance[valve] / outgoing[source]
+target_input[target] = sum(flow[* -> target])
+```
+
+This is a sparse matrix operation in shape, even though the implementation keeps it as arrays for readability.
 
 ## Asymptotic State
 

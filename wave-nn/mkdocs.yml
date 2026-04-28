@@ -10,6 +10,7 @@ nav:
   - Home: index.md
   - Concepts:
       - Pressure Network: concepts/pressure-network.md
+      - Field Math: concepts/field-math.md
       - Learning Dynamics: concepts/learning-dynamics.md
       - Topology: concepts/topology.md
   - Code Notes:
