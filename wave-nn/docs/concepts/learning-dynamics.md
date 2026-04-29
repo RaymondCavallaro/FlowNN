@@ -12,7 +12,7 @@ A0 + B1 + OUT1
 
 The desired output is not a passive sink. During training it becomes active, so input pressure arriving at the output boundary can meet teacher pressure locally.
 
-Reverse output valves are currently reserved for later experiments, but they do not conduct in the shaped pair-node topology. Letting output pressure activate every candidate pair node made all concepts learn the same output.
+Reverse output valves are not part of the current topology. Letting output pressure activate every candidate pair node made all concepts learn the same output, so teacher pressure now stays local to the expected output unless a narrower future mechanism is justified.
 
 Teacher output strength is balanced by output rarity. Rare outputs receive stronger flood pressure using a gentle square-root balance plus a small distinctiveness boost. This makes `0` and `1` both positive output meanings instead of allowing frequent outputs to dominate purely by appearing more often.
 
@@ -62,4 +62,4 @@ Valve openness uses an asymptotic internal aperture curve. A valve can become ex
 
 ## Testing
 
-Testing injects only input sources. Reverse output valves are disabled. The prediction is whichever output reaches the stronger peak activation during the settle window.
+Testing injects only input sources. There are no output-to-hidden reverse valves in the current topology. The prediction is whichever output reaches the stronger peak activation during the settle window.
