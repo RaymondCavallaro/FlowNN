@@ -238,12 +238,16 @@ function formatExplanation(explanation) {
       .map((supporter) => `${supporter.id}: ${supporter.relation.origin}, ${supporter.relation.value} (${supporter.strength.toFixed(2)})`)
       .join("<br />");
     const invariants = explanation.relationReading.invariants.join(", ") || "none";
+    const generated = explanation.generativeCandidates
+      .map((candidate) => `${candidate.signature}: ${candidate.inputIds.join(" + ")}`)
+      .join("<br />") || "none";
     return `
       <h3>Backward role</h3>
       <p>${explanation.valueMeaning?.id ?? "no value meaning"}</p>
       <dl>
         <dt>Supported by</dt><dd>${supporters}</dd>
         <dt>Invariants</dt><dd>${invariants}</dd>
+        <dt>Generates</dt><dd>${generated}</dd>
       </dl>
     `;
   }

@@ -15,7 +15,8 @@ O arquivo de codigo deve ficar relativamente limpo. Esta pagina carrega a explic
 - registrar metricas;
 - observar pressao nao resolvida;
 - recrutar separadores exploratorios quando ha ambiguidade repetida;
-- produzir explicacoes para o inspector.
+- produzir explicacoes para o inspector;
+- gerar pares candidatos de fonte a partir de invariantes relacionais de saida.
 
 ## Regra Importante
 
@@ -28,3 +29,9 @@ O arquivo de codigo deve ficar relativamente limpo. Esta pagina carrega a explic
 ## Recrutamento
 
 Quando uma assinatura nao resolvida persiste, a rede cria um separador fraco. A estrategia atual conecta o separador de forma ampla dentro da area de operacao e exclui nos de scaffold/significado. Rotas de saida para o recrutado sao `trainingOnly`, para que teste somente com entradas nao comece injetando pressao de resposta para tras.
+
+## Geracao Relacional
+
+`generateForOutput` e o primeiro uso generativo restrito das relacoes. Ele le a relacao da saida alvo, enumera o espaco atual de pares de fonte, le cada par pelos significados de scaffold, e mantem candidatos que satisfazem todos os invariantes aprendidos.
+
+Isso ainda fica limitado ao laboratorio bitwise. A funcao testa se significado relacional pode rodar de volta, saindo de um papel alvo para estruturas de fonte possiveis.

@@ -10,6 +10,7 @@ Branches de versao sao prateleiras experimentais e checkpoints historicos, nao m
 
 ```text
 recrutamento sob pressao nao resolvida
+-> geracao relacional a partir de invariantes aprendidos
 -> estado de expectativa/erro
 -> metricas de precisao/certeza
 -> probing por perturbacao
@@ -44,3 +45,15 @@ topologia insuficiente -> recrutar nos/conceitos -> formar topologia
 ```
 
 Depois que isso estiver estavel e inspecionavel, o projeto pode avancar para identidade de raciocinio de passo, probing ativo, transferencia e tempo.
+
+## Uso Generativo Atual
+
+A primeira fatia generativa em `main` deve ficar pequena:
+
+```text
+saida alvo
+-> invariante relacional estavel
+-> pares candidatos de fonte
+```
+
+Ela serve para testar se uma relacao aprendida pode ser usada como gerador restrito. Nao deve virar um oraculo da operacao nem um gerador de tabela-verdade escrito a mao.

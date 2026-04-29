@@ -14,6 +14,7 @@ The immediate direction is:
 
 ```text
 recruitment under unresolved pressure
+-> relational generation from learned invariants
 -> expectation/error state
 -> precision/certainty metrics
 -> perturbation-based landscape probing
@@ -66,6 +67,16 @@ recruitment traces
 -> uncertainty / margin / drift metrics
 -> survival and pruning
 ```
+
+Current main-line generative use:
+
+```text
+target output
+-> stable relation invariant
+-> candidate source pairs
+```
+
+This should remain a small bridge from relation reading to generation. It should not become an operation oracle or a hand-authored truth-table generator.
 
 Next main-line use:
 

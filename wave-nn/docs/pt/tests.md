@@ -30,6 +30,7 @@ Cada teste e registrado com:
 | feature | scaffold training locks primitive regions | consolidacao de origem/valor |
 | feature | meaning explanations use scaffold primitives | explicacao por significados primitivos |
 | feature | relation reader extracts operation meanings | invariantes de operacao |
+| feature | relation reader generates source candidates | geracao de fontes candidatas a partir da saida alvo |
 | feature | flood training changes valves | aprendizagem local por coativacao |
 | error | input-only tests produce diagnostic result shape | schema de resultado e diagnosticos |
 | feature | recruitable topology starts without fixed pairs | topologia principal subestruturada |

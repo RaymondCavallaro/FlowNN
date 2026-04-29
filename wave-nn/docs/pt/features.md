@@ -19,6 +19,7 @@ Esta pagina nomeia explicitamente os recursos atuais do FlowNN. Um recurso so de
 | Teacher balanceado por raridade | Saidas raras podem receber teacher mais forte ou mais longo. | `teacher strength balances rare outputs`; `teacher duration balances rare outputs` |
 | Scaffold de origem/valor | Significados primitivos sao treinados separados das operacoes. | `semantic scaffold topology exists`; `scaffold training locks primitive regions` |
 | Explicacao de significado | O inspector le estrutura aprendida, scaffold e relacoes. | `meaning explanations use scaffold primitives`; `relation reader extracts operation meanings` |
+| Leitura relacional generativa | Uma relacao de saida pode gerar pares candidatos de fonte a partir dos invariantes aprendidos. | `relation reader generates source candidates` |
 | Aprendizagem local de valvulas | Flood altera resistencia e peso por coativacao. | `flood training changes valves` |
 | Diagnosticos de teste | Testes registram pico, area, duracao e predicao hibrida. | `input-only tests produce diagnostic result shape` |
 | Topologia recrutavel | O modo principal comeca sem pares fixos. | `recruitable topology starts without fixed pairs` |
@@ -28,6 +29,7 @@ Esta pagina nomeia explicitamente os recursos atuais do FlowNN. Um recurso so de
 ## Ainda Nao Sao Recursos Atuais
 
 - raciocinio aritmetico geral;
+- geracao aberta fora do laboratorio atual de pares de fonte;
 - transferencia sem topologia fixa em dominios grandes;
 - probing ativo como controle da demo;
 - estado unificado de expectativa/erro/precisao em cada no;

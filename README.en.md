@@ -39,6 +39,7 @@ The current version is a plain browser app with:
 - separator recruitment when repeated cases do not settle cleanly
 - origin/value meaning scaffold
 - relational reading of learned invariants
+- constrained source-pair generation from output relations
 - ecology controls for valves and thresholds
 - metrics for pressure, openness, plasticity, cycles, and accuracy
 

@@ -15,6 +15,7 @@ A implementacao e pequena de proposito. A topologia principal comeca subestrutur
 - Duas saidas: `OUT0`, `OUT1`.
 - Valvulas diretas para teste somente com entradas.
 - Valvulas reversas de saida reservadas para treino com teacher flood.
+- Leituras relacionais de saida que podem propor pares candidatos de fonte.
 
 ## Caminho De Leitura
 

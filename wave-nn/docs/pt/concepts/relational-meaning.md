@@ -30,6 +30,37 @@ Isso separa:
 - significado de relacao: mapeamento estavel entre conjuntos;
 - significado de caminho: como o mapeamento e realizado.
 
+## Primeiro Uso Generativo
+
+O proximo passo pequeno e usar a leitura relacional no sentido inverso:
+
+```text
+saida alvo
+-> invariante relacional aprendido
+-> conjuntos candidatos de fonte
+```
+
+No laboratorio bitwise atual, isso quer dizer que uma relacao de saida pode propor pares de fonte. Se `OUT1` tem o invariante:
+
+```text
+cross-origin + mixed-value -> VALUE_1
+```
+
+a leitura generativa pode propor:
+
+```text
+A0 + B1
+A1 + B0
+```
+
+Isso ainda nao e geracao aberta. E uma reconstrucao restrita: o sistema enumera o espaco atual de pares de fonte e mantem candidatos cuja relacao de scaffold satisfaz o invariante aprendido. A ponte que queremos tornar visivel e:
+
+```text
+relacao como explicacao -> relacao como gerador
+```
+
+Depois, o trabalho generativo deve depender menos de enumerar pares conhecidos e mais de nos conceituais recrutados, probing ativo e reuso por transferencia.
+
 ## Intuicao De Conjunto E Propriedade
 
 O experimento atual de recrutamento amplo mostra uma base que ainda falta: antes de escolher boas estrategias de recrutamento, o sistema precisa de uma intuicao primitiva de conjunto/propriedade.

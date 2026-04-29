@@ -39,6 +39,7 @@ A versao atual e um app de navegador simples com:
 - recrutamento de separadores quando casos repetidos nao assentam bem
 - scaffold de significado para origem e valor
 - leitura relacional de invariantes aprendidos
+- geracao restrita de pares de fonte a partir de relacoes de saida
 - controles de ecologia para valvulas e limiares
 - metricas de pressao, abertura, plasticidade, ciclos e acuracia
 

@@ -89,6 +89,37 @@ NAND OUT1:
 
 This is still a reader, not a new learning rule. It asks whether the learned routes can be explained through the scaffold meanings already inside the system.
 
+## First Generative Use
+
+The next small step is to use the relation reader backward:
+
+```text
+target output
+-> learned relation invariant
+-> candidate source sets
+```
+
+In the current bitwise lab, this means an output relation can propose source pairs. For example, if `OUT1` has the invariant:
+
+```text
+cross-origin + mixed-value -> VALUE_1
+```
+
+then the generative read can propose:
+
+```text
+A0 + B1
+A1 + B0
+```
+
+This is not open-ended generation yet. It is a constrained reconstruction step: the system enumerates the current source-pair space and keeps candidates whose scaffold relation satisfies the learned invariant. The purpose is to make the bridge visible:
+
+```text
+relation as explanation -> relation as generator
+```
+
+Later generative work should reduce dependence on enumerating known source pairs by letting recruited concept nodes, active probing, and transfer reuse propose candidates.
+
 ## Stability Rule
 
 Do not store every possible path as a relation.

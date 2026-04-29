@@ -19,6 +19,7 @@ This page names the current FlowNN features explicitly. A feature is considered 
 | Rarity-balanced teacher pressure | Rare expected outputs can receive stronger or longer teacher pressure. | `teacher strength balances rare outputs`; `teacher duration balances rare outputs` |
 | Origin/value scaffold | Primitive source/value meanings are trained separately from operation meanings. | `semantic scaffold topology exists`; `scaffold training locks primitive regions` |
 | Meaning explanation | Inspector explanations read structure from learned scaffold and relations. | `meaning explanations use scaffold primitives`; `relation reader extracts operation meanings` |
+| Generative relation reading | A target output relation can generate candidate source pairs from its learned invariants. | `relation reader generates source candidates` |
 | Local valve learning | Flood training changes valve resistance and weight through co-activation. | `flood training changes valves` |
 | Input-only diagnostics | Test cycles report peak, area, duration, and hybrid predictions. | `input-only tests produce diagnostic result shape` |
 | Recruitable topology | The main topology starts without fixed pair nodes. | `recruitable topology starts without fixed pairs` |
@@ -30,6 +31,7 @@ This page names the current FlowNN features explicitly. A feature is considered 
 These are roadmap directions, not finished claims:
 
 - general arithmetic reasoning;
+- open-ended generation beyond the current source-pair lab;
 - fixed topology-free transfer across large domains;
 - active landscape probing as a browser control;
 - unified expectation/error/precision state inside every node;

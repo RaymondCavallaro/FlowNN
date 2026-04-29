@@ -29,6 +29,8 @@ The main mode now starts without the fixed pair layer. Sources begin with weak d
 
 The earlier shaped pair topology is still available as a reference mode in tests.
 
+Output explanations can also use learned relational invariants as a constrained generator. Given a target output, the network reads the stable relation and proposes source pairs from the current bitwise source space that satisfy it.
+
 ## Training
 
 Flood training injects the selected truth-table input sources and the desired output node at the same time.

@@ -15,6 +15,7 @@ The implementation is intentionally small. The main topology now starts under-st
 - Two output nodes: `OUT0`, `OUT1`.
 - Forward valves for input-only testing.
 - Reserved reverse valves from outputs for later teacher-flood experiments.
+- Output relation reads that can propose constrained source-pair candidates.
 
 ## Reading Path
 

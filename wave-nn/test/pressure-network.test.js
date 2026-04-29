@@ -208,6 +208,40 @@ function testRelationReaderExtractsOperationMeanings() {
   }
 }
 
+function testRelationReaderGeneratesSourceCandidates() {
+  const cases = {
+    xor: {
+      OUT0: ["00", "11"],
+      OUT1: ["01", "10"],
+    },
+    and: {
+      OUT0: ["00", "01", "10"],
+      OUT1: ["11"],
+    },
+    or: {
+      OUT0: ["00"],
+      OUT1: ["01", "10", "11"],
+    },
+    nand: {
+      OUT0: ["11"],
+      OUT1: ["00", "01", "10"],
+    },
+  };
+
+  for (const [operation, expected] of Object.entries(cases)) {
+    const network = new PressureNetwork({ topology: "shaped" });
+    imprintOperation(network, operation);
+
+    for (const [outputId, signatures] of Object.entries(expected)) {
+      assert.deepEqual(
+        network.generateForOutput(outputId).map((candidate) => candidate.signature),
+        signatures,
+        `${operation} ${outputId} should generate ${signatures.join(", ")}`,
+      );
+    }
+  }
+}
+
 function testFloodTrainingChangesValves() {
   const network = new PressureNetwork();
   const before = network.valves.map((valve) => valve.resistance);
@@ -422,6 +456,12 @@ const TEST_CASES = [
     kind: "feature",
     covers: "operation invariants from learned structure",
     run: testRelationReaderExtractsOperationMeanings,
+  },
+  {
+    name: "relation reader generates source candidates",
+    kind: "feature",
+    covers: "target output to candidate source generation",
+    run: testRelationReaderGeneratesSourceCandidates,
   },
   {
     name: "flood training changes valves",

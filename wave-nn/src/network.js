@@ -988,6 +988,7 @@ export class PressureNetwork {
       valueMeaning: this.strongestMeaningFor(outputId),
       supporters,
       relationReading: this.readOutputRelation(outputId),
+      generativeCandidates: this.generateForOutput(outputId),
     };
   }
 
@@ -1046,6 +1047,45 @@ export class PressureNetwork {
       role: valueMeaning ? `produces ${valueMeaning.id}` : `produces ${outputId}`,
     };
   }
+
+  generateForOutput(outputId, { supportRatio = 0.72 } = {}) {
+    const relation = this.readOutputRelation(outputId, { supportRatio });
+    if (!relation.invariants.length) return [];
+
+    return sourcePairCandidates().map((candidate) => {
+      const structuralMeaning = candidate.inputIds.map((sourceId) => this.explainSource(sourceId));
+      const candidateRelation = relationFromSources(structuralMeaning);
+      const matchedInvariants = relation.invariants.filter((invariant) => {
+        return relationCandidateMatchesInvariant(candidateRelation, invariant);
+      });
+      return {
+        ...candidate,
+        relation: candidateRelation,
+        matchedInvariants,
+        confidence: matchedInvariants.length / relation.invariants.length,
+      };
+    }).filter((candidate) => candidate.confidence === 1)
+      .sort((a, b) => a.signature.localeCompare(b.signature));
+  }
+}
+
+function sourcePairCandidates() {
+  return TRUTH_TABLE.map((row) => ({
+    signature: `${row.a}${row.b}`,
+    inputIds: [`A${row.a}`, `B${row.b}`],
+  }));
+}
+
+function relationCandidateMatchesInvariant(relation, invariant) {
+  if (invariant === "cross-origin") return relation.origin === "cross-origin";
+  if (invariant === "same-origin") return relation.origin === "same-origin";
+  if (invariant === "mixed-value") return relation.value === "mixed-value";
+  if (invariant === "same-value") return relation.value === "same-value";
+  if (invariant === "all-value-0") return relation.signature === "00";
+  if (invariant === "all-value-1") return relation.signature === "11";
+  if (invariant === "at-least-one-value-1") return relation.signature.includes("1");
+  if (invariant === "not-all-value-1") return relation.signature !== "11";
+  return false;
 }
 
 function relationFromSources(structuralMeaning) {

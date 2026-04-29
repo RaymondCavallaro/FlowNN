@@ -152,6 +152,15 @@ This is observational. It reads learned structure after training instead of addi
 
 Examples of extracted invariants are `mixed-value`, `same-value`, `all-value-1`, `all-value-0`, `at-least-one-value-1`, and `not-all-value-1`.
 
+`generateForOutput` is the first constrained generative use of those relations. It:
+
+1. reads the target output relation;
+2. enumerates the current source-pair space;
+3. reads each candidate pair through the scaffold meanings;
+4. keeps candidates whose relation satisfies every learned invariant.
+
+This is still bounded to the current bitwise lab. It is meant to test whether relation meaning can run backward from target role to possible source structure.
+
 ## Important Constraint
 
 Reverse output valves are marked `trainingOnly`. In the shaped pair-node experiment they are reserved but not conductive. Output flood participates by activating the desired output node; learning then happens locally where active hidden pressure reaches that active output.
