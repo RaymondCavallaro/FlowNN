@@ -9,7 +9,10 @@ Branches de versao sao prateleiras experimentais e checkpoints historicos, nao m
 ## Direcao Atual
 
 ```text
-recrutamento sob pressao nao resolvida
+matematica de campo unificada para os mecanismos atuais
+-> testes de emergencia de papel / reconstrucao de scaffold
+-> calibracao de reguladores
+-> recrutamento sob pressao nao resolvida
 -> geracao relacional a partir de invariantes aprendidos
 -> eixos de meta-regulacao para controle de aprendizagem
 -> estado de expectativa/erro

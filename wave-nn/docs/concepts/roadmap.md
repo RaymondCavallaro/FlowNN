@@ -13,7 +13,10 @@ See [Core Convergence](core-convergence.md) for the naming rule.
 The immediate direction is:
 
 ```text
-recruitment under unresolved pressure
+unified field math for current mechanisms
+-> role emergence / scaffold reconstruction tests
+-> regulator calibration
+-> recruitment under unresolved pressure
 -> relational generation from learned invariants
 -> meta-regulation axes for learning control
 -> expectation/error state

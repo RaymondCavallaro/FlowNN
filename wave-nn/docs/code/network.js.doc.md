@@ -6,6 +6,8 @@
 
 The source file should stay mostly clean. This document carries the explanatory comments that would otherwise clutter the engine.
 
+For the current unified math target, see [Unified Field Math](../concepts/field-math.md). The short version is: `PressureNetwork` stays inspectable, while a future `PressureField` can compress the same dynamics into sparse indexed state.
+
 ## Public Model
 
 - `OPERATIONS`: supported truth-table operations.

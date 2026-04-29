@@ -14,6 +14,7 @@ nav:
   - Concepts:
       - Core Convergence: concepts/core-convergence.md
       - Pressure Network: concepts/pressure-network.md
+      - Unified Field Math: concepts/field-math.md
       - Learning Dynamics: concepts/learning-dynamics.md
       - Topology: concepts/topology.md
       - Relational Meaning: concepts/relational-meaning.md
@@ -36,6 +37,7 @@ nav:
       - Conceitos:
           - Convergencia do Nucleo: pt/concepts/core-convergence.md
           - Rede de Pressao: pt/concepts/pressure-network.md
+          - Matematica De Campo Unificada: pt/concepts/field-math.md
           - Dinamica de Aprendizagem: pt/concepts/learning-dynamics.md
           - Topologia: pt/concepts/topology.md
           - Significado Relacional: pt/concepts/relational-meaning.md

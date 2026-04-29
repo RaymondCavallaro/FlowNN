@@ -21,6 +21,6 @@ The implementation is intentionally small. The main topology now starts under-st
 
 ## Reading Path
 
-Start with [Core Convergence](concepts/core-convergence.md), then [Pressure Network](concepts/pressure-network.md), then [Topology](concepts/topology.md), then [Relational Meaning](concepts/relational-meaning.md), then [Information Landscape](concepts/information-landscape.md), then [Meta-Regulation](concepts/meta-regulation.md), then [System Dynamics](concepts/system-dynamics.md). Later-stage notes live in [Self, Values, And Curiosity](concepts/self-values-and-curiosity.md). Then read [Features](features.md), [Tests](tests.md), [Manual Testing](manual-testing.md), and the implementation notes for [network.js](code/network.js.doc.md).
+Start with [Core Convergence](concepts/core-convergence.md), then [Pressure Network](concepts/pressure-network.md), then [Unified Field Math](concepts/field-math.md), then [Topology](concepts/topology.md), then [Relational Meaning](concepts/relational-meaning.md), then [Information Landscape](concepts/information-landscape.md), then [Meta-Regulation](concepts/meta-regulation.md), then [System Dynamics](concepts/system-dynamics.md). Later-stage notes live in [Self, Values, And Curiosity](concepts/self-values-and-curiosity.md). Then read [Features](features.md), [Tests](tests.md), [Manual Testing](manual-testing.md), and the implementation notes for [network.js](code/network.js.doc.md).
 
 For upcoming work, see [Roadmap](concepts/roadmap.md).
