@@ -1,8 +1,8 @@
-# Self, Valores E Curiosidade
+# Self, valores e curiosidade
 
 [English](../../concepts/self-values-and-curiosity.md)
 
-Esta e uma nota conceitual para uma fase posterior. Ela nao deve virar modulo antes das camadas inferiores existirem.
+Esta é uma nota conceitual para uma fase posterior. Ela nao deve virar modulo antes das camadas inferiores existirem.
 
 A ordem util e:
 
@@ -16,10 +16,10 @@ continuidade de experiencia
 -> hierarquia de valores
 ```
 
-Valores nao devem ser injetados primeiro. Um valor nao e apenas:
+Valores nao devem ser injetados primeiro. Um valor nao é apenas:
 
 ```text
-este resultado e bom
+este resultado é bom
 ```
 
 E mais perto de:
@@ -28,7 +28,7 @@ E mais perto de:
 este resultado importa para a continuidade, integridade ou futuro preferido deste self
 ```
 
-## Quadro De Referencia Do Self
+## Quadro de referencia do self
 
 Antes de valores, o sistema precisa de um quadro estavel de auto-referencia:
 
@@ -51,7 +51,7 @@ minha consequencia / consequencia observada
 
 Essa fronteira torna atribuicao de consequencia possivel.
 
-## Atribuicao De Consequencia
+## Atribuicao de consequencia
 
 O sistema precisa lembrar nao apenas resultados, mas como resultados se relacionam com atores, escolhas e restricoes:
 
@@ -65,7 +65,7 @@ memoria de evento
 -> atualizacao da hierarquia de valores
 ```
 
-A adicao importante e o espaco de opcoes. Sem ele, o sistema aprende apenas:
+A adicao importante é o espaco de opcoes. Sem ele, o sistema aprende apenas:
 
 ```text
 resultado ruim -> escolha ruim
@@ -112,13 +112,13 @@ coerencia de conjuntos
 
 Curiosidade nao deve ser um impulso cego sempre ligado.
 
-Nesta arquitetura, ela e melhor descrita como:
+Nesta arquitetura, ela é melhor descrita como:
 
 ```text
 reduzir incerteza sobre estados que podem afetar continuidade do self ou satisfacao de valores
 ```
 
-Antes da continuidade do self, curiosidade e apenas comportamento exploratorio. Ela vira valor quando o sistema aprende:
+Antes da continuidade do self, curiosidade é apenas comportamento exploratorio. Ela vira valor quando o sistema aprende:
 
 ```text
 exploracao -> melhores estados futuros
@@ -130,13 +130,13 @@ Entao pode se tornar:
 eu valorizo descobrir
 ```
 
-## Curiosidade Como Vies De Roteamento
+## Curiosidade como vies de roteamento
 
 Curiosidade pode ser expressa nos termos da rede de pressao:
 
 ```text
-se incerteza e alta
-e impacto potencial e alto
+se incerteza é alta
+e impacto potencial é alto
 entao reduzir temporariamente a resistencia de caminhos pouco explorados
 ```
 
@@ -149,7 +149,7 @@ fluxo atual -> caminho de descida conhecido
 curiosidade -> probe lateral ou subida local
 ```
 
-## Conflito De Valores
+## Conflito de valores
 
 Curiosidade deve conflitar com outros valores:
 
@@ -168,9 +168,9 @@ quando consolidar
 quando parar
 ```
 
-## Ainda Nao
+## Ainda nao
 
-Esta nota e material de roadmap. O trabalho de curto prazo continua em camadas mais baixas:
+Esta nota é material de roadmap. O trabalho de curto prazo continua em camadas mais baixas:
 
 - intuicao de conjunto/propriedade;
 - tracos de continuidade do self;

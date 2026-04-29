@@ -1,8 +1,8 @@
-# Significado Relacional
+# Significado relacional
 
 [English](../../concepts/relational-meaning.md)
 
-O scaffold atual deixa o sistema explicar nos por significados primitivos conhecidos. O proximo passo e ler significado como relacao.
+O scaffold atual deixa o sistema explicar nodes por significados primitivos conhecidos. O proximo passo é ler significado como relacao.
 
 ## Definicao
 
@@ -25,14 +25,14 @@ cross-origin + mixed-value -> VALUE_1
 
 Isso separa:
 
-- significado de no: o que ativa um no;
+- significado de node: o que ativa um node;
 - significado de grupo: estrutura compartilhada;
 - significado de relacao: mapeamento estavel entre conjuntos;
-- significado de caminho: como o mapeamento e realizado.
+- significado de caminho: como o mapeamento é realizado.
 
-## Primeiro Uso Generativo
+## Primeiro uso generativo
 
-O proximo passo pequeno e usar a leitura relacional no sentido inverso:
+O proximo passo pequeno é usar a leitura relacional no sentido inverso:
 
 ```text
 saida alvo
@@ -53,15 +53,15 @@ A0 + B1
 A1 + B0
 ```
 
-Isso ainda nao e geracao aberta. E uma reconstrucao restrita: o sistema enumera o espaco atual de pares de fonte e mantem candidatos cuja relacao de scaffold satisfaz o invariante aprendido. A ponte que queremos tornar visivel e:
+Isso ainda nao é geracao aberta. é uma reconstrucao restrita: o sistema enumera o espaco atual de pares de fonte e mantem candidatos cuja relacao de scaffold satisfaz o invariante aprendido. A ponte que queremos tornar visivel é:
 
 ```text
 relacao como explicacao -> relacao como gerador
 ```
 
-Depois, o trabalho generativo deve depender menos de enumerar pares conhecidos e mais de nos conceituais recrutados, probing ativo e reuso por transferencia.
+Depois, o trabalho generativo deve depender menos de enumerar pares conhecidos e mais de nodes conceituais recrutados, probing ativo e reuso por transferencia.
 
-## Intuicao De Conjunto E Propriedade
+## Intuicao de conjunto e propriedade
 
 O experimento atual de recrutamento amplo mostra uma base que ainda falta: antes de escolher boas estrategias de recrutamento, o sistema precisa de uma intuicao primitiva de conjunto/propriedade.
 
@@ -89,9 +89,9 @@ A0 e B0 compartilham VALUE_0
 A1 e B1 compartilham VALUE_1
 ```
 
-Essas distincoes importam porque recrutamento nao deve tratar todo no co-visivel como o mesmo tipo de vizinho. Contexto valido de caso, opcao alternativa, propriedade compartilhada e papel de saida pedem estrategias diferentes.
+Essas distincoes importam porque recrutamento nao deve tratar todo node co-visivel como o mesmo tipo de vizinho. Contexto valido de caso, opcao alternativa, propriedade compartilhada e papel de saida pedem estrategias diferentes.
 
-## Scaffold Explicito E Injetavel De Conjuntos
+## Scaffold explicito e injetavel de conjuntos
 
 A implementacao atual pode trapacear de proposito ao injetar conceitos de conjunto/propriedade como scaffold explicito.
 
@@ -105,9 +105,9 @@ A0 pode-coexistir-com B1
 A0 compartilha PROP_VALUE_0 com B0
 ```
 
-Isso nao e tratado como conhecimento descoberto. Cada conceito e relacao injetada fica marcado com `source = manual`.
+Isso nao é tratado como conhecimento descoberto. Cada conceito e relacao injetada fica marcado com `source = manual`.
 
-O objetivo e tornar claro o mecanismo de controle antes de devolve-lo ao sistema:
+O objetivo é tornar claro o mecanismo de controle antes de devolve-lo ao sistema:
 
 ```text
 scaffold manual de conjuntos
@@ -118,9 +118,9 @@ scaffold manual de conjuntos
 
 O modo automatico futuro deve usar pressao nao resolvida, co-presenca repetida, exclusao mutua e propriedades compartilhadas estaveis para recrutar conceitos de conjunto equivalentes dinamicamente.
 
-## Reconstrucao Funcional Do Scaffold
+## Reconstrucao funcional do scaffold
 
-O proximo passo e parar de tratar o scaffold apenas como uma lista de fatos.
+O proximo passo é parar de tratar o scaffold apenas como uma lista de fatos.
 
 O sistema agora tambem carrega uma descricao funcional:
 
@@ -131,7 +131,7 @@ relacoes necessarias = pertencimento, opcao, exclusao, co-presenca, propriedade 
 pontos de plug = explicacoes de fonte, espaco de estrategia de recrutamento, eixo scaffoldUse
 ```
 
-A partir dessa descricao, o gerador pode ler os nos de fonte atuais e recriar o mesmo scaffold conjunto/propriedade:
+A partir dessa descricao, o gerador pode ler os nodes de fonte atuais e recriar o mesmo scaffold conjunto/propriedade:
 
 ```text
 fontes -> inferir eixos e valores -> criar conceitos -> criar relacoes -> injetar scaffold gerado
@@ -145,11 +145,11 @@ recruitmentStrategyCandidates(...)
 recruitmentAxisDemand(...).scaffoldUse
 ```
 
-Isso ainda nao e descoberta autonoma completa. E reconstrucao funcional: o sistema consegue criar a forma de scaffold necessaria a partir de uma descricao do que o scaffold precisa fazer, e continuar operando pelas mesmas interfaces.
+Isso ainda nao é descoberta autonoma completa. é reconstrucao funcional: o sistema consegue criar a forma de scaffold necessaria a partir de uma descricao do que o scaffold precisa fazer, e continuar operando pelas mesmas interfaces.
 
-## Politica Experimental De Recrutamento
+## Politica experimental de recrutamento
 
-O scaffold de conjuntos nao deve ditar permanentemente onde um no recrutado se conecta. Ele deve fornecer contexto que o sistema de recrutamento pode usar enquanto experimenta estrategias.
+O scaffold de conjuntos nao deve ditar permanentemente onde um node recrutado se conecta. Ele deve fornecer contexto que o sistema de recrutamento pode usar enquanto experimenta estrategias.
 
 O espaco atual ainda tem perfis nomeados e legiveis:
 
@@ -160,7 +160,7 @@ set-scaffold-context
 broad-operation-area
 ```
 
-Mas esses nomes nao sao a politica inteira. Cada perfil e um ponto em um pequeno espaco de eixos:
+Mas esses nomes nao sao a politica inteira. Cada perfil é um ponto em um pequeno espaco de eixos:
 
 ```text
 sourceFocus
@@ -204,11 +204,11 @@ recrutado desvanece -> pontuacao cai, esses eixos enfraquecem
 
 Co-presenca continua sendo evidencia para recrutamento conceitual posterior; ela nao deve automaticamente tornar todo separador de caso amplo de novo.
 
-## Coerencia De Conjuntos Antes De CSP
+## Coerencia de conjuntos antes de CSP
 
 Intuicao de conjunto deve vir antes de resolucao tipo CSP.
 
-A ordem util e:
+A ordem util é:
 
 ```text
 agrupamento de sinais
@@ -250,7 +250,7 @@ resolucao CSP = resolucao estruturada posterior
 
 Coerencia vem antes de maximizacao de objetivo. O sistema deve primeiro aprender que um estado nao pode ser `eu` e `nao-eu` ao mesmo tempo, que uma opcao pode ser possivel enquanto viola outro conjunto, e que uma memoria pode conflitar com a percepcao atual. So depois ele deve perguntar qual opcao coerente melhor satisfaz valores.
 
-## Invariante Por Exclusao
+## Invariante por exclusao
 
 Para chegar a um invariante que aponta corretamente para um novo conceito, o sistema nao deve aceitar o primeiro padrao compartilhado que encontra.
 
@@ -279,10 +279,10 @@ Explicacoes possiveis:
 - ambos misturam `VALUE_0` e `VALUE_1`;
 - ambos ativam `OUT1`.
 
-As duas primeiras sao gerais demais se o sistema ja conhece pertencimento por eixo. `OUT1` e papel, nao o conceito do lado das fontes. Depois de descartar isso, o invariante explicativo restante fica mais perto de:
+As duas primeiras sao gerais demais se o sistema ja conhece pertencimento por eixo. `OUT1` é papel, nao o conceito do lado das fontes. Depois de descartar isso, o invariante explicativo restante fica mais perto de:
 
 ```text
 mixed-value entre eixos de entrada diferentes
 ```
 
-Esse e o tipo de invariante que pode virar um novo conceito. O ponto importante nao e apenas achar similaridade, mas subtrair similaridades conhecidas ate sobrar uma explicacao especifica o bastante.
+Esse é o tipo de invariante que pode virar um novo conceito. O ponto importante nao é apenas achar similaridade, mas subtrair similaridades conhecidas ate sobrar uma explicacao especifica o bastante.

@@ -1,8 +1,8 @@
-# Dinamica Do Sistema
+# Dinamica do sistema
 
 [English](../../concepts/system-dynamics.md)
 
-O projeto deve evitar implementar propriedades tipo cerebro como modulos isolados. A direcao util e definir dinamicas que facam essas propriedades aparecerem naturalmente.
+O projeto deve evitar implementar propriedades tipo cerebro como modulos isolados. A direcao util é definir dinamicas que facam essas propriedades aparecerem naturalmente.
 
 ## Requisitos
 
@@ -18,7 +18,7 @@ O projeto deve evitar implementar propriedades tipo cerebro como modulos isolado
 - completamento de padrao;
 - equilibrio entre estabilidade e flexibilidade.
 
-## Traducao Atual
+## Traducao atual
 
 ```text
 pressao nao resolvida -> recrutamento de separador -> sobrevivencia/desvanecimento
@@ -33,9 +33,9 @@ error = actual_pressure - expected_pressure
 precision = trust assigned to that error
 ```
 
-A ideia de active inference deve entrar como dinamica local de no e rota, nao como controlador externo que sabe a resposta.
+A ideia de active inference deve entrar como dinamica local de node e rota, nao como controlador externo que sabe a resposta.
 
-## Direcao Posterior De Self E Valores
+## Direcao posterior de self e valores
 
 Valores nao devem entrar como rotulos externos de recompensa. Eles precisam de dinamicas inferiores primeiro:
 
@@ -48,4 +48,4 @@ continuidade de experiencia
 -> hierarquia de valores
 ```
 
-A ponte importante e o espaco de opcoes. O sistema deve comparar a acao escolhida contra opcoes que estavam disponiveis sob as mesmas restricoes antes de atualizar arrependimento, reforco ou hierarquia de valores. Veja [Self, Valores E Curiosidade](self-values-and-curiosity.md).
+A ponte importante é o espaco de opcoes. O sistema deve comparar a acao escolhida contra opcoes que estavam disponiveis sob as mesmas restricoes antes de atualizar arrependimento, reforco ou hierarquia de valores. Veja [Self, valores e curiosidade](self-values-and-curiosity.md).

@@ -1,4 +1,4 @@
-# 001: Flooding De Saida
+# 001: Flooding de saida
 
 [English](../../experiments/001-output-flooding.md)
 
@@ -14,4 +14,4 @@ Durante teste, as saidas voltam a ser endpoints. Acuracia deve vir de teste some
 
 ## Risco
 
-Se a pressao teacher vazar para teste, a rede parece saber a resposta sem ter formado rota inspecionavel. Por isso as rotas reversas de saida sao `trainingOnly`.
+Se a pressao teacher vazar para teste, a rede parece saber a resposta sem ter formado rota inspecionavel. Por isso a topologia atual nao cria rotas reversas de saida para hidden ou recrutados.

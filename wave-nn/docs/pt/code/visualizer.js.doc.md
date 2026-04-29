@@ -4,4 +4,4 @@
 
 `src/visualizer.js` desenha o estado atual da rede no canvas.
 
-A visualizacao e diagnostica. Ela mostra nos, valvulas, pressao, ativacao e permite escolher elementos para o inspector.
+A visualizacao é diagnostica. Ela mostra nodes, valvulas, pressao, ativacao e permite escolher elementos para o inspector.

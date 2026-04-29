@@ -2,7 +2,7 @@
 
 [English](../index.md)
 
-FlowNN e um experimento de roteamento orientado por significado.
+FlowNN é um experimento de roteamento orientado por significado.
 
 O prototipo atual pergunta uma coisa estreita: pressao, limiares, adaptacao local de valvulas e treino por flood conseguem aprender pequenas tabelas-verdade sem rotulos explicitos de sinal, historico de caminho ou credito de rota no estilo backprop?
 
@@ -11,7 +11,7 @@ A implementacao e pequena de proposito. A topologia principal comeca subestrutur
 ## Forma Atual
 
 - Quatro fontes: `A0`, `A1`, `B0`, `B1`.
-- Nos ocultos recrutaveis criados a partir de assinaturas repetidas de pressao nao resolvida.
+- Nodes ocultos recrutaveis criados a partir de assinaturas repetidas de pressao nao resolvida.
 - Duas saidas: `OUT0`, `OUT1`.
 - Valvulas diretas para teste somente com entradas.
 - Sem valvulas reversas de saida para ocultos na topologia atual.
@@ -19,8 +19,8 @@ A implementacao e pequena de proposito. A topologia principal comeca subestrutur
 - Eixos observacionais de meta-regulacao para plasticidade, exploracao, certeza e pressao de restricao.
 - Injecao manual de scaffold conjunto/propriedade, mantida explicita para depois virar recrutamento automatico.
 
-## Caminho De Leitura
+## Caminho de leitura
 
-Comece por [Convergencia do Nucleo](concepts/core-convergence.md), depois [Rede de Pressao](concepts/pressure-network.md), [Matematica De Campo Unificada](concepts/field-math.md), [Computacao Temporal](concepts/temporal-computation.md), [Topologia](concepts/topology.md), [Significado Relacional](concepts/relational-meaning.md), [Paisagem de Informacao](concepts/information-landscape.md), [Meta-Regulacao](concepts/meta-regulation.md), [Dinamica do Sistema](concepts/system-dynamics.md). Notas de fase posterior ficam em [Self, Valores E Curiosidade](concepts/self-values-and-curiosity.md). Depois leia [Recursos](features.md), [Testes](tests.md), [Teste Manual](manual-testing.md), e as notas de implementacao de [network.js](code/network.js.doc.md).
+Comece por [Convergencia do nucleo](concepts/core-convergence.md), depois [Rede de pressao](concepts/pressure-network.md), [Matematica de campo unificada](concepts/field-math.md), [Computacao temporal](concepts/temporal-computation.md), [Topologia](concepts/topology.md), [Significado relacional](concepts/relational-meaning.md), [Paisagem de informacao](concepts/information-landscape.md), [Meta-Regulacao](concepts/meta-regulation.md), [Dinamica do sistema](concepts/system-dynamics.md). Notas de fase posterior ficam em [Self, valores e curiosidade](concepts/self-values-and-curiosity.md). Depois leia [Recursos](features.md), [Testes](tests.md), [Teste Manual](manual-testing.md), e as notas de implementacao de [network.js](code/network.js.doc.md).
 
 Para proximos passos, veja [Roadmap](concepts/roadmap.md).

@@ -1,4 +1,4 @@
-# Dinamica De Aprendizagem
+# Dinamica de aprendizagem
 
 [English](../../concepts/learning-dynamics.md)
 
@@ -20,4 +20,4 @@ Regioes como `operation`, `origin` e `value` podem reduzir plasticidade quando o
 
 ## Teste
 
-Teste e separado de treino. Em teste, so as fontes de entrada sao injetadas, e nao ha valvulas reversas de saida para ocultos. As saidas sao medidas por pico, area, duracao e uma leitura hibrida.
+Teste é separado de treino. Em teste, so as fontes de entrada sao injetadas, e nao ha valvulas reversas de saida para ocultos. As saidas sao medidas por pico, area, duracao e uma leitura hibrida.

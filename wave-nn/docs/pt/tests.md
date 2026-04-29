@@ -11,7 +11,7 @@ Cada teste e registrado com:
 - `covers`: recurso ou modo de falha protegido;
 - `run`: funcao que executa assercoes.
 
-## Mapa De Testes
+## Mapa de testes
 
 | Tipo | Teste | Cobre |
 | --- | --- | --- |
@@ -47,11 +47,11 @@ Cada teste e registrado com:
 | feature | recruitment strategies tune from survival | ajuste de estrategia de recrutamento por feedback |
 | feature | recruitable topology attempts bitwise operations | avaliacao exploratoria XOR/AND/OR/NAND fim-a-fim |
 
-## Por Que Existem Testes `error`
+## Por que existem testes `error`
 
 Um teste `error` protege contra um modo de falha. Os principais aqui sao:
 
-- tipo semantico entrando de volta nos payloads de pressao ou nos de fonte;
+- tipo semantico entrando de volta nos payloads de pressao ou nodes de fonte;
 - pressao teacher vazando para teste so com entradas;
 - abertura de valvula chegando a limites duros;
 - formato de resultado mudando sem atualizar docs e UI.

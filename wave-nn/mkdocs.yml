@@ -36,21 +36,21 @@ nav:
       - Testes: pt/tests.md
       - Teste Manual: pt/manual-testing.md
       - Conceitos:
-          - Convergencia do Nucleo: pt/concepts/core-convergence.md
-          - Rede de Pressao: pt/concepts/pressure-network.md
-          - Matematica De Campo Unificada: pt/concepts/field-math.md
-          - Computacao Temporal: pt/concepts/temporal-computation.md
-          - Dinamica de Aprendizagem: pt/concepts/learning-dynamics.md
+          - Convergencia do nucleo: pt/concepts/core-convergence.md
+          - Rede de pressao: pt/concepts/pressure-network.md
+          - Matematica de campo unificada: pt/concepts/field-math.md
+          - Computacao temporal: pt/concepts/temporal-computation.md
+          - Dinamica de aprendizagem: pt/concepts/learning-dynamics.md
           - Topologia: pt/concepts/topology.md
-          - Significado Relacional: pt/concepts/relational-meaning.md
-          - Paisagem de Informacao: pt/concepts/information-landscape.md
+          - Significado relacional: pt/concepts/relational-meaning.md
+          - Paisagem de informacao: pt/concepts/information-landscape.md
           - Meta-Regulacao: pt/concepts/meta-regulation.md
-          - Dinamica do Sistema: pt/concepts/system-dynamics.md
-          - Self, Valores E Curiosidade: pt/concepts/self-values-and-curiosity.md
+          - Dinamica do sistema: pt/concepts/system-dynamics.md
+          - Self, valores e curiosidade: pt/concepts/self-values-and-curiosity.md
           - Roadmap: pt/concepts/roadmap.md
       - Codigo:
           - network.js: pt/code/network.js.doc.md
           - main.js: pt/code/main.js.doc.md
           - visualizer.js: pt/code/visualizer.js.doc.md
       - Experimentos:
-          - Flooding de Saida: pt/experiments/001-output-flooding.md
+          - Flooding de saida: pt/experiments/001-output-flooding.md

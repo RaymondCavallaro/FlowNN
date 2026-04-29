@@ -12,6 +12,6 @@ Ele controla:
 - selecao de operacao;
 - sliders de taxa, aprendizagem e balanceamento;
 - metricas visiveis;
-- inspector de nos e valvulas.
+- inspector de nodes e valvulas.
 
 A UI separa treino e teste. Flood training nao deve entrar direto na metrica de acuracia; acuracia vem de testes somente com entradas.

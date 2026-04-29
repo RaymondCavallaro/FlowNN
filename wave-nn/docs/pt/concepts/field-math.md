@@ -1,4 +1,4 @@
-# Matematica De Campo Unificada
+# Matematica de campo unificada
 
 [English](../../concepts/field-math.md)
 
@@ -6,7 +6,7 @@ Esta pagina atualiza o enquadramento matematico de campo do `v0.0.3` para a linh
 
 O grafo de objetos continua util para desenho, inspecao e experimentos incrementais. Por baixo, o modelo pode ser descrito como dinamica esparsa de campo com camadas de regulacao.
 
-## Mudanca Central
+## Mudanca central
 
 O `v0.0.3` descrevia a rede como:
 
@@ -25,21 +25,21 @@ scaffolds sao restricoes temporarias, nao verdade permanente
 regulacao controla mecanismos compartilhados em vez de adicionar modulos separados
 ```
 
-Entao input, output, path e papel de no devem eventualmente ser lidos como funcoes aprendidas:
+Entao input, output, path e papel de node devem eventualmente ser lidos como funcoes aprendidas:
 
 ```text
 papel tipo entrada  = onde diferencas entram repetidamente em um sistema local
 papel tipo saida    = onde atividade estabilizada afeta outra regiao
-papel de roteamento = onde fluxo e redirecionado
+papel de roteamento = onde fluxo é redirecionado
 papel de retencao   = onde pressao permanece ativa ao longo do tempo
 papel de significado = onde estrutura invariante de fluxo vira reutilizavel
 ```
 
 ## Estado
 
-Considere o grafo visivel indexado por nos e valvulas.
+Considere o grafo visivel indexado por nodes e valvulas.
 
-Estado de no:
+Estado de node:
 
 ```text
 P      = pressao
@@ -97,14 +97,14 @@ Fluxo por uma valvula:
 F_ij = A_i * G_ij / max(1, C_i)
 ```
 
-Atualizacao de no:
+Atualizacao de node:
 
 ```text
 P'_j = decay_j(P_j + I_j + sum_i F_ij)
 A'_j = activate(P'_j, Theta_j, Role_j)
 ```
 
-Isso preserva a regra util do `v0.0.3`: pressao nao e copiada por toda rota aberta. Uma ativacao de fonte e dividida pela condutancia disponivel.
+Isso preserva a regra util do `v0.0.3`: pressao nao é copiada por toda rota aberta. Uma ativacao de fonte é dividida pela condutancia disponivel.
 
 ## Aprendizagem
 
@@ -144,9 +144,9 @@ aprendizagem altera rotas
 meta-regulacao altera quao mutavel o sistema deve ser
 ```
 
-## Recrutamento Como Campo De Estrategias
+## Recrutamento como campo de estrategias
 
-Recrutamento nao e mais uma unica regra fixa de fiacao.
+Recrutamento nao é mais uma unica regra fixa de fiacao.
 
 Traces nao resolvidos:
 
@@ -189,9 +189,9 @@ recrutado sobrevive -> pontuacao sobe, eixos usados fortalecem
 recrutado desvanece -> pontuacao cai, eixos usados enfraquecem
 ```
 
-Essa e a ponte entre controle explicito e recrutamento auto-ajustado.
+Essa é a ponte entre controle explicito e recrutamento auto-ajustado.
 
-## Reconstrucao De Scaffold
+## Reconstrucao de scaffold
 
 O scaffold de conjunto/propriedade pode ser expresso como funcao:
 
@@ -210,7 +210,7 @@ S_manual    = generate(functional_description, source = manual)
 S_generated = generate(functional_description, source = generated)
 ```
 
-O teste de longo prazo nao e se o sistema recria a mesma forma. E se ele recria um scaffold funcionalmente equivalente:
+O teste de longo prazo nao é se o sistema recria a mesma forma. é se ele recria um scaffold funcionalmente equivalente:
 
 ```text
 mesmos pontos de plug
@@ -218,7 +218,7 @@ mesmas restricoes uteis
 mesma ou melhor estabilizacao de fluxo
 ```
 
-## Regulacao E Saliencia
+## Regulacao e saliencia
 
 As notas de `13.txt` adicionam uma regra geral:
 
@@ -265,9 +265,9 @@ canal superamplificado -> atrator descontrolado / gatilhos excessivos
 canal subponderado     -> acoplamento fraco / sub-reconhecimento
 ```
 
-O alvo de design e calibracao adaptativa, nao amplificacao maxima.
+O alvo de design é calibracao adaptativa, nao amplificacao maxima.
 
-## Teste De Emergencia De Papeis
+## Teste de emergencia de papeis
 
 O sistema deve eventualmente passar por um teste de remocao de scaffold:
 
@@ -290,7 +290,7 @@ Falha significa:
 o scaffold estava sendo usado diretamente em vez de internalizado
 ```
 
-## Alvo De Implementacao
+## Alvo de implementacao
 
 A proxima implementacao nao deve reescrever tudo em matrizes densas.
 
@@ -308,7 +308,7 @@ PressureField = estado de campo esparso indexado
 
 A camada de campo deve possuir:
 
-- indices de nos;
+- indices de nodes;
 - arrays de fonte e alvo de valvulas;
 - vetores de condutancia, fluxo e entrada por alvo;
 - observacoes de funcao de papel;

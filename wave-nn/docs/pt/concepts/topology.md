@@ -10,15 +10,15 @@ A topologia moldada antiga ainda existe como referencia nos testes, mas o experi
 
 Fontes comecam com rotas fracas para `OUT0` e `OUT1`. Quando um caso fica repetidamente ambiguo, com baixa margem ou pressao nao resolvida, a rede registra a assinatura ativa e pode criar um separador fraco.
 
-Esse separador nao e um rotulo simbolico. Ele nasce de uma falha de assentamento, e um tuner secundario de recrutamento escolhe um perfil de conexao a partir de eixos dependentes do caso, como foco em fonte, foco em saida, amplitude de escopo, uso de scaffold e feedback teacher:
+Esse separador nao é um rotulo simbolico. Ele nasce de uma falha de assentamento, e um tuner secundario de recrutamento escolhe um perfil de conexao a partir de eixos dependentes do caso, como foco em fonte, foco em saida, amplitude de escopo, uso de scaffold e feedback teacher:
 
 ```text
 sinais do caso -> demanda de eixos -> estrategia de conexao -> separador recrutado
 ```
 
-As estrategias podem ser estreitas ou amplas, mas a area de operacao ainda exclui nos de scaffold/significado como `ORIGIN_A`, `VALUE_0` e `VALUE_1`.
+As estrategias podem ser estreitas ou amplas, mas a area de operacao ainda exclui nodes de scaffold/significado como `ORIGIN_A`, `VALUE_0` e `VALUE_1`.
 
-O candidato comeca com valvulas exploratorias fracas e alta resistencia. Ele pode falhar. Essa falha e util porque mostra capacidades que ainda faltam, como poda, precisao, memoria de traco ou limites melhores entre areas.
+O candidato comeca com valvulas exploratorias fracas e alta resistencia. Ele pode falhar. Essa falha é util porque mostra capacidades que ainda faltam, como poda, precisao, memoria de traco ou limites melhores entre areas.
 
 ## Modo Moldado
 

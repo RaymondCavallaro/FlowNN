@@ -1,10 +1,10 @@
-# Paisagem De Informacao
+# Paisagem de informacao
 
 [English](../../concepts/information-landscape.md)
 
-A paisagem de informacao e o mapa do observador sobre crencas possiveis, incerteza, encaixe e transferencia.
+A paisagem de informacao é o mapa do observador sobre crencas possiveis, incerteza, encaixe e transferencia.
 
-Ela nao deve ser tratada como uma paisagem de perda completa. O objeto pratico e um proxy construido a partir do comportamento local:
+Ela nao deve ser tratada como uma paisagem de perda completa. O objeto pratico é um proxy construido a partir do comportamento local:
 
 ```text
 estado de crenca
@@ -14,7 +14,7 @@ estado de crenca
 -> transferencia sob perturbacao
 ```
 
-## Proxy De Energia Livre
+## Proxy de energia livre
 
 ```text
 free-energy proxy =
@@ -23,12 +23,12 @@ free-energy proxy =
 + uncertainty cost
 ```
 
-Isso nao e energia livre termodinamica. E um score compacto para decidir se a rede tem explicacao estavel ou precisa de mais probing/recrutamento.
+Isso nao é energia livre termodinamica. é um score compacto para decidir se a rede tem explicacao estavel ou precisa de mais probing/recrutamento.
 
-## Precisao E Certeza
+## Precisao e certeza
 
 ```text
-precision = quanto este no/rota deve confiar neste sinal ou erro
+precision = quanto este node/rota deve confiar neste sinal ou erro
 ```
 
 Certeza boa deve sobreviver perturbacao:
@@ -40,7 +40,7 @@ high margin
 + stable response under perturbation
 ```
 
-## Protocolo De Probing
+## Protocolo de probing
 
 ```text
 observar incerteza
@@ -58,4 +58,4 @@ Regimes uteis:
 - bacia de regra;
 - bacia supercomprimida.
 
-Mais tarde, curiosidade pode regular probing ao reduzir resistencia de caminhos pouco explorados apenas quando incerteza e impacto potencial sao altos. Veja [Self, Valores E Curiosidade](self-values-and-curiosity.md).
+Mais tarde, curiosidade pode regular probing ao reduzir resistencia de caminhos pouco explorados apenas quando incerteza e impacto potencial sao altos. Veja [Self, valores e curiosidade](self-values-and-curiosity.md).

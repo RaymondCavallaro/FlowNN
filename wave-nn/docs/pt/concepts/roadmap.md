@@ -2,11 +2,11 @@
 
 [English](../../concepts/roadmap.md)
 
-O branch `main` atual e a linha de convergencia do experimento de rede de pressao.
+O branch `main` atual é a linha de convergencia do experimento de rede de pressao.
 
-Branches de versao sao prateleiras experimentais e checkpoints historicos, nao modulos permanentes. Os docs devem descrever primeiro a dinamica convergente dos nos, e so mencionar branches quando algum trabalho esta estacionado fora do `main`.
+Branches de versao sao prateleiras experimentais e checkpoints historicos, nao modulos permanentes. Os docs devem descrever primeiro a dinamica convergente dos nodes, e so mencionar branches quando algum trabalho esta estacionado fora do `main`.
 
-## Direcao Atual
+## Direcao atual
 
 ```text
 matematica de campo unificada para os mecanismos atuais
@@ -23,7 +23,7 @@ matematica de campo unificada para os mecanismos atuais
 
 Aritmetica continua util como dominio de teste, mas trabalho especifico de aritmetica deve ficar separado ate as dinamicas gerais ficarem mais claras.
 
-## Base Conceitual Necessaria
+## Base conceitual necessaria
 
 Antes de tornar o recrutamento mais inteligente, o sistema precisa de intuicoes primitivas de conjunto/propriedade:
 
@@ -40,17 +40,17 @@ Valores e curiosidade-como-valor devem vir depois de continuidade do self, front
 
 Coerencia de conjuntos deve vir antes de resolucao tipo CSP; escolha ponderada por valores deve vir depois da comparacao do espaco de opcoes.
 
-## Proximo Recurso
+## Proximo recurso
 
-A proxima linha principal e crescimento de topologia:
+A proxima linha principal é crescimento de topologia:
 
 ```text
-topologia insuficiente -> recrutar nos/conceitos -> formar topologia
+topologia insuficiente -> recrutar nodes/conceitos -> formar topologia
 ```
 
 Depois que isso estiver estavel e inspecionavel, o projeto pode avancar para identidade de raciocinio de passo, probing ativo, transferencia e tempo.
 
-## Uso Generativo Atual
+## Uso generativo atual
 
 A primeira fatia generativa em `main` deve ficar pequena:
 
@@ -62,7 +62,7 @@ saida alvo
 
 Ela serve para testar se uma relacao aprendida pode ser usada como gerador restrito. Nao deve virar um oraculo da operacao nem um gerador de tabela-verdade escrito a mao.
 
-## Uso Atual De Meta-Regulacao
+## Uso atual de meta-regulacao
 
 A primeira fatia em `main` tambem deve ficar observacional:
 
@@ -72,9 +72,9 @@ acuracia / ambiguidade / margem / pressao de recrutamento
 -> controles de aprendizagem sugeridos
 ```
 
-O proximo passo e comparar essas sugestoes com os controles manuais de ecologia antes de deixar a camada dirigir plasticidade, modo de valvula, modo de limiar ou janelas temporais automaticamente.
+O proximo passo é comparar essas sugestoes com os controles manuais de ecologia antes de deixar a camada dirigir plasticidade, modo de valvula, modo de limiar ou janelas temporais automaticamente.
 
-## Helpers De Runtime Estacionados
+## Helpers de runtime estacionados
 
 O runtime carregava helpers genericos nao usados para interpolacao, escolha aleatoria e matematica de fase. Eles foram removidos de `src/math.js` ate que um recurso atual precise deles.
 

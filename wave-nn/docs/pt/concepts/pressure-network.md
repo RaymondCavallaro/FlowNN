@@ -1,4 +1,4 @@
-# Rede De Pressao
+# Rede de pressao
 
 [English](../../concepts/pressure-network.md)
 
@@ -9,17 +9,17 @@ Um sinal carrega apenas forca. A identidade do sinal vem de onde ele entra no gr
 ## Partes
 
 - `PressureNode`: acumula pressao, ativa depois de limiar e decai.
-- `InputValve`: conecta um no a outro com resistencia e peso.
-- nos de saida agem como endpoints durante teste e fontes teacher durante treino por flood.
+- `InputValve`: conecta um node a outro com resistencia e peso.
+- nodes de saida agem como endpoints durante teste e fontes teacher durante treino por flood.
 
-Nao existe objeto runtime `Signal` no modelo atual. Nos de fonte injetam pressao diretamente, e o payload de pressao nao carrega tipo semantico.
+Nao existe objeto runtime `Signal` no modelo atual. Nodes de fonte injetam pressao diretamente, e o payload de pressao nao carrega tipo semantico.
 
 ## Regra Atual
 
 O projeto evita:
 
 - tipo explicito de sinal;
-- tipo aceito por no;
+- tipo aceito por node;
 - historico dedicado de rota;
 - credito de rota no estilo backprop.
 

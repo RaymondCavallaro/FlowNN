@@ -10,7 +10,7 @@ Esta pagina nomeia explicitamente os recursos atuais do FlowNN. Um recurso so de
 | --- | --- | --- |
 | Operacoes de tabela-verdade | XOR, AND, OR e NAND sao a regua pequena do laboratorio. | `truth table oracle matches supported operations` |
 | Identidade estrutural de fonte | A pressao carrega apenas forca; identidade vem da fonte e da topologia. | `source identity is structural` |
-| Ativacao por limiar | Nos ativam quando a pressao cruza o limiar. | `threshold gates node activation` |
+| Ativacao por limiar | Nodes ativam quando a pressao cruza o limiar. | `threshold gates node activation` |
 | Flood de saida | No treino, a saida desejada pode agir como fonte de pressao teacher. | `outputs can flood pressure during training` |
 | Rotas teacher reversas omitidas | Rotas reversas de saida para ocultos nao existem; a pressao teacher fica local na saida esperada. | `output reverse valves are omitted` |
 | Ecologia limitada de valvulas | Abertura se aproxima de limites sem virar exatamente aberta ou fechada. | `valve openness stays bounded` |
@@ -28,9 +28,9 @@ Esta pagina nomeia explicitamente os recursos atuais do FlowNN. Um recurso so de
 | Topologia recrutavel | O modo principal comeca sem pares fixos. | `recruitable topology starts without fixed pairs` |
 | Recrutamento de separadores | Pressao nao resolvida repetida pode criar separador fraco usando o tuner atual de estrategia de recrutamento. | `recruitment creates separators for repeated ambiguity` |
 | Politica experimental de recrutamento | O recrutamento de separadores usa um tuner secundario de eixos para escolher e refinar estrategias de conexao a partir do contexto do caso e feedback de sobrevivencia. | `set scaffold guides recruitment connections`; `recruitment strategy space includes scaffold option`; `recruitment axis demand is case dependent`; `recruitment strategies tune from survival` |
-| Avaliacao bitwise exploratoria | A topologia recrutavel tenta XOR, AND, OR e NAND com recrutados amplos; sucesso nao e garantido por este recurso. | `recruitable topology attempts bitwise operations` |
+| Avaliacao bitwise exploratoria | A topologia recrutavel tenta XOR, AND, OR e NAND com recrutados amplos; sucesso nao é garantido por este recurso. | `recruitable topology attempts bitwise operations` |
 
-## Ainda Nao Sao Recursos Atuais
+## Ainda nao sao recursos atuais
 
 - raciocinio aritmetico geral;
 - geracao aberta fora do laboratorio atual de pares de fonte;

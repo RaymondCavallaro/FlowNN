@@ -2,7 +2,7 @@
 
 [English](../../concepts/meta-regulation.md)
 
-Meta-regulacao e a camada que decide quanto a rede pode mudar.
+Meta-regulacao é a camada que decide quanto a rede pode mudar.
 
 Ela nao resolve a tarefa diretamente. Ela regula as condicoes de aprendizagem:
 
@@ -41,7 +41,7 @@ Ele le:
 - ambiguidade;
 - margem baixa de saida;
 - pressao de recrutamento nao resolvida;
-- nos recrutados candidatos e estaveis.
+- nodes recrutados candidatos e estaveis.
 
 Ele relata eixos como:
 
@@ -61,7 +61,7 @@ thresholdMode: seeking | neutral | certainty
 timeWindow: normal | extend
 ```
 
-Isso ainda e scaffold. Ele descreve como o sistema deveria regular a si mesmo, mas ainda nao dirige automaticamente os controles de treino.
+Isso ainda é scaffold. Ele descreve como o sistema deveria regular a si mesmo, mas ainda nao dirige automaticamente os controles de treino.
 
 ## Zonas Protegidas
 
@@ -83,15 +83,15 @@ regiao de operacao       -> dinamica de tarefa adaptavel
 candidatos recrutados    -> estruturas exploratorias de alta mudanca
 ```
 
-## Forma Das Regras
+## Forma das regras
 
 As regras locais pretendidas sao simples:
 
 ```text
-se erro e alto e confianca e baixa:
+se erro é alto e confianca é baixa:
     aumentar plasticidade local
 
-se padrao e repetido e util:
+se padrao é repetido e util:
     consolidar memoria
     reduzir plasticidade
 
@@ -102,7 +102,7 @@ se conflito toca estrutura protegida:
 se ambiente e novo:
     ampliar exploracao
 
-se risco de acao e alto:
+se risco de acao é alto:
     endurecer restricoes
 ```
 
@@ -113,7 +113,7 @@ camada de acao          = o que deve acontecer?
 camada de meta-regulacao = quanto o sistema deve permitir que ele mesmo mude?
 ```
 
-## Direcao Posterior
+## Direcao posterior
 
 A versao mais profunda sao `meta-valves`: valvulas que nao roteiam conteudo diretamente, mas regulam como outras valvulas aprendem, abrem, fecham, estabilizam ou esquecem.
 
