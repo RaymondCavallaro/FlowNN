@@ -8,6 +8,7 @@ Ele controla:
 
 - botoes de treino, teste, reset e auto-treino;
 - injecao manual de scaffold conjunto/propriedade;
+- injecao gerada de scaffold conjunto/propriedade;
 - selecao de operacao;
 - sliders de taxa, aprendizagem e balanceamento;
 - metricas visiveis;

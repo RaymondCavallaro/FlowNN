@@ -173,6 +173,42 @@ function testInjectSetScaffoldAddsManualConcepts() {
   assert.ok(source.setConcepts.some((concept) => concept.kind === "shared-property" && concept.target === "PROP_VALUE_0"));
 }
 
+function testGeneratedSetScaffoldMatchesManualFunctionality() {
+  const manual = new PressureNetwork();
+  const generated = new PressureNetwork();
+
+  manual.injectSetScaffold({ mode: "manual" });
+  generated.injectGeneratedSetScaffold({ mode: "generated" });
+
+  assert.deepEqual(
+    normalizeSetScaffold(generated.setScaffold),
+    normalizeSetScaffold(manual.setScaffold),
+  );
+  assert.ok(generated.setScaffold.functionalDescription.plugCompatibility.includes(
+    "set-scaffold-context recruitment strategy becomes available",
+  ));
+}
+
+function testGeneratedSetScaffoldPlugsIntoRecruitment() {
+  const network = new PressureNetwork();
+  network.injectGeneratedSetScaffold({ mode: "generated" });
+  const observation = {
+    signature: "01",
+    count: 2,
+    inputIds: ["A0", "B1"],
+    expectedOutputId: "OUT1",
+  };
+
+  assert.ok(
+    network.recruitmentStrategyCandidates(observation)
+      .some((candidate) => candidate.strategy === "set-scaffold-context"),
+  );
+  assert.ok(
+    network.explainSource("A0").setConcepts
+      .some((concept) => concept.kind === "membership" && concept.target === "AXIS_A"),
+  );
+}
+
 function testScaffoldTrainingLocksPrimitiveRegions() {
   const network = new PressureNetwork();
   network.trainScaffold({ cycles: 2, lock: true });
@@ -333,6 +369,15 @@ function imprintOperation(network, operation) {
     correct.weight = 3;
     wrong.weight = 0.2;
   }
+}
+
+function normalizeSetScaffold(scaffold) {
+  return {
+    concepts: scaffold.concepts.map(({ confidence, source, ...concept }) => concept)
+      .sort((left, right) => left.id.localeCompare(right.id)),
+    relations: scaffold.relations.map(({ confidence, source, ...relation }) => relation)
+      .sort((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right))),
+  };
 }
 
 function testInputOnlyProducesResultShape() {
@@ -637,6 +682,18 @@ const TEST_CASES = [
     kind: "feature",
     covers: "manual set/property scaffold injection",
     run: testInjectSetScaffoldAddsManualConcepts,
+  },
+  {
+    name: "generated set scaffold matches manual functionality",
+    kind: "feature",
+    covers: "functional scaffold reconstruction",
+    run: testGeneratedSetScaffoldMatchesManualFunctionality,
+  },
+  {
+    name: "generated set scaffold plugs into recruitment",
+    kind: "feature",
+    covers: "generated scaffold compatibility",
+    run: testGeneratedSetScaffoldPlugsIntoRecruitment,
   },
   {
     name: "scaffold training locks primitive regions",

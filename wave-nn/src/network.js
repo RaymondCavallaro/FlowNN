@@ -99,6 +99,28 @@ const EXPLICIT_SET_RELATIONS = [
   { kind: "generalization", from: "B1", to: "PROP_VALUE_1" },
 ];
 
+const SET_SCAFFOLD_FUNCTIONAL_DESCRIPTION = {
+  sourcePattern: "axis+value",
+  concepts: [
+    "input-axis",
+    "input-option",
+    "shared-property",
+  ],
+  relations: [
+    "membership",
+    "option",
+    "mutual-exclusion",
+    "co-presence",
+    "shared-property",
+    "generalization",
+  ],
+  plugCompatibility: [
+    "source explanations expose setConcepts",
+    "set-scaffold-context recruitment strategy becomes available",
+    "recruitment axis demand can use scaffoldUse",
+  ],
+};
+
 function sigmoid(value) {
   if (value > 40) return 1 - 1e-12;
   if (value < -40) return 1e-12;
@@ -409,6 +431,100 @@ export class PressureNetwork {
       })),
       injections: this.setScaffold.injections + 1,
     };
+    this.lastMode = "set-scaffold";
+    return this.setScaffoldSummary();
+  }
+
+  describeSetScaffoldFunctionality() {
+    return {
+      ...SET_SCAFFOLD_FUNCTIONAL_DESCRIPTION,
+      sources: this.sourceDescriptors(),
+    };
+  }
+
+  sourceDescriptors() {
+    return this.nodes
+      .filter((node) => node.role === "source")
+      .map((node) => {
+        const match = node.id.match(/^([A-Z]+)([0-9]+)$/);
+        return {
+          id: node.id,
+          axis: match?.[1] ?? node.id,
+          value: match?.[2] ?? node.id,
+        };
+      });
+  }
+
+  generateSetScaffold({ mode = "generated", confidence = 0.82 } = {}) {
+    const sources = this.sourceDescriptors();
+    const axes = groupBy(sources, (source) => source.axis);
+    const values = groupBy(sources, (source) => source.value);
+    const concepts = [];
+    const relations = [];
+
+    for (const [axis, members] of axes.entries()) {
+      const axisId = `AXIS_${axis}`;
+      concepts.push({
+        id: axisId,
+        kind: "input-axis",
+        members: members.map((source) => source.id),
+      });
+      for (const source of members) {
+        concepts.push({
+          id: `OPTION_${source.id}`,
+          kind: "input-option",
+          members: [source.id],
+        });
+        relations.push({ kind: "membership", from: source.id, to: axisId });
+        relations.push({ kind: "option", from: source.id, to: `OPTION_${source.id}` });
+      }
+      for (const pair of uniquePairs(members.map((source) => source.id))) {
+        relations.push({ kind: "mutual-exclusion", members: pair, scope: axisId });
+      }
+    }
+
+    for (const [value, members] of values.entries()) {
+      const propertyId = `PROP_VALUE_${value}`;
+      concepts.push({
+        id: propertyId,
+        kind: "shared-property",
+        members: members.map((source) => source.id),
+      });
+      for (const pair of uniquePairs(members.map((source) => source.id))) {
+        relations.push({ kind: "shared-property", members: pair, property: propertyId });
+      }
+      for (const source of members) {
+        relations.push({ kind: "generalization", from: source.id, to: propertyId });
+      }
+    }
+
+    for (const left of sources) {
+      for (const right of sources) {
+        if (left.axis >= right.axis) continue;
+        relations.push({ kind: "co-presence", members: [left.id, right.id] });
+      }
+    }
+
+    return {
+      mode,
+      injected: true,
+      concepts: sortSetRecords(concepts).map((concept) => ({
+        ...concept,
+        source: mode,
+        confidence,
+      })),
+      relations: sortSetRecords(relations).map((relation) => ({
+        ...relation,
+        source: mode,
+        confidence,
+      })),
+      injections: this.setScaffold.injections + 1,
+      functionalDescription: this.describeSetScaffoldFunctionality(),
+    };
+  }
+
+  injectGeneratedSetScaffold({ mode = "generated", confidence = 0.82 } = {}) {
+    this.setScaffold = this.generateSetScaffold({ mode, confidence });
     this.lastMode = "set-scaffold";
     return this.setScaffoldSummary();
   }
@@ -1517,6 +1633,44 @@ function dotAxes(left, right) {
   return RECRUITMENT_AXES.reduce((sum, axis) => {
     return sum + (left?.[axis] ?? 0) * (right?.[axis] ?? 0);
   }, 0) / RECRUITMENT_AXES.length;
+}
+
+function groupBy(items, keyFn) {
+  const grouped = new Map();
+  for (const item of items) {
+    const key = keyFn(item);
+    if (!grouped.has(key)) grouped.set(key, []);
+    grouped.get(key).push(item);
+  }
+  return grouped;
+}
+
+function uniquePairs(items) {
+  const pairs = [];
+  for (let left = 0; left < items.length; left += 1) {
+    for (let right = left + 1; right < items.length; right += 1) {
+      pairs.push([items[left], items[right]].sort());
+    }
+  }
+  return pairs;
+}
+
+function sortSetRecords(records) {
+  return records.slice().sort((left, right) => {
+    return setRecordKey(left).localeCompare(setRecordKey(right));
+  });
+}
+
+function setRecordKey(record) {
+  return [
+    record.kind,
+    record.id,
+    record.from,
+    record.to,
+    record.scope,
+    record.property,
+    record.members?.join("+"),
+  ].filter(Boolean).join(":");
 }
 
 export function evaluateOperation(a, b, operation) {

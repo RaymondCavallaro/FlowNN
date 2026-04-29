@@ -12,6 +12,7 @@ const controls = {
   trainCycleButton: document.querySelector("#trainCycleButton"),
   trainScaffoldButton: document.querySelector("#trainScaffoldButton"),
   injectSetButton: document.querySelector("#injectSetButton"),
+  generateSetButton: document.querySelector("#generateSetButton"),
   testCycleButton: document.querySelector("#testCycleButton"),
   resetButton: document.querySelector("#resetButton"),
   operationSelect: document.querySelector("#operationSelect"),
@@ -87,6 +88,12 @@ function injectSetScaffold() {
   renderInspector();
 }
 
+function generateSetScaffold() {
+  network.injectGeneratedSetScaffold({ mode: "generated" });
+  state.metrics = network.metrics();
+  renderInspector();
+}
+
 function testCycle() {
   network.testCycle();
   state.metrics = network.metrics();
@@ -103,6 +110,7 @@ controls.trainRowButton.addEventListener("click", () => trainRow());
 controls.trainCycleButton.addEventListener("click", () => trainCycle());
 controls.trainScaffoldButton.addEventListener("click", () => trainScaffold());
 controls.injectSetButton.addEventListener("click", () => injectSetScaffold());
+controls.generateSetButton.addEventListener("click", () => generateSetScaffold());
 controls.testCycleButton.addEventListener("click", () => testCycle());
 
 controls.resetButton.addEventListener("click", () => {

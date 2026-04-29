@@ -118,6 +118,35 @@ scaffold manual de conjuntos
 
 O modo automatico futuro deve usar pressao nao resolvida, co-presenca repetida, exclusao mutua e propriedades compartilhadas estaveis para recrutar conceitos de conjunto equivalentes dinamicamente.
 
+## Reconstrucao Funcional Do Scaffold
+
+O proximo passo e parar de tratar o scaffold apenas como uma lista de fatos.
+
+O sistema agora tambem carrega uma descricao funcional:
+
+```text
+padrao de fonte = eixo + valor
+conceitos necessarios = eixo, opcao, propriedade compartilhada
+relacoes necessarias = pertencimento, opcao, exclusao, co-presenca, propriedade compartilhada, generalizacao
+pontos de plug = explicacoes de fonte, espaco de estrategia de recrutamento, eixo scaffoldUse
+```
+
+A partir dessa descricao, o gerador pode ler os nos de fonte atuais e recriar o mesmo scaffold conjunto/propriedade:
+
+```text
+fontes -> inferir eixos e valores -> criar conceitos -> criar relacoes -> injetar scaffold gerado
+```
+
+O scaffold gerado fica marcado com `source = generated`. Ele deve plugar nos mesmos lugares do scaffold manual:
+
+```text
+explainSource(...).setConcepts
+recruitmentStrategyCandidates(...)
+recruitmentAxisDemand(...).scaffoldUse
+```
+
+Isso ainda nao e descoberta autonoma completa. E reconstrucao funcional: o sistema consegue criar a forma de scaffold necessaria a partir de uma descricao do que o scaffold precisa fazer, e continuar operando pelas mesmas interfaces.
+
 ## Politica Experimental De Recrutamento
 
 O scaffold de conjuntos nao deve ditar permanentemente onde um no recrutado se conecta. Ele deve fornecer contexto que o sistema de recrutamento pode usar enquanto experimenta estrategias.

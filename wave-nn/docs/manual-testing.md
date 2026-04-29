@@ -81,6 +81,16 @@ Expected result: explanations should mention origin/value primitives, recruitmen
 
 Expected result: source explanations should show manual set/property relations such as axis membership, mutual exclusion, co-presence, and shared value property. This is an explicit scaffold, not discovered knowledge yet.
 
+## Generated Set Scaffold Test
+
+1. Reset the demo.
+2. Click `G`.
+3. Watch `Sets`; it should show the generated concept count.
+4. Click a source node.
+5. Read `Set concepts` in the inspector.
+
+Expected result: the generated scaffold should expose the same kind of source concepts as the manual scaffold. It should be marked internally as generated and remain compatible with recruitment strategy selection.
+
 ## Manual Source Pulse Test
 
 1. Click `A0`, `A1`, `B0`, or `B1`.

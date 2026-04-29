@@ -81,6 +81,16 @@ Resultado esperado: explicacoes mencionam primitivas de origem/valor, assinatura
 
 Resultado esperado: explicacoes de fonte mostram relacoes manuais de conjunto/propriedade como pertencimento a eixo, exclusao mutua, co-presenca e propriedade compartilhada de valor. Isso e scaffold explicito, ainda nao conhecimento descoberto.
 
+## Teste Do Scaffold De Conjuntos Gerado
+
+1. Resete a demo.
+2. Clique `G`.
+3. Veja `Sets`; ele deve mostrar a quantidade de conceitos gerados.
+4. Clique um no de fonte.
+5. Leia `Set concepts` no inspector.
+
+Resultado esperado: o scaffold gerado deve expor o mesmo tipo de conceitos de fonte que o scaffold manual. Ele deve ficar marcado internamente como gerado e continuar compativel com a selecao de estrategia de recrutamento.
+
 ## Teste De Pulso Manual
 
 1. Clique `A0`, `A1`, `B0` ou `B1`.

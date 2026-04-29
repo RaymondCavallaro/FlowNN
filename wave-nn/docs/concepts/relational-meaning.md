@@ -190,6 +190,35 @@ manual set scaffold
 
 The future automatic mode should use unresolved pressure, repeated co-presence, mutual exclusion, and stable shared properties to recruit equivalent set concepts dynamically.
 
+## Functional Scaffold Reconstruction
+
+The next step is to stop treating the scaffold as only a list of facts.
+
+The system now also carries a functional description:
+
+```text
+source pattern = axis + value
+needed concepts = axis, option, shared property
+needed relations = membership, option, exclusion, co-presence, shared property, generalization
+plug points = source explanations, recruitment strategy space, scaffold-use axis
+```
+
+From that description, the generator can read the current source nodes and recreate the same set/property scaffold:
+
+```text
+sources -> infer axes and values -> build concepts -> build relations -> inject generated scaffold
+```
+
+The generated scaffold is marked with `source = generated`. It must plug back into the same places as the manual scaffold:
+
+```text
+explainSource(...).setConcepts
+recruitmentStrategyCandidates(...)
+recruitmentAxisDemand(...).scaffoldUse
+```
+
+This is still not full autonomous discovery. It is functional self-reconstruction: the system can create the needed scaffold shape from a description of what the scaffold must do, then keep operating through the same interfaces.
+
 ## Experimental Recruitment Policy
 
 The set scaffold should not permanently dictate where a recruited node connects. It should supply context that the recruitment system can use while it experiments with strategies.

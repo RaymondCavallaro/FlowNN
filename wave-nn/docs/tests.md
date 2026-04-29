@@ -29,6 +29,8 @@ Every test is registered with:
 | feature | semantic scaffold topology exists | origin/value primitive regions |
 | feature | set scaffold starts explicit and empty | manual set scaffold starts uninjected |
 | feature | inject set scaffold adds manual concepts | manual set/property scaffold injection |
+| feature | generated set scaffold matches manual functionality | functional scaffold reconstruction |
+| feature | generated set scaffold plugs into recruitment | generated scaffold compatibility |
 | feature | scaffold training locks primitive regions | origin/value consolidation |
 | feature | meaning explanations use scaffold primitives | pair-node explanation from primitive meanings |
 | feature | relation reader extracts operation meanings | operation invariants from learned structure |

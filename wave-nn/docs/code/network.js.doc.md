@@ -69,6 +69,14 @@ source = manual
 
 so later automatic recruitment can use the same shape without pretending the manual scaffold was discovered.
 
+`generateSetScaffold` reconstructs that shape from a functional description and current source nodes. It infers axes and values from source ids, builds the needed concepts and relations, and marks the result with:
+
+```text
+source = generated
+```
+
+`injectGeneratedSetScaffold` plugs the generated scaffold into the same `setScaffold` slot used by manual injection, so source explanations and recruitment strategy candidates continue to work.
+
 Operation plasticity is updated by `updateOperationPlasticityFromCycle`, which receives a full input-only truth-table test cycle. Local valve events do not directly change operation plasticity.
 
 When cycle accuracy improves or remains perfect, regional plasticity drops. When cycle accuracy falls, regional plasticity rises.

@@ -11,6 +11,7 @@ It owns:
 - auto-training cadence;
 - manual source pulses;
 - manual set/property scaffold injection;
+- generated set/property scaffold injection;
 - metrics display;
 - inspector rendering;
 - animation frame scheduling.

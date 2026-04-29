@@ -39,6 +39,14 @@ source = manual
 
 assim o recrutamento automatico posterior pode reutilizar a mesma forma sem fingir que o scaffold manual foi descoberto pela rede.
 
+`generateSetScaffold` reconstrui essa forma a partir de uma descricao funcional e dos nos de fonte atuais. Ele infere eixos e valores pelos ids das fontes, cria os conceitos e relacoes necessarios, e marca o resultado com:
+
+```text
+source = generated
+```
+
+`injectGeneratedSetScaffold` pluga o scaffold gerado no mesmo slot `setScaffold` usado pela injecao manual, entao explicacoes de fonte e candidatos de estrategia de recrutamento continuam funcionando.
+
 ## Recrutamento
 
 Quando uma assinatura nao resolvida persiste, a rede cria um separador fraco. A estrategia atual conecta o separador de forma ampla dentro da area de operacao e exclui nos de scaffold/significado. Rotas de saida para o recrutado sao `trainingOnly`, para que teste somente com entradas nao comece injetando pressao de resposta para tras.
