@@ -144,6 +144,10 @@ The candidate is not a symbolic label. It is a pressure structure born from unre
 
 In recruitable mode, direct source-to-output operation routes learn slowly. Separator routes learn more strongly while they are candidates, then slow down after they become stable. Recruited separator nodes start with broad weak exploratory routes; output-to-recruit routes are training-only so normal input-only testing does not begin by injecting answer pressure backward.
 
+When the explicit set scaffold is injected, `recruitmentPolicyFor` narrows separator wiring. Instead of connecting to every operation-area node, a case separator connects to the active source options, the expected output, and the training-only reverse teacher route from that expected output.
+
+The broad policy remains the fallback when no set scaffold is injected.
+
 ## Explanation
 
 `explainNode` exposes forward and backward signatures:

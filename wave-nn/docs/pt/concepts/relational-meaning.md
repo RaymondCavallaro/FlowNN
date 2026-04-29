@@ -118,6 +118,34 @@ scaffold manual de conjuntos
 
 O modo automatico futuro deve usar pressao nao resolvida, co-presenca repetida, exclusao mutua e propriedades compartilhadas estaveis para recrutar conceitos de conjunto equivalentes dinamicamente.
 
+## Politica De Recrutamento Por Papeis De Conjunto
+
+O mesmo scaffold pode guiar onde um no recrutado deve se conectar.
+
+Sem o scaffold de conjuntos, o recrutamento de separador usa a politica ampla antiga:
+
+```text
+nos da area de operacao <-> separador
+```
+
+Com o scaffold injetado, um separador especifico de caso usa uma politica de contexto mais estreita:
+
+```text
+opcoes de fonte ativas -> separador
+separador -> saida esperada
+saida esperada -> separador como rota teacher de treino
+```
+
+Por exemplo, `A0 + B1 -> OUT1` nao resolvido recruta um separador conectado a:
+
+```text
+A0
+B1
+OUT1
+```
+
+Ele nao se conecta a `A1`, `B0` ou `OUT0` so porque esses nos aparecem em relacoes proximas de co-presenca. Co-presenca continua sendo evidencia para recrutamento conceitual posterior; ela nao deve tornar todo separador de caso amplo de novo.
+
 ## Coerencia De Conjuntos Antes De CSP
 
 Intuicao de conjunto deve vir antes de resolucao tipo CSP.

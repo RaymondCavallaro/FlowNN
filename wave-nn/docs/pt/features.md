@@ -26,6 +26,7 @@ Esta pagina nomeia explicitamente os recursos atuais do FlowNN. Um recurso so de
 | Diagnosticos de teste | Testes registram pico, area, duracao e predicao hibrida. | `input-only tests produce diagnostic result shape` |
 | Topologia recrutavel | O modo principal comeca sem pares fixos. | `recruitable topology starts without fixed pairs` |
 | Recrutamento de separadores | Pressao nao resolvida repetida pode criar separador fraco com links exploratorios amplos dentro da area de operacao. | `recruitment creates separators for repeated ambiguity` |
+| Politica de recrutamento guiada por scaffold | Quando o scaffold de conjuntos esta injetado, separadores se conectam ao contexto ativo do caso e a saida esperada em vez de toda a area de operacao. | `set scaffold guides recruitment connections` |
 | Avaliacao bitwise exploratoria | A topologia recrutavel tenta XOR, AND, OR e NAND com recrutados amplos; sucesso nao e garantido por este recurso. | `recruitable topology attempts bitwise operations` |
 
 ## Ainda Nao Sao Recursos Atuais

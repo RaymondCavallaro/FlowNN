@@ -39,6 +39,7 @@ Every test is registered with:
 | error | input-only tests produce diagnostic result shape | test result schema and diagnostic scores |
 | feature | recruitable topology starts without fixed pairs | under-structured main topology |
 | feature | recruitment creates separators for repeated ambiguity | broad separator recruitment from unresolved pressure |
+| feature | set scaffold guides recruitment connections | set/property scaffold recruitment policy |
 | feature | recruitable topology attempts bitwise operations | end-to-end XOR/AND/OR/NAND exploratory evaluation |
 
 ## Why Some Tests Are Error Tests

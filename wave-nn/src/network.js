@@ -640,9 +640,45 @@ export class PressureNetwork {
     return this.nodes.filter((node) => node.role !== "meaning");
   }
 
+  recruitmentPolicyFor(observation) {
+    const activeInputs = observation.inputIds;
+    const outputs = ["OUT0", "OUT1"];
+    if (!this.setScaffold.injected) {
+      return {
+        source: "broad-operation-area",
+        peers: this.solvingAreaNodes().map((node) => node.id),
+        inputSources: activeInputs,
+        outputTargets: outputs,
+        reverseTeachers: outputs,
+        protected: this.nodes.filter((node) => node.role === "meaning").map((node) => node.id),
+        concepts: [],
+      };
+    }
+
+    const concepts = [];
+    for (const inputId of activeInputs) {
+      for (const concept of this.explainSetMembership(inputId)) {
+        concepts.push(concept);
+      }
+    }
+
+    return {
+      source: "set-scaffold-context",
+      peers: [...activeInputs, observation.expectedOutputId],
+      inputSources: activeInputs,
+      outputTargets: [observation.expectedOutputId],
+      reverseTeachers: [observation.expectedOutputId],
+      protected: this.nodes
+        .filter((node) => node.role === "meaning")
+        .map((node) => node.id),
+      concepts,
+    };
+  }
+
   recruitSeparator(observation) {
     const id = `R${this.recruitment.nextId}`;
     this.recruitment.nextId += 1;
+    const policy = this.recruitmentPolicyFor(observation);
     const node = new PressureNode({
       id,
       label: `sep ${observation.signature}`,
@@ -658,24 +694,26 @@ export class PressureNetwork {
         evidence: observation.count,
         survival: 0,
         createdAt: this.time,
+        policy: policy.source,
       },
     });
 
     this.nodes.splice(Math.max(0, this.nodes.length - 2), 0, node);
-    for (const peer of this.solvingAreaNodes()) {
-      if (peer.id === id) continue;
+    for (const peerId of policy.peers) {
+      if (peerId === id) continue;
       this.addValve({
-        from: peer.id,
+        from: peerId,
         to: id,
         resistance: RECRUIT_EXPLORATORY_RESISTANCE,
         weight: RECRUIT_EXPLORATORY_WEIGHT,
-        trainingOnly: peer.role === "output",
+        trainingOnly: policy.reverseTeachers.includes(peerId),
       });
       this.addValve({
         from: id,
-        to: peer.id,
+        to: peerId,
         resistance: RECRUIT_EXPLORATORY_RESISTANCE,
         weight: RECRUIT_EXPLORATORY_WEIGHT,
+        trainingOnly: false,
       });
     }
 
@@ -684,7 +722,8 @@ export class PressureNetwork {
       nodeId: id,
       signature: observation.signature,
       evidence: observation.count,
-      strategy: "broad-operation-area",
+      strategy: policy.source,
+      connected: policy.peers,
       createdAt: this.time,
     };
     this.recruitment.events.push(event);

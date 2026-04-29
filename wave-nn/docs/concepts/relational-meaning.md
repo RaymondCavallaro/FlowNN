@@ -190,6 +190,34 @@ manual set scaffold
 
 The future automatic mode should use unresolved pressure, repeated co-presence, mutual exclusion, and stable shared properties to recruit equivalent set concepts dynamically.
 
+## Recruitment Policy From Set Roles
+
+The same scaffold can guide where a recruited node connects.
+
+Without the set scaffold, separator recruitment uses the older broad policy:
+
+```text
+operation-area nodes <-> separator
+```
+
+With the set scaffold injected, a case-specific separator uses a narrower context policy:
+
+```text
+active source options -> separator
+separator -> expected output
+expected output -> separator as training-only teacher route
+```
+
+For example, unresolved `A0 + B1 -> OUT1` recruits a separator connected to:
+
+```text
+A0
+B1
+OUT1
+```
+
+It does not connect to `A1`, `B0`, or `OUT0` just because those nodes are in nearby co-presence relations. Co-presence remains evidence for later concept recruitment; it should not make every case separator broad again.
+
 ## Set Coherence Before CSP
 
 Set intuition should come before CSP-like constraint solving.

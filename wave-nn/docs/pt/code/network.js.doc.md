@@ -43,6 +43,10 @@ assim o recrutamento automatico posterior pode reutilizar a mesma forma sem fing
 
 Quando uma assinatura nao resolvida persiste, a rede cria um separador fraco. A estrategia atual conecta o separador de forma ampla dentro da area de operacao e exclui nos de scaffold/significado. Rotas de saida para o recrutado sao `trainingOnly`, para que teste somente com entradas nao comece injetando pressao de resposta para tras.
 
+Quando o scaffold explicito de conjuntos esta injetado, `recruitmentPolicyFor` estreita a fiacao do separador. Em vez de conectar com toda a area de operacao, um separador de caso conecta com as opcoes de fonte ativas, a saida esperada e a rota teacher reversa dessa saida esperada.
+
+A politica ampla continua sendo fallback quando nenhum scaffold de conjuntos foi injetado.
+
 ## Geracao Relacional
 
 `generateForOutput` e o primeiro uso generativo restrito das relacoes. Ele le a relacao da saida alvo, enumera o espaco atual de pares de fonte, le cada par pelos significados de scaffold, e mantem candidatos que satisfazem todos os invariantes aprendidos.

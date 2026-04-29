@@ -388,6 +388,7 @@ function testRecruitmentCreatesSeparatorForRepeatedAmbiguity() {
 
   assert.ok(recruited);
   assert.equal(recruited.recruitment.kind, "separator");
+  assert.equal(recruited.recruitment.policy, "broad-operation-area");
   assert.ok(network.getValve("A0->R0"));
   assert.ok(network.getValve("A1->R0"));
   assert.ok(network.getValve("B0->R0"));
@@ -402,6 +403,38 @@ function testRecruitmentCreatesSeparatorForRepeatedAmbiguity() {
   assert.ok(network.getValve("OUT1->R0").trainingOnly);
   assert.equal(network.getValve("ORIGIN_A->R0"), undefined);
   assert.equal(network.getValve("VALUE_0->R0"), undefined);
+}
+
+function testSetScaffoldGuidesRecruitmentConnections() {
+  const network = new PressureNetwork();
+  network.injectSetScaffold({ mode: "manual" });
+  const ambiguous = {
+    a: 0,
+    b: 1,
+    inputIds: ["A0", "B1"],
+    expected: 1,
+    expectedOutputId: "OUT1",
+    out0: 0.2,
+    out1: 0.22,
+    margin: 0.02,
+    correct: false,
+    ambiguous: true,
+  };
+
+  network.observeRecruitmentFromCycle([ambiguous]);
+  network.observeRecruitmentFromCycle([ambiguous]);
+  const recruited = network.nodes.find((node) => node.recruitment?.signature === "01");
+
+  assert.ok(recruited);
+  assert.equal(recruited.recruitment.policy, "set-scaffold-context");
+  assert.ok(network.getValve("A0->R0"));
+  assert.ok(network.getValve("B1->R0"));
+  assert.ok(network.getValve("OUT1->R0").trainingOnly);
+  assert.ok(network.getValve("R0->OUT1"));
+  assert.equal(network.getValve("A1->R0"), undefined);
+  assert.equal(network.getValve("B0->R0"), undefined);
+  assert.equal(network.getValve("OUT0->R0"), undefined);
+  assert.equal(network.getValve("R0->OUT0"), undefined);
 }
 
 function testRecruitableTopologyAttemptsBitwiseOperations() {
@@ -570,6 +603,12 @@ const TEST_CASES = [
     kind: "feature",
     covers: "broad separator recruitment from unresolved pressure",
     run: testRecruitmentCreatesSeparatorForRepeatedAmbiguity,
+  },
+  {
+    name: "set scaffold guides recruitment connections",
+    kind: "feature",
+    covers: "set/property scaffold recruitment policy",
+    run: testSetScaffoldGuidesRecruitmentConnections,
   },
   {
     name: "recruitable topology attempts bitwise operations",

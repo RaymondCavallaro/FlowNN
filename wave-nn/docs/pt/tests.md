@@ -39,6 +39,7 @@ Cada teste e registrado com:
 | error | input-only tests produce diagnostic result shape | schema de resultado e diagnosticos |
 | feature | recruitable topology starts without fixed pairs | topologia principal subestruturada |
 | feature | recruitment creates separators for repeated ambiguity | recrutamento amplo por pressao nao resolvida |
+| feature | set scaffold guides recruitment connections | politica de recrutamento guiada por scaffold conjunto/propriedade |
 | feature | recruitable topology attempts bitwise operations | avaliacao exploratoria XOR/AND/OR/NAND fim-a-fim |
 
 ## Por Que Existem Testes `error`
