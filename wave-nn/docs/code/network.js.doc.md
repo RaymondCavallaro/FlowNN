@@ -10,10 +10,11 @@ The source file should stay mostly clean. This document carries the explanatory 
 
 - `OPERATIONS`: supported truth-table operations.
 - `TRUTH_TABLE`: four rows used for training and testing.
-- `Signal`: pressure strength only.
 - `PressureNode`: pressure accumulator and threshold activator.
 - `InputValve`: directed pressure connection.
 - `PressureNetwork`: graph construction, training, testing, and metrics.
+
+There is no separate runtime `Signal` object. Pressure is injected directly into source/output nodes as strength, and identity remains structural.
 
 `PressureNetwork` supports two topology modes:
 
@@ -59,7 +60,7 @@ The current regions are `origin`, `value`, and `operation`.
 
 `trainScaffold` trains the primitive origin/value meanings and then lowers plasticity for those scaffold regions. Operation training can then learn truth-table behavior while the primitive meanings remain relatively stable.
 
-`injectSetScaffold` is a separate explicit scaffold. It does not train pressure routes. It injects inspectable set/property concepts and relations such as axis membership, input options, mutual exclusion, co-presence, shared value property, and generalization.
+`injectSetScaffold` is a separate explicit scaffold. It does not train pressure routes. It uses the functional scaffold generator with `source = manual`, producing inspectable set/property concepts and relations such as axis membership, input options, mutual exclusion, co-presence, shared value property, and generalization.
 
 Injected set relations are marked by source:
 
@@ -145,7 +146,7 @@ When a signature persists, the network recruits a weak separator node:
 operation-area nodes <-> separator candidate
 ```
 
-The candidate is not a symbolic label. It is a pressure structure born from unresolved pressure. The current strategy connects it broadly inside the operation area and excludes scaffold/meaning nodes. Later test cycles update its survival state:
+The candidate is not a symbolic label. It is a pressure structure born from unresolved pressure. The recruitment strategy tuner chooses how broadly it connects inside the operation area while excluding scaffold/meaning nodes. Later test cycles update its survival state:
 
 - stable when it improves margin and correctness;
 - fading when it continues to fail.

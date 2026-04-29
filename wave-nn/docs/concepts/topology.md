@@ -23,13 +23,13 @@ A0/A1/B0/B1 -> OUT0/OUT1
 
 This is intentionally under-structured for operations such as XOR. When repeated test cycles show ambiguity, low output margin, or wrong settling, the network records the active source pattern as an unresolved pressure signature.
 
-After repeated unresolved signatures, the network recruits a weak separator node, but it no longer wires that node only to the active pair. The recruit is connected broadly inside the active operation area:
+After repeated unresolved signatures, the network recruits a weak separator node. A secondary recruitment tuner chooses a connection profile from case-dependent axes such as source focus, output focus, scope breadth, scaffold use, and teacher feedback.
 
 ```text
-operation-area nodes <-> recruited separator
+case signals -> recruitment axis demand -> connection strategy -> recruited separator
 ```
 
-The operation area currently includes source, hidden/recruited, and output nodes. It excludes scaffold/meaning nodes such as `ORIGIN_A`, `VALUE_0`, and `VALUE_1`.
+Strategies may be narrow or broad, but the operation area still excludes scaffold/meaning nodes such as `ORIGIN_A`, `VALUE_0`, and `VALUE_1`.
 
 The candidate starts with weak/high-resistance exploratory valves and high plasticity. It may fail. That failure is useful because it shows which extra capacities are missing, such as pruning, precision, memory traces, or better area boundaries.
 
@@ -71,4 +71,4 @@ In shaped mode, every pair node has a forward valve to each output. Each output 
 
 Complexity should be recruited by failure to resolve, not designed in advance.
 
-The current implementation still creates separator-style nodes, but their wiring strategy is broad exploration inside the operation area rather than hand-shaped pair coupling. Later versions can add bridge nodes for missing route continuity, concept nodes for reusable basins across tasks, and pruning for failed exploratory valves.
+The current implementation still creates separator-style nodes, but their wiring is chosen by the recruitment tuner rather than hand-shaped pair coupling. Later versions can add bridge nodes for missing route continuity, concept nodes for reusable basins across tasks, and pruning for failed exploratory valves.

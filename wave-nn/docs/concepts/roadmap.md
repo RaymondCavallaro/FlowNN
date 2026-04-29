@@ -48,7 +48,7 @@ Recruitment should happen when the current network cannot settle cleanly:
 - high unresolved pressure;
 - the same cases interfering across cycles.
 
-The first implementation keeps the bitwise operations as the measuring stick, but removes the fixed pair topology from the main mode. Repeated unresolved source signatures recruit weak separator candidates with broad exploratory links inside the operation area. A candidate survives only if later cycles improve settling.
+The first implementation keeps the bitwise operations as the measuring stick, but removes the fixed pair topology from the main mode. Repeated unresolved source signatures recruit weak separator candidates through the current recruitment strategy tuner. A candidate survives only if later cycles improve settling.
 
 ## Separation Of New Source Notes
 
@@ -281,6 +281,21 @@ Implementation guidance:
 - Separate operation regions for input translation, pair/concept formation, output assignment, and target seeking.
 - More intrinsic ambiguity and basin-depth metrics, reducing dependence on external accuracy.
 - A controlled reverse-flood experiment that does not activate every hidden node at once.
+
+## Parked Runtime Helpers
+
+The runtime previously carried unused generic helpers for interpolation, random choice, and phase math. They were removed from `src/math.js` until a current feature needs them.
+
+Temporal routing can reconstruct the phase helpers from:
+
+```text
+wrap01(value) = ((value % 1) + 1) % 1
+phaseDistance(a, b) = min(abs(wrap01(a) - wrap01(b)), 1 - abs(wrap01(a) - wrap01(b)))
+signedPhaseDelta(target, current):
+  delta = wrap01(target) - wrap01(current)
+  if delta > 0.5: delta -= 1
+  if delta < -0.5: delta += 1
+```
 
 Possible time chain:
 

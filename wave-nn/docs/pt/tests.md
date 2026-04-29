@@ -16,7 +16,7 @@ Cada teste e registrado com:
 | Tipo | Teste | Cobre |
 | --- | --- | --- |
 | feature | truth table oracle matches supported operations | definicoes das operacoes |
-| error | signal carries strength only | nenhum tipo semantico dentro de `Signal` |
+| error | source identity is structural | nenhum tipo semantico no payload de pressao |
 | feature | threshold gates node activation | ativacao por limiar de pressao |
 | feature | outputs can flood pressure during training | saida teacher como fonte ativa |
 | feature | shaped pair topology is structural | topologia de pares de referencia |
@@ -51,7 +51,7 @@ Cada teste e registrado com:
 
 Um teste `error` protege contra um modo de falha. Os principais aqui sao:
 
-- tipo semantico entrando de volta em `Signal`;
+- tipo semantico entrando de volta nos payloads de pressao ou nos de fonte;
 - pressao teacher vazando para teste so com entradas;
 - abertura de valvula chegando a limites duros;
 - formato de resultado mudando sem atualizar docs e UI.

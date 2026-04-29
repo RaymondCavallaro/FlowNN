@@ -16,7 +16,7 @@ Every test is registered with:
 | Kind | Test | Covers |
 | --- | --- | --- |
 | feature | truth table oracle matches supported operations | truth-table operation definitions |
-| error | signal carries strength only | no semantic type stored in Signal |
+| error | source identity is structural | no semantic type stored in pressure payload |
 | feature | threshold gates node activation | pressure threshold activation |
 | feature | outputs can flood pressure during training | teacher output as active pressure source |
 | feature | shaped pair topology is structural | reference pair-node topology |
@@ -51,7 +51,7 @@ Every test is registered with:
 
 An `error` test protects against a failure mode rather than proving a positive feature. For this project, the most important failure modes are:
 
-- semantic type sneaking back into `Signal`;
+- semantic type sneaking back into pressure payloads or source nodes;
 - teacher output pressure leaking into normal input-only tests;
 - valve openness reaching exact hard limits;
 - test result shape changing without updating docs and UI expectations.

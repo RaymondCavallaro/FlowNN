@@ -9,7 +9,7 @@ Esta pagina nomeia explicitamente os recursos atuais do FlowNN. Um recurso so de
 | Recurso | O que significa | Verificado por |
 | --- | --- | --- |
 | Operacoes de tabela-verdade | XOR, AND, OR e NAND sao a regua pequena do laboratorio. | `truth table oracle matches supported operations` |
-| Sinal so com forca | O sinal carrega apenas pressao; identidade vem da fonte e da topologia. | `signal carries strength only` |
+| Identidade estrutural de fonte | A pressao carrega apenas forca; identidade vem da fonte e da topologia. | `source identity is structural` |
 | Ativacao por limiar | Nos ativam quando a pressao cruza o limiar. | `threshold gates node activation` |
 | Flood de saida | No treino, a saida desejada pode agir como fonte de pressao teacher. | `outputs can flood pressure during training` |
 | Rotas teacher so de treino | Rotas reversas de saida nao devem vazar para teste so com entradas. | `reverse output valves are training-only` |
@@ -26,7 +26,7 @@ Esta pagina nomeia explicitamente os recursos atuais do FlowNN. Um recurso so de
 | Aprendizagem local de valvulas | Flood altera resistencia e peso por coativacao. | `flood training changes valves` |
 | Diagnosticos de teste | Testes registram pico, area, duracao e predicao hibrida. | `input-only tests produce diagnostic result shape` |
 | Topologia recrutavel | O modo principal comeca sem pares fixos. | `recruitable topology starts without fixed pairs` |
-| Recrutamento de separadores | Pressao nao resolvida repetida pode criar separador fraco com links exploratorios amplos dentro da area de operacao. | `recruitment creates separators for repeated ambiguity` |
+| Recrutamento de separadores | Pressao nao resolvida repetida pode criar separador fraco usando o tuner atual de estrategia de recrutamento. | `recruitment creates separators for repeated ambiguity` |
 | Politica experimental de recrutamento | O recrutamento de separadores usa um tuner secundario de eixos para escolher e refinar estrategias de conexao a partir do contexto do caso e feedback de sobrevivencia. | `set scaffold guides recruitment connections`; `recruitment strategy space includes scaffold option`; `recruitment axis demand is case dependent`; `recruitment strategies tune from survival` |
 | Avaliacao bitwise exploratoria | A topologia recrutavel tenta XOR, AND, OR e NAND com recrutados amplos; sucesso nao e garantido por este recurso. | `recruitable topology attempts bitwise operations` |
 

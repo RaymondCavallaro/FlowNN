@@ -2,14 +2,13 @@
 
 A meaning-first pressure network experiment.
 
-The current prototype removes wave/timing routing and tests whether local pressure learning can form useful paths. Signal identity is structural: a pressure pulse starts at a source node such as `A0` or `B1`; the signal itself only carries strength.
+The current prototype removes wave/timing routing and tests whether local pressure learning can form useful paths. Pressure identity is structural: a pulse starts at a source node such as `A0` or `B1`; the pulse itself only carries strength.
 
 ## Model
 
-- `Signal`: pressure only.
 - `PressureNode`: internal pressure, threshold, decay, activation.
 - `InputValve`: source node, target node, resistance, weight, pressure/activity.
-- `OutputNode`: endpoint during testing, but an active pressure source during flood training.
+- output nodes: endpoints during testing, but active pressure sources during flood training.
 
 The operation region tracks continuous plasticity. Plasticity scales future valve updates across the active operation area, so successful behavior can consolidate without permanently freezing individual valves.
 
@@ -25,7 +24,7 @@ Outputs:
 
 Initial valves start near middle resistance so they are neither fully open nor fully closed.
 
-The main mode now starts without the fixed pair layer. Sources begin with weak direct routes to both outputs. When repeated bitwise cases remain ambiguous or low-margin, the network recruits weak separator nodes with broad exploratory links inside the operation area, while keeping scaffold meaning nodes out.
+The main mode now starts without the fixed pair layer. Sources begin with weak direct routes to both outputs. When repeated bitwise cases remain ambiguous or low-margin, the network recruits weak separator nodes through the recruitment strategy tuner, while keeping scaffold meaning nodes out.
 
 The earlier shaped pair topology is still available as a reference mode in tests.
 

@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import {
   PressureNetwork,
-  Signal,
   evaluateOperation,
 } from "../src/network.js";
 
@@ -15,9 +14,16 @@ function testTruthTable() {
   assert.equal(evaluateOperation(true, true, "nand"), false);
 }
 
-function testSignalHasNoTypeMeaning() {
-  const signal = new Signal({ strength: 1 });
-  assert.deepEqual(Object.keys(signal), ["strength"]);
+function testSourceIdentityIsStructural() {
+  const network = new PressureNetwork();
+  const source = network.getNode("A0");
+
+  source.inject(1);
+
+  assert.equal(source.id, "A0");
+  assert.equal(source.pressure, 1);
+  assert.equal(source.signalType, undefined);
+  assert.equal(source.acceptedSignalType, undefined);
 }
 
 function testThresholdActivation() {
@@ -606,10 +612,10 @@ const TEST_CASES = [
     run: testTruthTable,
   },
   {
-    name: "signal carries strength only",
+    name: "source identity is structural",
     kind: "error",
-    covers: "no semantic type stored in Signal",
-    run: testSignalHasNoTypeMeaning,
+    covers: "no semantic type stored in pressure payload",
+    run: testSourceIdentityIsStructural,
   },
   {
     name: "threshold gates node activation",

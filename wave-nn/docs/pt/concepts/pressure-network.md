@@ -8,10 +8,11 @@ Um sinal carrega apenas forca. A identidade do sinal vem de onde ele entra no gr
 
 ## Partes
 
-- `Signal`: apenas forca de pressao.
 - `PressureNode`: acumula pressao, ativa depois de limiar e decai.
 - `InputValve`: conecta um no a outro com resistencia e peso.
-- `OutputNode`: endpoint durante teste e fonte teacher durante treino por flood.
+- nos de saida agem como endpoints durante teste e fontes teacher durante treino por flood.
+
+Nao existe objeto runtime `Signal` no modelo atual. Nos de fonte injetam pressao diretamente, e o payload de pressao nao carrega tipo semantico.
 
 ## Regra Atual
 

@@ -65,40 +65,6 @@ const RECRUITMENT_STRATEGY_PROFILES = {
   },
 };
 
-const EXPLICIT_SET_CONCEPTS = [
-  { id: "AXIS_A", kind: "input-axis", members: ["A0", "A1"] },
-  { id: "AXIS_B", kind: "input-axis", members: ["B0", "B1"] },
-  { id: "OPTION_A0", kind: "input-option", members: ["A0"] },
-  { id: "OPTION_A1", kind: "input-option", members: ["A1"] },
-  { id: "OPTION_B0", kind: "input-option", members: ["B0"] },
-  { id: "OPTION_B1", kind: "input-option", members: ["B1"] },
-  { id: "PROP_VALUE_0", kind: "shared-property", members: ["A0", "B0"] },
-  { id: "PROP_VALUE_1", kind: "shared-property", members: ["A1", "B1"] },
-];
-
-const EXPLICIT_SET_RELATIONS = [
-  { kind: "membership", from: "A0", to: "AXIS_A" },
-  { kind: "membership", from: "A1", to: "AXIS_A" },
-  { kind: "membership", from: "B0", to: "AXIS_B" },
-  { kind: "membership", from: "B1", to: "AXIS_B" },
-  { kind: "option", from: "A0", to: "OPTION_A0" },
-  { kind: "option", from: "A1", to: "OPTION_A1" },
-  { kind: "option", from: "B0", to: "OPTION_B0" },
-  { kind: "option", from: "B1", to: "OPTION_B1" },
-  { kind: "mutual-exclusion", members: ["A0", "A1"], scope: "AXIS_A" },
-  { kind: "mutual-exclusion", members: ["B0", "B1"], scope: "AXIS_B" },
-  { kind: "co-presence", members: ["A0", "B0"] },
-  { kind: "co-presence", members: ["A0", "B1"] },
-  { kind: "co-presence", members: ["A1", "B0"] },
-  { kind: "co-presence", members: ["A1", "B1"] },
-  { kind: "shared-property", members: ["A0", "B0"], property: "PROP_VALUE_0" },
-  { kind: "shared-property", members: ["A1", "B1"], property: "PROP_VALUE_1" },
-  { kind: "generalization", from: "A0", to: "PROP_VALUE_0" },
-  { kind: "generalization", from: "B0", to: "PROP_VALUE_0" },
-  { kind: "generalization", from: "A1", to: "PROP_VALUE_1" },
-  { kind: "generalization", from: "B1", to: "PROP_VALUE_1" },
-];
-
 const SET_SCAFFOLD_FUNCTIONAL_DESCRIPTION = {
   sourcePattern: "axis+value",
   concepts: [
@@ -130,12 +96,6 @@ function sigmoid(value) {
 function logit(value) {
   const bounded = clamp(value, 0.001, 0.999);
   return Math.log(bounded / (1 - bounded));
-}
-
-export class Signal {
-  constructor({ strength }) {
-    this.strength = strength;
-  }
 }
 
 export class PressureNode {
@@ -416,21 +376,7 @@ export class PressureNetwork {
   }
 
   injectSetScaffold({ mode = "manual", confidence = 1 } = {}) {
-    this.setScaffold = {
-      mode,
-      injected: true,
-      concepts: EXPLICIT_SET_CONCEPTS.map((concept) => ({
-        ...concept,
-        source: mode,
-        confidence,
-      })),
-      relations: EXPLICIT_SET_RELATIONS.map((relation) => ({
-        ...relation,
-        source: mode,
-        confidence,
-      })),
-      injections: this.setScaffold.injections + 1,
-    };
+    this.setScaffold = this.generateSetScaffold({ mode, confidence });
     this.lastMode = "set-scaffold";
     return this.setScaffoldSummary();
   }

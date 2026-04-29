@@ -31,7 +31,7 @@ Para cada operacao: XOR, AND, OR, NAND.
 6. Clique `T`.
 7. Confira `Accuracy`.
 
-Resultado esperado: o sistema deve recrutar e tentar a operacao. A acuracia pode chegar a `100%`, mas com recrutados exploratorios amplos ela tambem pode falhar ou oscilar. Trate a falha como evidencia de que ainda faltam poda, precisao ou melhores limites entre areas.
+Resultado esperado: o sistema deve recrutar e tentar a operacao. A acuracia pode chegar a `100%`, mas recrutados exploratorios tambem podem falhar ou oscilar. Trate a falha como evidencia de que ainda faltam poda, precisao ou melhores limites entre areas.
 
 ## Teste De Recrutamento
 
@@ -41,7 +41,7 @@ Resultado esperado: o sistema deve recrutar e tentar a operacao. A acuracia pode
 4. Treine ciclos com `C` ou `A`.
 5. Observe nos ocultos recrutados aparecendo entre fontes e saidas.
 
-Resultado esperado: o modo principal comeca sem os pares fixos `H0` a `H3`. Separadores recrutados aparecem depois de pressao nao resolvida repetida. Cada recrutado deve se conectar amplamente dentro da area de operacao, mantendo os nos de scaffold/significado fora.
+Resultado esperado: o modo principal comeca sem os pares fixos `H0` a `H3`. Separadores recrutados aparecem depois de pressao nao resolvida repetida. Cada recrutado deve usar uma estrategia de conexao selecionada, mantendo os nos de scaffold/significado fora.
 
 ## Teste De Teacher Flood
 

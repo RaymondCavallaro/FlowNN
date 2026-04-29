@@ -70,3 +70,18 @@ acuracia / ambiguidade / margem / pressao de recrutamento
 ```
 
 O proximo passo e comparar essas sugestoes com os controles manuais de ecologia antes de deixar a camada dirigir plasticidade, modo de valvula, modo de limiar ou janelas temporais automaticamente.
+
+## Helpers De Runtime Estacionados
+
+O runtime carregava helpers genericos nao usados para interpolacao, escolha aleatoria e matematica de fase. Eles foram removidos de `src/math.js` ate que um recurso atual precise deles.
+
+Roteamento temporal pode reconstruir os helpers de fase a partir de:
+
+```text
+wrap01(value) = ((value % 1) + 1) % 1
+phaseDistance(a, b) = min(abs(wrap01(a) - wrap01(b)), 1 - abs(wrap01(a) - wrap01(b)))
+signedPhaseDelta(target, current):
+  delta = wrap01(target) - wrap01(current)
+  if delta > 0.5: delta -= 1
+  if delta < -0.5: delta += 1
+```

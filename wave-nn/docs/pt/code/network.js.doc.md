@@ -21,7 +21,7 @@ O arquivo de codigo deve ficar relativamente limpo. Esta pagina carrega a explic
 
 ## Regra Importante
 
-`Signal` carrega apenas `strength`. Identidade vem da fonte e da topologia. O sistema deve evitar tipo semantico explicito, tipo aceito por no, historico de rota e backprop.
+Nao existe objeto runtime `Signal` separado. Pressao e injetada diretamente em nos de fonte/saida como forca, e identidade continua estrutural. O sistema deve evitar tipo semantico explicito, tipo aceito por no, historico de rota e backprop.
 
 ## Teste
 
@@ -29,7 +29,7 @@ O arquivo de codigo deve ficar relativamente limpo. Esta pagina carrega a explic
 
 ## Scaffold De Conjuntos
 
-`injectSetScaffold` injeta conceitos e relacoes explicitas sem treinar rotas de pressao. O scaffold inclui pertencimento a eixo, opcoes de entrada, exclusao mutua, co-presenca, propriedade compartilhada de valor e generalizacao.
+`injectSetScaffold` injeta conceitos e relacoes explicitas sem treinar rotas de pressao. Ele usa o gerador funcional de scaffold com `source = manual`, produzindo pertencimento a eixo, opcoes de entrada, exclusao mutua, co-presenca, propriedade compartilhada de valor e generalizacao.
 
 As relacoes injetadas sao marcadas por origem:
 
@@ -49,7 +49,7 @@ source = generated
 
 ## Recrutamento
 
-Quando uma assinatura nao resolvida persiste, a rede cria um separador fraco. A estrategia atual conecta o separador de forma ampla dentro da area de operacao e exclui nos de scaffold/significado. Rotas de saida para o recrutado sao `trainingOnly`, para que teste somente com entradas nao comece injetando pressao de resposta para tras.
+Quando uma assinatura nao resolvida persiste, a rede cria um separador fraco. O tuner de estrategia de recrutamento escolhe quao ampla deve ser a conexao dentro da area de operacao, mantendo nos de scaffold/significado fora. Rotas de saida para o recrutado sao `trainingOnly`, para que teste somente com entradas nao comece injetando pressao de resposta para tras.
 
 `recruitmentPolicyFor` nao contem mais uma resposta fixa para onde um separador deve se conectar. Ele monta estrategias candidatas e deixa o controlador de recrutamento escolher uma.
 
