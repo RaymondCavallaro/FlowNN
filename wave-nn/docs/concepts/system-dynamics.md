@@ -69,6 +69,21 @@ precision = trust assigned to that error
 
 The active-inference idea should enter as local node and route dynamics, not as a separate controller that knows the answer from outside the current pressure state.
 
+## Later Self And Values Direction
+
+Values should not be added as external reward labels. They require lower-level dynamics first:
+
+```text
+continuity of experience
+-> self-model
+-> self-boundary
+-> consequence attribution
+-> preference stability
+-> value hierarchy
+```
+
+The important bridge is option-space. A system should compare the chosen action against options that were available under the same constraints before updating regret, reinforcement, or value hierarchy. See [Self, Values, And Curiosity](self-values-and-curiosity.md).
+
 ## Later Translation
 
 After separator recruitment is stable and inspectable, the next dynamics can be introduced in this order:

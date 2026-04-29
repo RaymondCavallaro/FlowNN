@@ -251,6 +251,8 @@ Implementation guidance:
 - Information-landscape metrics: track uncertainty, margin, drift, calibration quality, and transfer stability.
 - Continuous unresolved-state memory with decay and competition between traces.
 - Primitive set/property intuition before smarter recruitment strategies.
+- Set coherence before CSP-like resolution, and value-weighted choice only after option-space comparison.
+- Self-continuity, option-space, and consequence attribution before value hierarchy or curiosity-as-value.
 - Time integration: keep Laplace-like transformation as an early layer, then let routed temporal behavior refine meaning.
 - Bridge-node and concept-node recruitment after separator recruitment is inspectable.
 - Knowledge transfer / reuse: recruit existing basins in new contexts instead of creating new nodes every time.

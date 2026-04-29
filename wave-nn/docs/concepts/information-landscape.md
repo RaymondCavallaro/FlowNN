@@ -117,6 +117,8 @@ In the bitwise lab, probes can be simple:
 - withhold one row and see whether structure transfers;
 - compare direct routes against recruited routes.
 
+Later, curiosity can regulate probing by lowering resistance to unexplored paths only when uncertainty and potential impact are both high. See [Self, Values, And Curiosity](self-values-and-curiosity.md).
+
 Useful regimes:
 
 - confused basin: low margin, high drift, no stable explanation;

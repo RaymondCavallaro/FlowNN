@@ -31,6 +31,10 @@ Antes de tornar o recrutamento mais inteligente, o sistema precisa de intuicoes 
 
 Ao procurar um novo conceito, ele deve comparar invariantes candidatos com conceitos similares ja conhecidos, descartar explicacoes ja cobertas, e aceitar apenas o invariante estavel que sobra.
 
+Valores e curiosidade-como-valor devem vir depois de continuidade do self, fronteira do self, espaco de opcoes e atribuicao de consequencia.
+
+Coerencia de conjuntos deve vir antes de resolucao tipo CSP; escolha ponderada por valores deve vir depois da comparacao do espaco de opcoes.
+
 ## Proximo Recurso
 
 A proxima linha principal e crescimento de topologia:

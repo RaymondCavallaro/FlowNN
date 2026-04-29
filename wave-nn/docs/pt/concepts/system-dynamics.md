@@ -34,3 +34,18 @@ precision = trust assigned to that error
 ```
 
 A ideia de active inference deve entrar como dinamica local de no e rota, nao como controlador externo que sabe a resposta.
+
+## Direcao Posterior De Self E Valores
+
+Valores nao devem entrar como rotulos externos de recompensa. Eles precisam de dinamicas inferiores primeiro:
+
+```text
+continuidade de experiencia
+-> modelo de self
+-> fronteira do self
+-> atribuicao de consequencia
+-> estabilidade de preferencia
+-> hierarquia de valores
+```
+
+A ponte importante e o espaco de opcoes. O sistema deve comparar a acao escolhida contra opcoes que estavam disponiveis sob as mesmas restricoes antes de atualizar arrependimento, reforco ou hierarquia de valores. Veja [Self, Valores E Curiosidade](self-values-and-curiosity.md).

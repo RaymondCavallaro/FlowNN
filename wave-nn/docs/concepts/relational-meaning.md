@@ -132,6 +132,52 @@ A1 and B1 share VALUE_1
 
 Those distinctions matter because recruitment should not treat every co-visible node as the same kind of neighbor. A valid case context, an alternative option, a shared property, and an output role require different strategies.
 
+## Set Coherence Before CSP
+
+Set intuition should come before CSP-like constraint solving.
+
+The useful order is:
+
+```text
+signal grouping
+-> object / category sets
+-> relation sets
+-> self/world boundary sets
+-> option sets
+-> constraint sets
+-> CSP-like solving
+```
+
+Early cognition should not begin by solving constraints formally. It should first stabilize possible worlds:
+
+```text
+what belongs together
+what excludes what
+what overlaps
+what can coexist
+what cannot coexist
+```
+
+Example sets:
+
+```text
+Self-set       = things belonging to me
+World-set      = things outside me
+Action-set     = things I can do
+Forbidden-set  = things that break coherence
+Possible-set   = options still available
+```
+
+This gives a three-step direction:
+
+```text
+set formation = soft coherence
+constraint formation = conflict detection
+CSP solving = later structured resolution
+```
+
+Coherence comes before goal maximization. The system should first learn that a state cannot be both `me` and `not-me`, an option can be possible while violating another set, and a memory can conflict with current perception. Only later should it ask which coherent option best satisfies values.
+
 ## Invariant By Exclusion
 
 To arrive at an invariant that correctly points to a new concept, the system should not accept the first shared pattern it sees.

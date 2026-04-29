@@ -18,6 +18,6 @@ A implementacao e pequena de proposito. A topologia principal comeca subestrutur
 
 ## Caminho De Leitura
 
-Comece por [Convergencia do Nucleo](concepts/core-convergence.md), depois [Rede de Pressao](concepts/pressure-network.md), [Topologia](concepts/topology.md), [Significado Relacional](concepts/relational-meaning.md), [Paisagem de Informacao](concepts/information-landscape.md), [Dinamica do Sistema](concepts/system-dynamics.md), [Recursos](features.md), [Testes](tests.md), [Teste Manual](manual-testing.md), e as notas de implementacao de [network.js](code/network.js.doc.md).
+Comece por [Convergencia do Nucleo](concepts/core-convergence.md), depois [Rede de Pressao](concepts/pressure-network.md), [Topologia](concepts/topology.md), [Significado Relacional](concepts/relational-meaning.md), [Paisagem de Informacao](concepts/information-landscape.md), [Dinamica do Sistema](concepts/system-dynamics.md). Notas de fase posterior ficam em [Self, Valores E Curiosidade](concepts/self-values-and-curiosity.md). Depois leia [Recursos](features.md), [Testes](tests.md), [Teste Manual](manual-testing.md), e as notas de implementacao de [network.js](code/network.js.doc.md).
 
 Para proximos passos, veja [Roadmap](concepts/roadmap.md).

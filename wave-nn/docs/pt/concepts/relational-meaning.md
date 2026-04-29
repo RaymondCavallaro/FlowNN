@@ -60,6 +60,52 @@ A1 e B1 compartilham VALUE_1
 
 Essas distincoes importam porque recrutamento nao deve tratar todo no co-visivel como o mesmo tipo de vizinho. Contexto valido de caso, opcao alternativa, propriedade compartilhada e papel de saida pedem estrategias diferentes.
 
+## Coerencia De Conjuntos Antes De CSP
+
+Intuicao de conjunto deve vir antes de resolucao tipo CSP.
+
+A ordem util e:
+
+```text
+agrupamento de sinais
+-> conjuntos de objeto / categoria
+-> conjuntos de relacao
+-> conjuntos de fronteira self/mundo
+-> conjuntos de opcoes
+-> conjuntos de restricoes
+-> resolucao tipo CSP
+```
+
+A cognicao inicial nao deve comecar resolvendo restricoes formalmente. Ela deve primeiro estabilizar mundos possiveis:
+
+```text
+o que pertence junto
+o que exclui o que
+o que sobrepoe
+o que pode coexistir
+o que nao pode coexistir
+```
+
+Exemplos de conjuntos:
+
+```text
+Self-set       = coisas que pertencem a mim
+World-set      = coisas fora de mim
+Action-set     = coisas que posso fazer
+Forbidden-set  = coisas que quebram coerencia
+Possible-set   = opcoes ainda disponiveis
+```
+
+Isso da uma direcao em tres passos:
+
+```text
+formacao de conjuntos = coerencia suave
+formacao de restricoes = deteccao de conflito
+resolucao CSP = resolucao estruturada posterior
+```
+
+Coerencia vem antes de maximizacao de objetivo. O sistema deve primeiro aprender que um estado nao pode ser `eu` e `nao-eu` ao mesmo tempo, que uma opcao pode ser possivel enquanto viola outro conjunto, e que uma memoria pode conflitar com a percepcao atual. So depois ele deve perguntar qual opcao coerente melhor satisfaz valores.
+
 ## Invariante Por Exclusao
 
 Para chegar a um invariante que aponta corretamente para um novo conceito, o sistema nao deve aceitar o primeiro padrao compartilhado que encontra.

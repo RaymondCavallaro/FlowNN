@@ -19,6 +19,7 @@ nav:
       - Relational Meaning: concepts/relational-meaning.md
       - Information Landscape: concepts/information-landscape.md
       - System Dynamics: concepts/system-dynamics.md
+      - Self, Values, And Curiosity: concepts/self-values-and-curiosity.md
       - Roadmap: concepts/roadmap.md
   - Code Notes:
       - network.js: code/network.js.doc.md
@@ -39,6 +40,7 @@ nav:
           - Significado Relacional: pt/concepts/relational-meaning.md
           - Paisagem de Informacao: pt/concepts/information-landscape.md
           - Dinamica do Sistema: pt/concepts/system-dynamics.md
+          - Self, Valores E Curiosidade: pt/concepts/self-values-and-curiosity.md
           - Roadmap: pt/concepts/roadmap.md
       - Codigo:
           - network.js: pt/code/network.js.doc.md

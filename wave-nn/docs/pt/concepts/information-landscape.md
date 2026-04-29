@@ -57,3 +57,5 @@ Regimes uteis:
 - bacia de memorizacao;
 - bacia de regra;
 - bacia supercomprimida.
+
+Mais tarde, curiosidade pode regular probing ao reduzir resistencia de caminhos pouco explorados apenas quando incerteza e impacto potencial sao altos. Veja [Self, Valores E Curiosidade](self-values-and-curiosity.md).
