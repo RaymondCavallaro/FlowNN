@@ -17,6 +17,7 @@ A implementacao e pequena de proposito. A topologia principal comeca subestrutur
 - Valvulas reversas de saida reservadas para treino com teacher flood.
 - Leituras relacionais de saida que podem propor pares candidatos de fonte.
 - Eixos observacionais de meta-regulacao para plasticidade, exploracao, certeza e pressao de restricao.
+- Injecao manual de scaffold conjunto/propriedade, mantida explicita para depois virar recrutamento automatico.
 
 ## Caminho De Leitura
 

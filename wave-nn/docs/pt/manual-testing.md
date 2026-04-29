@@ -71,6 +71,16 @@ Resultado esperado: abertura de valvulas e media de limiares mudam de forma inde
 
 Resultado esperado: explicacoes mencionam primitivas de origem/valor, assinaturas de recrutamento ou leituras de relacao/invariante quando ha estrutura suficiente.
 
+## Teste De Injecao Do Scaffold De Conjuntos
+
+1. Resete a demo.
+2. Clique `∈`.
+3. Veja `Sets`; ele deve mostrar a quantidade de conceitos injetados.
+4. Clique `A0`, `A1`, `B0` ou `B1`.
+5. Leia `Set concepts` no inspector.
+
+Resultado esperado: explicacoes de fonte mostram relacoes manuais de conjunto/propriedade como pertencimento a eixo, exclusao mutua, co-presenca e propriedade compartilhada de valor. Isso e scaffold explicito, ainda nao conhecimento descoberto.
+
 ## Teste De Pulso Manual
 
 1. Clique `A0`, `A1`, `B0` ou `B1`.

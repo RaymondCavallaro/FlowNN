@@ -16,6 +16,7 @@ O arquivo de codigo deve ficar relativamente limpo. Esta pagina carrega a explic
 - observar pressao nao resolvida;
 - recrutar separadores exploratorios quando ha ambiguidade repetida;
 - produzir explicacoes para o inspector;
+- injetar conceitos explicitos de conjunto/propriedade como scaffold manual;
 - gerar pares candidatos de fonte a partir de invariantes relacionais de saida.
 
 ## Regra Importante
@@ -25,6 +26,18 @@ O arquivo de codigo deve ficar relativamente limpo. Esta pagina carrega a explic
 ## Teste
 
 `testCase` injeta apenas fontes de entrada. Ele mede as saidas durante a janela de assentamento porque o pulso significativo pode acontecer antes do quadro final.
+
+## Scaffold De Conjuntos
+
+`injectSetScaffold` injeta conceitos e relacoes explicitas sem treinar rotas de pressao. O scaffold inclui pertencimento a eixo, opcoes de entrada, exclusao mutua, co-presenca, propriedade compartilhada de valor e generalizacao.
+
+As relacoes injetadas sao marcadas por origem:
+
+```text
+source = manual
+```
+
+assim o recrutamento automatico posterior pode reutilizar a mesma forma sem fingir que o scaffold manual foi descoberto pela rede.
 
 ## Recrutamento
 

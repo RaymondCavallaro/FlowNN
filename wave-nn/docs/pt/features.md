@@ -18,6 +18,7 @@ Esta pagina nomeia explicitamente os recursos atuais do FlowNN. Um recurso so de
 | Plasticidade regional | Regioes de operacao, origem e valor consolidam em ritmos diferentes. | `operation plasticity consolidates after stable cycles`; `scaffold training locks primitive regions` |
 | Teacher balanceado por raridade | Saidas raras podem receber teacher mais forte ou mais longo. | `teacher strength balances rare outputs`; `teacher duration balances rare outputs` |
 | Scaffold de origem/valor | Significados primitivos sao treinados separados das operacoes. | `semantic scaffold topology exists`; `scaffold training locks primitive regions` |
+| Scaffold explicito de conjuntos | Conceitos de conjunto/propriedade podem ser injetados manualmente como scaffold inspecionavel para recrutamento autonomo posterior. | `set scaffold starts explicit and empty`; `inject set scaffold adds manual concepts` |
 | Explicacao de significado | O inspector le estrutura aprendida, scaffold e relacoes. | `meaning explanations use scaffold primitives`; `relation reader extracts operation meanings` |
 | Leitura relacional generativa | Uma relacao de saida pode gerar pares candidatos de fonte a partir dos invariantes aprendidos. | `relation reader generates source candidates` |
 | Scaffold de meta-regulacao | A rede relata eixos de tensao adaptativa e controles sugeridos de aprendizagem a partir de estabilidade, ambiguidade e pressao de recrutamento. | `meta regulation responds to uncertainty`; `meta regulation consolidates stable behavior` |

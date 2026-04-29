@@ -11,6 +11,7 @@ const controls = {
   trainRowButton: document.querySelector("#trainRowButton"),
   trainCycleButton: document.querySelector("#trainCycleButton"),
   trainScaffoldButton: document.querySelector("#trainScaffoldButton"),
+  injectSetButton: document.querySelector("#injectSetButton"),
   testCycleButton: document.querySelector("#testCycleButton"),
   resetButton: document.querySelector("#resetButton"),
   operationSelect: document.querySelector("#operationSelect"),
@@ -34,6 +35,7 @@ const controls = {
   modeMetric: document.querySelector("#modeMetric"),
   topologyMetric: document.querySelector("#topologyMetric"),
   recruitmentMetric: document.querySelector("#recruitmentMetric"),
+  setMetric: document.querySelector("#setMetric"),
   lastMetric: document.querySelector("#lastMetric"),
   inspector: document.querySelector("#inspector"),
 };
@@ -79,6 +81,12 @@ function trainScaffold() {
   renderInspector();
 }
 
+function injectSetScaffold() {
+  network.injectSetScaffold({ mode: "manual" });
+  state.metrics = network.metrics();
+  renderInspector();
+}
+
 function testCycle() {
   network.testCycle();
   state.metrics = network.metrics();
@@ -94,6 +102,7 @@ controls.autoToggle.addEventListener("click", () => {
 controls.trainRowButton.addEventListener("click", () => trainRow());
 controls.trainCycleButton.addEventListener("click", () => trainCycle());
 controls.trainScaffoldButton.addEventListener("click", () => trainScaffold());
+controls.injectSetButton.addEventListener("click", () => injectSetScaffold());
 controls.testCycleButton.addEventListener("click", () => testCycle());
 
 controls.resetButton.addEventListener("click", () => {
@@ -140,6 +149,7 @@ function updateMetrics(metrics) {
   controls.modeMetric.textContent = metrics.mode;
   controls.topologyMetric.textContent = metrics.topology === "recruitable" ? "Grow" : "Fixed";
   controls.recruitmentMetric.textContent = String(metrics.recruitment.nodeCount);
+  controls.setMetric.textContent = metrics.setScaffold.injected ? String(metrics.setScaffold.conceptCount) : "--";
   controls.lastMetric.textContent = formatLast(metrics.lastResult);
 }
 
@@ -197,7 +207,14 @@ function formatExplanation(explanation) {
     return `<h3>Meaning inputs</h3><p>${formatWeighted(explanation.inputs)}</p>`;
   }
   if (explanation.meanings) {
-    return `<h3>Forward meaning</h3><p>${formatWeighted(explanation.meanings)}</p>`;
+    const setConcepts = formatSetConcepts(explanation.setConcepts);
+    return `
+      <h3>Forward meaning</h3>
+      <p>${formatWeighted(explanation.meanings)}</p>
+      <dl>
+        <dt>Set concepts</dt><dd>${setConcepts}</dd>
+      </dl>
+    `;
   }
   if (explanation.kind === "pair") {
     const sources = explanation.sources.join(" + ");
@@ -260,6 +277,18 @@ function formatWeighted(items) {
     .slice(0, 4)
     .map((item) => `${item.id} ${item.strength.toFixed(2)}`)
     .join(", ");
+}
+
+function formatSetConcepts(items) {
+  if (!items?.length) return "none";
+  return items
+    .slice(0, 6)
+    .map((item) => {
+      const target = item.target ? ` -> ${item.target}` : "";
+      const members = item.members?.length ? ` [${item.members.join(", ")}]` : "";
+      return `${item.kind}${target}${members}`;
+    })
+    .join("<br />");
 }
 
 function formatRecruitment(recruitment) {

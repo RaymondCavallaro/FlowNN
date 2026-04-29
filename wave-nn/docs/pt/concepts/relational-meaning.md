@@ -91,6 +91,33 @@ A1 e B1 compartilham VALUE_1
 
 Essas distincoes importam porque recrutamento nao deve tratar todo no co-visivel como o mesmo tipo de vizinho. Contexto valido de caso, opcao alternativa, propriedade compartilhada e papel de saida pedem estrategias diferentes.
 
+## Scaffold Explicito E Injetavel De Conjuntos
+
+A implementacao atual pode trapacear de proposito ao injetar conceitos de conjunto/propriedade como scaffold explicito.
+
+A injecao manual adiciona relacoes inspecionaveis como:
+
+```text
+A0 pertence-a AXIS_A
+A1 pertence-a AXIS_A
+A0 exclui A1 dentro de AXIS_A
+A0 pode-coexistir-com B1
+A0 compartilha PROP_VALUE_0 com B0
+```
+
+Isso nao e tratado como conhecimento descoberto. Cada conceito e relacao injetada fica marcado com `source = manual`.
+
+O objetivo e tornar claro o mecanismo de controle antes de devolve-lo ao sistema:
+
+```text
+scaffold manual de conjuntos
+-> forma inspecionavel de conceito/relacao
+-> comparacao com traces aprendidos
+-> recrutamento automatico posterior dos mesmos tipos de conceito
+```
+
+O modo automatico futuro deve usar pressao nao resolvida, co-presenca repetida, exclusao mutua e propriedades compartilhadas estaveis para recrutar conceitos de conjunto equivalentes dinamicamente.
+
 ## Coerencia De Conjuntos Antes De CSP
 
 Intuicao de conjunto deve vir antes de resolucao tipo CSP.

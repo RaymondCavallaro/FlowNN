@@ -59,6 +59,16 @@ The current regions are `origin`, `value`, and `operation`.
 
 `trainScaffold` trains the primitive origin/value meanings and then lowers plasticity for those scaffold regions. Operation training can then learn truth-table behavior while the primitive meanings remain relatively stable.
 
+`injectSetScaffold` is a separate explicit scaffold. It does not train pressure routes. It injects inspectable set/property concepts and relations such as axis membership, input options, mutual exclusion, co-presence, shared value property, and generalization.
+
+Injected set relations are marked by source:
+
+```text
+source = manual
+```
+
+so later automatic recruitment can use the same shape without pretending the manual scaffold was discovered.
+
 Operation plasticity is updated by `updateOperationPlasticityFromCycle`, which receives a full input-only truth-table test cycle. Local valve events do not directly change operation plasticity.
 
 When cycle accuracy improves or remains perfect, regional plasticity drops. When cycle accuracy falls, regional plasticity rises.
@@ -139,6 +149,7 @@ In recruitable mode, direct source-to-output operation routes learn slowly. Sepa
 `explainNode` exposes forward and backward signatures:
 
 - source nodes report which scaffold meanings they support;
+- source nodes report injected set/property relations when the set scaffold is active;
 - hidden nodes report source structure, origin/value composition, output role, and recruitment state when present;
 - output nodes report value meaning and hidden-node supporters.
 

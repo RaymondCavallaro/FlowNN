@@ -71,6 +71,16 @@ Expected result: valve openness and threshold averages move independently.
 
 Expected result: explanations should mention origin/value primitives, recruitment signatures, or relation/invariant readings when enough structure exists.
 
+## Set Scaffold Injection Test
+
+1. Reset the demo.
+2. Click `∈`.
+3. Watch `Sets`; it should show the injected concept count.
+4. Click `A0`, `A1`, `B0`, or `B1`.
+5. Read `Set concepts` in the inspector.
+
+Expected result: source explanations should show manual set/property relations such as axis membership, mutual exclusion, co-presence, and shared value property. This is an explicit scaffold, not discovered knowledge yet.
+
 ## Manual Source Pulse Test
 
 1. Click `A0`, `A1`, `B0`, or `B1`.

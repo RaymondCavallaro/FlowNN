@@ -10,6 +10,7 @@ It owns:
 - operation selection;
 - auto-training cadence;
 - manual source pulses;
+- manual set/property scaffold injection;
 - metrics display;
 - inspector rendering;
 - animation frame scheduling.

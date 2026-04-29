@@ -58,6 +58,7 @@ Tests also record diagnostic peak, area, duration, and hybrid output predictions
 - `+`: train one truth-table row.
 - `C`: train one full truth-table cycle.
 - `T`: test one full truth-table cycle.
+- `∈`: inject the explicit set/property scaffold.
 - `A`: toggle auto-train.
 - `R`: reset.
 - Operation selector: XOR, AND, OR, NAND.

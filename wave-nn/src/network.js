@@ -22,6 +22,40 @@ const RECRUIT_EXPLORATORY_RESISTANCE = 0.72;
 const RECRUIT_EXPLORATORY_WEIGHT = 0.42;
 const META_LOW_MARGIN_WINDOW = 16;
 
+const EXPLICIT_SET_CONCEPTS = [
+  { id: "AXIS_A", kind: "input-axis", members: ["A0", "A1"] },
+  { id: "AXIS_B", kind: "input-axis", members: ["B0", "B1"] },
+  { id: "OPTION_A0", kind: "input-option", members: ["A0"] },
+  { id: "OPTION_A1", kind: "input-option", members: ["A1"] },
+  { id: "OPTION_B0", kind: "input-option", members: ["B0"] },
+  { id: "OPTION_B1", kind: "input-option", members: ["B1"] },
+  { id: "PROP_VALUE_0", kind: "shared-property", members: ["A0", "B0"] },
+  { id: "PROP_VALUE_1", kind: "shared-property", members: ["A1", "B1"] },
+];
+
+const EXPLICIT_SET_RELATIONS = [
+  { kind: "membership", from: "A0", to: "AXIS_A" },
+  { kind: "membership", from: "A1", to: "AXIS_A" },
+  { kind: "membership", from: "B0", to: "AXIS_B" },
+  { kind: "membership", from: "B1", to: "AXIS_B" },
+  { kind: "option", from: "A0", to: "OPTION_A0" },
+  { kind: "option", from: "A1", to: "OPTION_A1" },
+  { kind: "option", from: "B0", to: "OPTION_B0" },
+  { kind: "option", from: "B1", to: "OPTION_B1" },
+  { kind: "mutual-exclusion", members: ["A0", "A1"], scope: "AXIS_A" },
+  { kind: "mutual-exclusion", members: ["B0", "B1"], scope: "AXIS_B" },
+  { kind: "co-presence", members: ["A0", "B0"] },
+  { kind: "co-presence", members: ["A0", "B1"] },
+  { kind: "co-presence", members: ["A1", "B0"] },
+  { kind: "co-presence", members: ["A1", "B1"] },
+  { kind: "shared-property", members: ["A0", "B0"], property: "PROP_VALUE_0" },
+  { kind: "shared-property", members: ["A1", "B1"], property: "PROP_VALUE_1" },
+  { kind: "generalization", from: "A0", to: "PROP_VALUE_0" },
+  { kind: "generalization", from: "B0", to: "PROP_VALUE_0" },
+  { kind: "generalization", from: "A1", to: "PROP_VALUE_1" },
+  { kind: "generalization", from: "B1", to: "PROP_VALUE_1" },
+];
+
 function sigmoid(value) {
   if (value > 40) return 1 - 1e-12;
   if (value < -40) return 1e-12;
@@ -167,6 +201,7 @@ export class PressureNetwork {
     this.perfectCycleStreak = 0;
     this.lastCycleSummary = null;
     this.recruitment = null;
+    this.setScaffold = null;
     this.time = 0;
     this.reset();
   }
@@ -198,6 +233,7 @@ export class PressureNetwork {
       observations: new Map(),
       events: [],
     };
+    this.setScaffold = this.emptySetScaffold();
     this.time = 0;
 
     this.nodes = [
@@ -291,6 +327,36 @@ export class PressureNetwork {
 
   regionPlasticity(id) {
     return this.getRegion(id)?.plasticity ?? 1;
+  }
+
+  emptySetScaffold() {
+    return {
+      mode: "manual",
+      injected: false,
+      concepts: [],
+      relations: [],
+      injections: 0,
+    };
+  }
+
+  injectSetScaffold({ mode = "manual", confidence = 1 } = {}) {
+    this.setScaffold = {
+      mode,
+      injected: true,
+      concepts: EXPLICIT_SET_CONCEPTS.map((concept) => ({
+        ...concept,
+        source: mode,
+        confidence,
+      })),
+      relations: EXPLICIT_SET_RELATIONS.map((relation) => ({
+        ...relation,
+        source: mode,
+        confidence,
+      })),
+      injections: this.setScaffold.injections + 1,
+    };
+    this.lastMode = "set-scaffold";
+    return this.setScaffoldSummary();
   }
 
   trainScaffold({ learning = 0.65, cycles = 1, lock = true } = {}) {
@@ -853,6 +919,7 @@ export class PressureNetwork {
       topology: this.topology,
       recruitment: this.recruitmentSummary(),
       scaffold: this.scaffoldSummary(),
+      setScaffold: this.setScaffoldSummary(),
       explanation: this.explainOperation(),
       metaRegulation: this.metaRegulationState(),
       lastCycleAccuracy: this.lastCycleAccuracy,
@@ -971,6 +1038,22 @@ export class PressureNetwork {
     return { origin, value };
   }
 
+  setScaffoldSummary() {
+    const relationsByKind = {};
+    for (const relation of this.setScaffold.relations) {
+      relationsByKind[relation.kind] = (relationsByKind[relation.kind] ?? 0) + 1;
+    }
+
+    return {
+      mode: this.setScaffold.mode,
+      injected: this.setScaffold.injected,
+      conceptCount: this.setScaffold.concepts.length,
+      relationCount: this.setScaffold.relations.length,
+      injections: this.setScaffold.injections,
+      relationsByKind,
+    };
+  }
+
   describeMeaningNode(nodeId) {
     const inputs = this.valves
       .filter((valve) => valve.to === nodeId && !valve.trainingOnly)
@@ -1000,7 +1083,26 @@ export class PressureNetwork {
         strength: valve.weight * valve.openness,
       }))
       .sort((a, b) => b.strength - a.strength);
-    return { id: sourceId, direction: "forward", meanings };
+    return {
+      id: sourceId,
+      direction: "forward",
+      meanings,
+      setConcepts: this.explainSetMembership(sourceId),
+    };
+  }
+
+  explainSetMembership(sourceId) {
+    if (!this.setScaffold.injected) return [];
+    return this.setScaffold.relations.filter((relation) => {
+      if (relation.from === sourceId) return true;
+      return relation.members?.includes(sourceId);
+    }).map((relation) => ({
+      kind: relation.kind,
+      target: relation.to ?? relation.property ?? relation.scope ?? null,
+      members: relation.members ?? [relation.from, relation.to].filter(Boolean),
+      confidence: relation.confidence,
+      source: relation.source,
+    }));
   }
 
   explainPairNode(nodeId) {

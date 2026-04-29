@@ -38,6 +38,7 @@ A versao atual e um app de navegador simples com:
 - topologia inicial sem camada fixa de pares no modo principal
 - recrutamento de separadores quando casos repetidos nao assentam bem
 - scaffold de significado para origem e valor
+- scaffold explicito e injetavel de conjuntos/propriedades
 - leitura relacional de invariantes aprendidos
 - geracao restrita de pares de fonte a partir de relacoes de saida
 - scaffold observacional de meta-regulacao para controlar plasticidade, exploracao e certeza

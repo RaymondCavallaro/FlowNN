@@ -27,6 +27,8 @@ Cada teste e registrado com:
 | feature | teacher strength balances rare outputs | pressao teacher balanceada por raridade |
 | feature | teacher duration balances rare outputs | duracao teacher balanceada por raridade |
 | feature | semantic scaffold topology exists | regioes primitivas de origem/valor |
+| feature | set scaffold starts explicit and empty | scaffold manual de conjuntos comeca nao injetado |
+| feature | inject set scaffold adds manual concepts | injecao manual de scaffold conjunto/propriedade |
 | feature | scaffold training locks primitive regions | consolidacao de origem/valor |
 | feature | meaning explanations use scaffold primitives | explicacao por significados primitivos |
 | feature | relation reader extracts operation meanings | invariantes de operacao |

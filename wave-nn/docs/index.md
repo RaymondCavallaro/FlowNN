@@ -17,6 +17,7 @@ The implementation is intentionally small. The main topology now starts under-st
 - Reserved reverse valves from outputs for later teacher-flood experiments.
 - Output relation reads that can propose constrained source-pair candidates.
 - Observational meta-regulation axes for plasticity, exploration, certainty, and constraint pressure.
+- Manual set/property scaffold injection, kept explicit so it can later become automatic recruitment.
 
 ## Reading Path
 

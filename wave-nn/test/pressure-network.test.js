@@ -149,6 +149,30 @@ function testSemanticScaffoldTopology() {
   assert.equal(network.getValve("A0->ORIGIN_A").region, "origin");
 }
 
+function testSetScaffoldStartsExplicitAndEmpty() {
+  const network = new PressureNetwork();
+  const summary = network.metrics().setScaffold;
+
+  assert.equal(summary.mode, "manual");
+  assert.equal(summary.injected, false);
+  assert.equal(summary.conceptCount, 0);
+  assert.equal(summary.relationCount, 0);
+}
+
+function testInjectSetScaffoldAddsManualConcepts() {
+  const network = new PressureNetwork();
+  const summary = network.injectSetScaffold({ mode: "manual" });
+  const source = network.explainSource("A0");
+
+  assert.equal(summary.injected, true);
+  assert.equal(summary.mode, "manual");
+  assert.ok(summary.conceptCount > 0);
+  assert.ok(summary.relationsByKind.membership > 0);
+  assert.ok(summary.relationsByKind["mutual-exclusion"] > 0);
+  assert.ok(source.setConcepts.some((concept) => concept.kind === "membership" && concept.target === "AXIS_A"));
+  assert.ok(source.setConcepts.some((concept) => concept.kind === "shared-property" && concept.target === "PROP_VALUE_0"));
+}
+
 function testScaffoldTrainingLocksPrimitiveRegions() {
   const network = new PressureNetwork();
   network.trainScaffold({ cycles: 2, lock: true });
@@ -474,6 +498,18 @@ const TEST_CASES = [
     kind: "feature",
     covers: "origin/value primitive regions",
     run: testSemanticScaffoldTopology,
+  },
+  {
+    name: "set scaffold starts explicit and empty",
+    kind: "feature",
+    covers: "manual set scaffold starts uninjected",
+    run: testSetScaffoldStartsExplicitAndEmpty,
+  },
+  {
+    name: "inject set scaffold adds manual concepts",
+    kind: "feature",
+    covers: "manual set/property scaffold injection",
+    run: testInjectSetScaffoldAddsManualConcepts,
   },
   {
     name: "scaffold training locks primitive regions",

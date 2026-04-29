@@ -38,6 +38,7 @@ The current version is a plain browser app with:
 - main mode without a fixed pair layer
 - separator recruitment when repeated cases do not settle cleanly
 - origin/value meaning scaffold
+- explicit injectable set/property scaffold
 - relational reading of learned invariants
 - constrained source-pair generation from output relations
 - observational meta-regulation scaffold for plasticity, exploration, and certainty control

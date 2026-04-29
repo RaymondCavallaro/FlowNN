@@ -163,6 +163,33 @@ A1 and B1 share VALUE_1
 
 Those distinctions matter because recruitment should not treat every co-visible node as the same kind of neighbor. A valid case context, an alternative option, a shared property, and an output role require different strategies.
 
+## Explicit Injectable Set Scaffold
+
+The current implementation is allowed to cheat deliberately by injecting set/property concepts as an explicit scaffold.
+
+Manual injection adds inspectable relations such as:
+
+```text
+A0 member-of AXIS_A
+A1 member-of AXIS_A
+A0 excludes A1 within AXIS_A
+A0 can-co-present-with B1
+A0 shares PROP_VALUE_0 with B0
+```
+
+This is not treated as discovered knowledge. Each injected concept and relation is marked with `source = manual`.
+
+The point is to make the control mechanism clear before giving it back to the system:
+
+```text
+manual set scaffold
+-> inspectable concept/relation shape
+-> compare with learned traces
+-> later auto-recruit the same concept types
+```
+
+The future automatic mode should use unresolved pressure, repeated co-presence, mutual exclusion, and stable shared properties to recruit equivalent set concepts dynamically.
+
 ## Set Coherence Before CSP
 
 Set intuition should come before CSP-like constraint solving.

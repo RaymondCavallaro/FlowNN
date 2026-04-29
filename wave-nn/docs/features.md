@@ -18,6 +18,7 @@ This page names the current FlowNN features explicitly. A feature is considered 
 | Regional plasticity | Operation, origin, and value regions can consolidate at different rates. | `operation plasticity consolidates after stable cycles`; `scaffold training locks primitive regions` |
 | Rarity-balanced teacher pressure | Rare expected outputs can receive stronger or longer teacher pressure. | `teacher strength balances rare outputs`; `teacher duration balances rare outputs` |
 | Origin/value scaffold | Primitive source/value meanings are trained separately from operation meanings. | `semantic scaffold topology exists`; `scaffold training locks primitive regions` |
+| Explicit set scaffold | Set/property concepts can be injected manually as an inspectable scaffold for later autonomous recruitment. | `set scaffold starts explicit and empty`; `inject set scaffold adds manual concepts` |
 | Meaning explanation | Inspector explanations read structure from learned scaffold and relations. | `meaning explanations use scaffold primitives`; `relation reader extracts operation meanings` |
 | Generative relation reading | A target output relation can generate candidate source pairs from its learned invariants. | `relation reader generates source candidates` |
 | Meta-regulation scaffold | The network reports adaptive tension axes and suggested learning controls from stability, ambiguity, and recruitment pressure. | `meta regulation responds to uncertainty`; `meta regulation consolidates stable behavior` |
