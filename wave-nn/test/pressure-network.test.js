@@ -437,6 +437,62 @@ function testSetScaffoldGuidesRecruitmentConnections() {
   assert.equal(network.getValve("R0->OUT0"), undefined);
 }
 
+function testRecruitmentStrategySpaceIncludesScaffoldOption() {
+  const network = new PressureNetwork();
+  const observation = {
+    signature: "01",
+    count: 2,
+    inputIds: ["A0", "B1"],
+    expectedOutputId: "OUT1",
+  };
+
+  assert.deepEqual(
+    network.recruitmentStrategyCandidates(observation).map((candidate) => candidate.strategy),
+    ["active-case-context", "expected-output-context", "broad-operation-area"],
+  );
+
+  network.injectSetScaffold({ mode: "manual" });
+  assert.deepEqual(
+    network.recruitmentStrategyCandidates(observation).map((candidate) => candidate.strategy),
+    ["active-case-context", "expected-output-context", "set-scaffold-context", "broad-operation-area"],
+  );
+}
+
+function testRecruitmentStrategiesTuneFromSurvival() {
+  const network = new PressureNetwork();
+  network.injectSetScaffold({ mode: "manual" });
+  const ambiguous = {
+    a: 0,
+    b: 1,
+    inputIds: ["A0", "B1"],
+    expected: 1,
+    expectedOutputId: "OUT1",
+    out0: 0.2,
+    out1: 0.22,
+    margin: 0.02,
+    correct: false,
+    ambiguous: true,
+  };
+
+  network.observeRecruitmentFromCycle([ambiguous]);
+  network.observeRecruitmentFromCycle([ambiguous]);
+  const recruited = network.nodes.find((node) => node.recruitment?.signature === "01");
+  const strategy = recruited.recruitment.strategy;
+  const before = network.metrics().recruitment.strategyStats[strategy].score;
+
+  network.updateRecruitmentSurvival({
+    a: 0,
+    b: 1,
+    correct: true,
+    ambiguous: false,
+    margin: 0.4,
+  });
+
+  const after = network.metrics().recruitment.strategyStats[strategy];
+  assert.ok(after.score > before);
+  assert.equal(after.successes, 1);
+}
+
 function testRecruitableTopologyAttemptsBitwiseOperations() {
   for (const operation of ["xor", "and", "or", "nand"]) {
     const network = new PressureNetwork();
@@ -609,6 +665,18 @@ const TEST_CASES = [
     kind: "feature",
     covers: "set/property scaffold recruitment policy",
     run: testSetScaffoldGuidesRecruitmentConnections,
+  },
+  {
+    name: "recruitment strategy space includes scaffold option",
+    kind: "feature",
+    covers: "experimental recruitment strategy candidates",
+    run: testRecruitmentStrategySpaceIncludesScaffoldOption,
+  },
+  {
+    name: "recruitment strategies tune from survival",
+    kind: "feature",
+    covers: "recruitment strategy feedback tuning",
+    run: testRecruitmentStrategiesTuneFromSurvival,
   },
   {
     name: "recruitable topology attempts bitwise operations",

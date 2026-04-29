@@ -21,6 +21,12 @@ const LOW_MARGIN_THRESHOLD = 0.16;
 const RECRUIT_EXPLORATORY_RESISTANCE = 0.72;
 const RECRUIT_EXPLORATORY_WEIGHT = 0.42;
 const META_LOW_MARGIN_WINDOW = 16;
+const RECRUITMENT_STRATEGIES = [
+  "active-case-context",
+  "expected-output-context",
+  "set-scaffold-context",
+  "broad-operation-area",
+];
 
 const EXPLICIT_SET_CONCEPTS = [
   { id: "AXIS_A", kind: "input-axis", members: ["A0", "A1"] },
@@ -232,6 +238,10 @@ export class PressureNetwork {
       nextId: 0,
       observations: new Map(),
       events: [],
+      strategyStats: Object.fromEntries(RECRUITMENT_STRATEGIES.map((strategy) => [
+        strategy,
+        { score: 0, trials: 0, successes: 0, failures: 0 },
+      ])),
     };
     this.setScaffold = this.emptySetScaffold();
     this.time = 0;
@@ -624,8 +634,17 @@ export class PressureNetwork {
 
     const delta = result.correct && result.margin >= LOW_MARGIN_THRESHOLD ? 1 : -0.5;
     node.recruitment.survival = clamp(node.recruitment.survival + delta, -3, 6);
+    this.tuneRecruitmentStrategy(node.recruitment.strategy, delta);
     if (node.recruitment.survival >= 3) node.recruitment.status = "stable";
     if (node.recruitment.survival <= -2) node.recruitment.status = "fading";
+  }
+
+  tuneRecruitmentStrategy(strategy, delta) {
+    const stats = this.recruitment.strategyStats[strategy];
+    if (!stats) return;
+    stats.score = clamp(stats.score + delta * 0.18, -2, 2);
+    if (delta > 0) stats.successes += 1;
+    if (delta < 0) stats.failures += 1;
   }
 
   shouldRecruitFromResult(result) {
@@ -641,20 +660,16 @@ export class PressureNetwork {
   }
 
   recruitmentPolicyFor(observation) {
+    const candidates = this.recruitmentStrategyCandidates(observation);
+    const selected = this.selectRecruitmentStrategy(candidates, observation);
+    const stats = this.recruitment.strategyStats[selected.strategy];
+    if (stats) stats.trials += 1;
+    return selected;
+  }
+
+  recruitmentStrategyCandidates(observation) {
     const activeInputs = observation.inputIds;
     const outputs = ["OUT0", "OUT1"];
-    if (!this.setScaffold.injected) {
-      return {
-        source: "broad-operation-area",
-        peers: this.solvingAreaNodes().map((node) => node.id),
-        inputSources: activeInputs,
-        outputTargets: outputs,
-        reverseTeachers: outputs,
-        protected: this.nodes.filter((node) => node.role === "meaning").map((node) => node.id),
-        concepts: [],
-      };
-    }
-
     const concepts = [];
     for (const inputId of activeInputs) {
       for (const concept of this.explainSetMembership(inputId)) {
@@ -662,17 +677,65 @@ export class PressureNetwork {
       }
     }
 
-    return {
-      source: "set-scaffold-context",
-      peers: [...activeInputs, observation.expectedOutputId],
-      inputSources: activeInputs,
-      outputTargets: [observation.expectedOutputId],
-      reverseTeachers: [observation.expectedOutputId],
-      protected: this.nodes
-        .filter((node) => node.role === "meaning")
-        .map((node) => node.id),
-      concepts,
-    };
+    return [
+      {
+        strategy: "active-case-context",
+        peers: [...activeInputs, observation.expectedOutputId],
+        inputSources: activeInputs,
+        outputTargets: [observation.expectedOutputId],
+        reverseTeachers: [observation.expectedOutputId],
+        concepts: [],
+      },
+      {
+        strategy: "expected-output-context",
+        peers: [observation.expectedOutputId],
+        inputSources: [],
+        outputTargets: [observation.expectedOutputId],
+        reverseTeachers: [observation.expectedOutputId],
+        concepts: [],
+      },
+      {
+        strategy: "set-scaffold-context",
+        peers: [...activeInputs, observation.expectedOutputId],
+        inputSources: activeInputs,
+        outputTargets: [observation.expectedOutputId],
+        reverseTeachers: [observation.expectedOutputId],
+        concepts,
+        available: this.setScaffold.injected,
+      },
+      {
+        strategy: "broad-operation-area",
+        peers: this.solvingAreaNodes().map((node) => node.id),
+        inputSources: activeInputs,
+        outputTargets: outputs,
+        reverseTeachers: outputs,
+        concepts: [],
+      },
+    ].filter((candidate) => candidate.available !== false)
+      .map((candidate) => ({
+        ...candidate,
+        protected: this.nodes.filter((node) => node.role === "meaning").map((node) => node.id),
+      }));
+  }
+
+  selectRecruitmentStrategy(candidates, observation) {
+    const scored = candidates.map((candidate) => {
+      const stats = this.recruitment.strategyStats[candidate.strategy] ?? { score: 0, trials: 0 };
+      const confidencePenalty = Math.min(0.35, stats.trials * 0.03);
+      return {
+        candidate,
+        score: stats.score - confidencePenalty,
+      };
+    });
+    const bestScore = Math.max(...scored.map((item) => item.score));
+    const tied = scored.filter((item) => Math.abs(item.score - bestScore) < 0.0001);
+    if (tied.length === 1) return tied[0].candidate;
+
+    const index = stableChoiceIndex(
+      `${observation.signature}:${observation.count}:${this.recruitment.nextId}:${this.time}`,
+      tied.length,
+    );
+    return tied[index].candidate;
   }
 
   recruitSeparator(observation) {
@@ -694,7 +757,8 @@ export class PressureNetwork {
         evidence: observation.count,
         survival: 0,
         createdAt: this.time,
-        policy: policy.source,
+        policy: policy.strategy,
+        strategy: policy.strategy,
       },
     });
 
@@ -722,7 +786,7 @@ export class PressureNetwork {
       nodeId: id,
       signature: observation.signature,
       evidence: observation.count,
-      strategy: policy.source,
+      strategy: policy.strategy,
       connected: policy.peers,
       createdAt: this.time,
     };
@@ -1064,6 +1128,7 @@ export class PressureNetwork {
           lastMargin: observation.lastMargin,
         })),
       latest: latestEvent,
+      strategyStats: this.recruitment.strategyStats,
       nodes: recruited.map((node) => ({
         id: node.id,
         ...node.recruitment,
@@ -1356,6 +1421,15 @@ function yForSignature(signature) {
     "11": 0.78,
   };
   return positions[signature] ?? 0.52;
+}
+
+function stableChoiceIndex(seed, size) {
+  if (size <= 1) return 0;
+  let hash = 0;
+  for (let index = 0; index < seed.length; index += 1) {
+    hash = (hash * 31 + seed.charCodeAt(index)) % 9973;
+  }
+  return hash % size;
 }
 
 export function evaluateOperation(a, b, operation) {

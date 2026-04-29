@@ -118,17 +118,20 @@ scaffold manual de conjuntos
 
 O modo automatico futuro deve usar pressao nao resolvida, co-presenca repetida, exclusao mutua e propriedades compartilhadas estaveis para recrutar conceitos de conjunto equivalentes dinamicamente.
 
-## Politica De Recrutamento Por Papeis De Conjunto
+## Politica Experimental De Recrutamento
 
-O mesmo scaffold pode guiar onde um no recrutado deve se conectar.
+O scaffold de conjuntos nao deve ditar permanentemente onde um no recrutado se conecta. Ele deve fornecer contexto que o sistema de recrutamento pode usar enquanto experimenta estrategias.
 
-Sem o scaffold de conjuntos, o recrutamento de separador usa a politica ampla antiga:
+O espaco atual de estrategias inclui:
 
 ```text
-nos da area de operacao <-> separador
+active-case-context
+expected-output-context
+set-scaffold-context
+broad-operation-area
 ```
 
-Com o scaffold injetado, um separador especifico de caso usa uma politica de contexto mais estreita:
+Quando o scaffold esta injetado, `set-scaffold-context` fica disponivel como uma estrategia candidata. Ela pode conectar um separador a:
 
 ```text
 opcoes de fonte ativas -> separador
@@ -136,7 +139,7 @@ separador -> saida esperada
 saida esperada -> separador como rota teacher de treino
 ```
 
-Por exemplo, `A0 + B1 -> OUT1` nao resolvido recruta um separador conectado a:
+Por exemplo, `A0 + B1 -> OUT1` nao resolvido pode recrutar um separador conectado a:
 
 ```text
 A0
@@ -144,7 +147,14 @@ B1
 OUT1
 ```
 
-Ele nao se conecta a `A1`, `B0` ou `OUT0` so porque esses nos aparecem em relacoes proximas de co-presenca. Co-presenca continua sendo evidencia para recrutamento conceitual posterior; ela nao deve tornar todo separador de caso amplo de novo.
+O sistema acompanha pontuacoes de estrategia. Feedback posterior de sobrevivencia altera a pontuacao da estrategia que criou o recrutado:
+
+```text
+recrutado sobrevive -> pontuacao da estrategia sobe
+recrutado desvanece -> pontuacao da estrategia cai
+```
+
+Co-presenca continua sendo evidencia para recrutamento conceitual posterior; ela nao deve automaticamente tornar todo separador de caso amplo de novo.
 
 ## Coerencia De Conjuntos Antes De CSP
 

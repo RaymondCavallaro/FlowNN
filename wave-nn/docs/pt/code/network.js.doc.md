@@ -43,9 +43,18 @@ assim o recrutamento automatico posterior pode reutilizar a mesma forma sem fing
 
 Quando uma assinatura nao resolvida persiste, a rede cria um separador fraco. A estrategia atual conecta o separador de forma ampla dentro da area de operacao e exclui nos de scaffold/significado. Rotas de saida para o recrutado sao `trainingOnly`, para que teste somente com entradas nao comece injetando pressao de resposta para tras.
 
-Quando o scaffold explicito de conjuntos esta injetado, `recruitmentPolicyFor` estreita a fiacao do separador. Em vez de conectar com toda a area de operacao, um separador de caso conecta com as opcoes de fonte ativas, a saida esperada e a rota teacher reversa dessa saida esperada.
+`recruitmentPolicyFor` nao contem mais uma resposta fixa para onde um separador deve se conectar. Ele monta estrategias candidatas e deixa o controlador de recrutamento escolher uma.
 
-A politica ampla continua sendo fallback quando nenhum scaffold de conjuntos foi injetado.
+Estrategias atuais:
+
+```text
+active-case-context
+expected-output-context
+set-scaffold-context
+broad-operation-area
+```
+
+`set-scaffold-context` so fica disponivel quando o scaffold explicito de conjuntos foi injetado. As estatisticas de estrategia registram tentativas, pontuacao, sucessos e falhas. `updateRecruitmentSurvival` ajusta a pontuacao da estrategia depois que o recrutado melhora ou falha.
 
 ## Geracao Relacional
 
