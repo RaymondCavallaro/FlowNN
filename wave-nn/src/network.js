@@ -27,6 +27,43 @@ const RECRUITMENT_STRATEGIES = [
   "set-scaffold-context",
   "broad-operation-area",
 ];
+const RECRUITMENT_AXES = [
+  "sourceFocus",
+  "outputFocus",
+  "scopeBreadth",
+  "scaffoldUse",
+  "teacherFeedback",
+];
+const RECRUITMENT_STRATEGY_PROFILES = {
+  "active-case-context": {
+    sourceFocus: 0.95,
+    outputFocus: 0.7,
+    scopeBreadth: 0.2,
+    scaffoldUse: 0.1,
+    teacherFeedback: 0.65,
+  },
+  "expected-output-context": {
+    sourceFocus: 0.1,
+    outputFocus: 1,
+    scopeBreadth: 0.08,
+    scaffoldUse: 0,
+    teacherFeedback: 0.95,
+  },
+  "set-scaffold-context": {
+    sourceFocus: 0.85,
+    outputFocus: 0.75,
+    scopeBreadth: 0.2,
+    scaffoldUse: 1,
+    teacherFeedback: 0.65,
+  },
+  "broad-operation-area": {
+    sourceFocus: 0.45,
+    outputFocus: 0.55,
+    scopeBreadth: 1,
+    scaffoldUse: 0,
+    teacherFeedback: 0.8,
+  },
+};
 
 const EXPLICIT_SET_CONCEPTS = [
   { id: "AXIS_A", kind: "input-axis", members: ["A0", "A1"] },
@@ -242,6 +279,13 @@ export class PressureNetwork {
         strategy,
         { score: 0, trials: 0, successes: 0, failures: 0 },
       ])),
+      tuner: {
+        axisWeights: Object.fromEntries(RECRUITMENT_AXES.map((axis) => [axis, 0])),
+        axisStats: Object.fromEntries(RECRUITMENT_AXES.map((axis) => [
+          axis,
+          { successes: 0, failures: 0 },
+        ])),
+      },
     };
     this.setScaffold = this.emptySetScaffold();
     this.time = 0;
@@ -634,17 +678,30 @@ export class PressureNetwork {
 
     const delta = result.correct && result.margin >= LOW_MARGIN_THRESHOLD ? 1 : -0.5;
     node.recruitment.survival = clamp(node.recruitment.survival + delta, -3, 6);
-    this.tuneRecruitmentStrategy(node.recruitment.strategy, delta);
+    this.tuneRecruitmentStrategy(node.recruitment, delta);
     if (node.recruitment.survival >= 3) node.recruitment.status = "stable";
     if (node.recruitment.survival <= -2) node.recruitment.status = "fading";
   }
 
-  tuneRecruitmentStrategy(strategy, delta) {
-    const stats = this.recruitment.strategyStats[strategy];
+  tuneRecruitmentStrategy(recruitment, delta) {
+    const stats = this.recruitment.strategyStats[recruitment.strategy];
     if (!stats) return;
     stats.score = clamp(stats.score + delta * 0.18, -2, 2);
     if (delta > 0) stats.successes += 1;
     if (delta < 0) stats.failures += 1;
+
+    const profile = recruitment.axisProfile ?? RECRUITMENT_STRATEGY_PROFILES[recruitment.strategy];
+    for (const axis of RECRUITMENT_AXES) {
+      const axisAmount = profile?.[axis] ?? 0;
+      const axisStats = this.recruitment.tuner.axisStats[axis];
+      this.recruitment.tuner.axisWeights[axis] = clamp(
+        this.recruitment.tuner.axisWeights[axis] + delta * axisAmount * 0.08,
+        -1,
+        1,
+      );
+      if (delta > 0 && axisAmount > 0.5) axisStats.successes += 1;
+      if (delta < 0 && axisAmount > 0.5) axisStats.failures += 1;
+    }
   }
 
   shouldRecruitFromResult(result) {
@@ -719,12 +776,20 @@ export class PressureNetwork {
   }
 
   selectRecruitmentStrategy(candidates, observation) {
+    const axisDemand = this.recruitmentAxisDemand(observation);
     const scored = candidates.map((candidate) => {
       const stats = this.recruitment.strategyStats[candidate.strategy] ?? { score: 0, trials: 0 };
+      const axisProfile = RECRUITMENT_STRATEGY_PROFILES[candidate.strategy];
       const confidencePenalty = Math.min(0.35, stats.trials * 0.03);
+      const caseFit = dotAxes(axisDemand, axisProfile);
+      const learnedFit = dotAxes(this.recruitment.tuner.axisWeights, axisProfile) * 0.35;
       return {
-        candidate,
-        score: stats.score - confidencePenalty,
+        candidate: {
+          ...candidate,
+          axisDemand,
+          axisProfile,
+        },
+        score: caseFit + learnedFit + stats.score - confidencePenalty,
       };
     });
     const bestScore = Math.max(...scored.map((item) => item.score));
@@ -736,6 +801,19 @@ export class PressureNetwork {
       tied.length,
     );
     return tied[index].candidate;
+  }
+
+  recruitmentAxisDemand(observation) {
+    const lowMargin = clamp((LOW_MARGIN_THRESHOLD - observation.lastMargin) / LOW_MARGIN_THRESHOLD, 0, 1);
+    const pressure = clamp(observation.pressure / 2, 0, 1);
+    const repeated = clamp(observation.count / 6, 0, 1);
+    return {
+      sourceFocus: clamp(0.45 + repeated * 0.25 + lowMargin * 0.15, 0, 1),
+      outputFocus: clamp(0.45 + repeated * 0.2 + pressure * 0.15, 0, 1),
+      scopeBreadth: clamp(0.2 + pressure * 0.45 + lowMargin * 0.25, 0, 1),
+      scaffoldUse: this.setScaffold.injected ? clamp(0.35 + repeated * 0.25, 0, 1) : 0,
+      teacherFeedback: clamp(0.35 + lowMargin * 0.25 + pressure * 0.2, 0, 1),
+    };
   }
 
   recruitSeparator(observation) {
@@ -759,6 +837,8 @@ export class PressureNetwork {
         createdAt: this.time,
         policy: policy.strategy,
         strategy: policy.strategy,
+        axisDemand: policy.axisDemand,
+        axisProfile: policy.axisProfile,
       },
     });
 
@@ -1129,6 +1209,7 @@ export class PressureNetwork {
         })),
       latest: latestEvent,
       strategyStats: this.recruitment.strategyStats,
+      tuner: this.recruitment.tuner,
       nodes: recruited.map((node) => ({
         id: node.id,
         ...node.recruitment,
@@ -1430,6 +1511,12 @@ function stableChoiceIndex(seed, size) {
     hash = (hash * 31 + seed.charCodeAt(index)) % 9973;
   }
   return hash % size;
+}
+
+function dotAxes(left, right) {
+  return RECRUITMENT_AXES.reduce((sum, axis) => {
+    return sum + (left?.[axis] ?? 0) * (right?.[axis] ?? 0);
+  }, 0) / RECRUITMENT_AXES.length;
 }
 
 export function evaluateOperation(a, b, operation) {

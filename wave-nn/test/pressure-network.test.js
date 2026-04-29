@@ -458,6 +458,41 @@ function testRecruitmentStrategySpaceIncludesScaffoldOption() {
   );
 }
 
+function testRecruitmentAxisDemandIsCaseDependent() {
+  const network = new PressureNetwork();
+  const mild = network.recruitmentAxisDemand({
+    signature: "01",
+    count: 1,
+    inputIds: ["A0", "B1"],
+    expectedOutputId: "OUT1",
+    pressure: 0.2,
+    lastMargin: 0.12,
+  });
+  const unresolved = network.recruitmentAxisDemand({
+    signature: "01",
+    count: 5,
+    inputIds: ["A0", "B1"],
+    expectedOutputId: "OUT1",
+    pressure: 1.5,
+    lastMargin: 0.01,
+  });
+
+  assert.ok(unresolved.sourceFocus > mild.sourceFocus);
+  assert.ok(unresolved.outputFocus > mild.outputFocus);
+  assert.ok(unresolved.scopeBreadth > mild.scopeBreadth);
+  assert.equal(mild.scaffoldUse, 0);
+
+  network.injectSetScaffold({ mode: "manual" });
+  assert.ok(network.recruitmentAxisDemand({
+    signature: "01",
+    count: 5,
+    inputIds: ["A0", "B1"],
+    expectedOutputId: "OUT1",
+    pressure: 1.5,
+    lastMargin: 0.01,
+  }).scaffoldUse > 0);
+}
+
 function testRecruitmentStrategiesTuneFromSurvival() {
   const network = new PressureNetwork();
   network.injectSetScaffold({ mode: "manual" });
@@ -479,6 +514,7 @@ function testRecruitmentStrategiesTuneFromSurvival() {
   const recruited = network.nodes.find((node) => node.recruitment?.signature === "01");
   const strategy = recruited.recruitment.strategy;
   const before = network.metrics().recruitment.strategyStats[strategy].score;
+  const axisBefore = network.metrics().recruitment.tuner.axisWeights.sourceFocus;
 
   network.updateRecruitmentSurvival({
     a: 0,
@@ -489,7 +525,9 @@ function testRecruitmentStrategiesTuneFromSurvival() {
   });
 
   const after = network.metrics().recruitment.strategyStats[strategy];
+  const axisAfter = network.metrics().recruitment.tuner.axisWeights.sourceFocus;
   assert.ok(after.score > before);
+  assert.ok(axisAfter >= axisBefore);
   assert.equal(after.successes, 1);
 }
 
@@ -671,6 +709,12 @@ const TEST_CASES = [
     kind: "feature",
     covers: "experimental recruitment strategy candidates",
     run: testRecruitmentStrategySpaceIncludesScaffoldOption,
+  },
+  {
+    name: "recruitment axis demand is case dependent",
+    kind: "feature",
+    covers: "secondary recruitment tuner axis gradients",
+    run: testRecruitmentAxisDemandIsCaseDependent,
   },
   {
     name: "recruitment strategies tune from survival",

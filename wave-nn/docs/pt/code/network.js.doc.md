@@ -56,6 +56,18 @@ broad-operation-area
 
 `set-scaffold-context` so fica disponivel quando o scaffold explicito de conjuntos foi injetado. As estatisticas de estrategia registram tentativas, pontuacao, sucessos e falhas. `updateRecruitmentSurvival` ajusta a pontuacao da estrategia depois que o recrutado melhora ou falha.
 
+O tuner secundario adiciona uma camada continua por baixo desses nomes de estrategia. `recruitmentAxisDemand` le o caso e produz demanda de eixos:
+
+```text
+sourceFocus
+outputFocus
+scopeBreadth
+scaffoldUse
+teacherFeedback
+```
+
+Cada estrategia tem um perfil nesses eixos. A selecao compara demanda atual do caso, pesos de eixo aprendidos e pontuacao de sobrevivencia da estrategia. O feedback de sobrevivencia ajusta tanto a pontuacao da estrategia nomeada quanto os pesos de eixo usados por ela.
+
 ## Geracao Relacional
 
 `generateForOutput` e o primeiro uso generativo restrito das relacoes. Ele le a relacao da saida alvo, enumera o espaco atual de pares de fonte, le cada par pelos significados de scaffold, e mantem candidatos que satisfazem todos os invariantes aprendidos.

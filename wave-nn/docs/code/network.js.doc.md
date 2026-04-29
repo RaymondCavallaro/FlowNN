@@ -157,6 +157,18 @@ broad-operation-area
 
 `set-scaffold-context` is available only when the explicit set scaffold has been injected. Strategy stats track trials, score, successes, and failures. `updateRecruitmentSurvival` tunes the strategy score after the recruited node improves or fails.
 
+The secondary tuner adds a continuous layer under those strategy names. `recruitmentAxisDemand` reads the case and produces axis demand:
+
+```text
+sourceFocus
+outputFocus
+scopeBreadth
+scaffoldUse
+teacherFeedback
+```
+
+Each strategy has an axis profile. Selection compares the current case demand, learned axis weights, and strategy survival score. Survival feedback tunes both the named strategy score and the axis weights used by that strategy.
+
 ## Explanation
 
 `explainNode` exposes forward and backward signatures:

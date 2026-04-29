@@ -41,6 +41,7 @@ Every test is registered with:
 | feature | recruitment creates separators for repeated ambiguity | broad separator recruitment from unresolved pressure |
 | feature | set scaffold guides recruitment connections | set/property scaffold recruitment policy |
 | feature | recruitment strategy space includes scaffold option | experimental recruitment strategy candidates |
+| feature | recruitment axis demand is case dependent | secondary recruitment tuner axis gradients |
 | feature | recruitment strategies tune from survival | recruitment strategy feedback tuning |
 | feature | recruitable topology attempts bitwise operations | end-to-end XOR/AND/OR/NAND exploratory evaluation |
 

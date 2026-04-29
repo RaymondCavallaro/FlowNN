@@ -194,13 +194,32 @@ The future automatic mode should use unresolved pressure, repeated co-presence, 
 
 The set scaffold should not permanently dictate where a recruited node connects. It should supply context that the recruitment system can use while it experiments with strategies.
 
-The current strategy space includes:
+The current strategy space still has readable named profiles:
 
 ```text
 active-case-context
 expected-output-context
 set-scaffold-context
 broad-operation-area
+```
+
+But these names are not the whole policy. Each profile is a point in a small axis space:
+
+```text
+sourceFocus
+outputFocus
+scopeBreadth
+scaffoldUse
+teacherFeedback
+```
+
+For each unresolved case, a secondary tuner computes case-dependent axis demand from repeated evidence, unresolved pressure, low margin, and whether explicit set concepts are available. Strategy selection compares:
+
+```text
+case axis demand
+learned axis weights
+strategy profile
+strategy survival score
 ```
 
 When the set scaffold is injected, `set-scaffold-context` becomes available as one candidate strategy. It can connect a separator to:
@@ -219,11 +238,11 @@ B1
 OUT1
 ```
 
-The system tracks strategy scores. Later survival feedback changes the score of the strategy that created the recruit:
+The system tracks both strategy scores and axis weights. Later survival feedback changes the score and nudges the axes used by the strategy that created the recruit:
 
 ```text
-recruit survives -> strategy score rises
-recruit fades    -> strategy score falls
+recruit survives -> strategy score rises, useful axes strengthen
+recruit fades    -> strategy score falls, those axes weaken
 ```
 
 Co-presence remains evidence for later concept recruitment; it should not automatically make every case separator broad again.

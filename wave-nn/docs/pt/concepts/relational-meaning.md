@@ -122,13 +122,32 @@ O modo automatico futuro deve usar pressao nao resolvida, co-presenca repetida, 
 
 O scaffold de conjuntos nao deve ditar permanentemente onde um no recrutado se conecta. Ele deve fornecer contexto que o sistema de recrutamento pode usar enquanto experimenta estrategias.
 
-O espaco atual de estrategias inclui:
+O espaco atual ainda tem perfis nomeados e legiveis:
 
 ```text
 active-case-context
 expected-output-context
 set-scaffold-context
 broad-operation-area
+```
+
+Mas esses nomes nao sao a politica inteira. Cada perfil e um ponto em um pequeno espaco de eixos:
+
+```text
+sourceFocus
+outputFocus
+scopeBreadth
+scaffoldUse
+teacherFeedback
+```
+
+Para cada caso nao resolvido, um tuner secundario calcula a demanda de eixos dependente do caso a partir de evidencia repetida, pressao nao resolvida, margem baixa e disponibilidade de conceitos explicitos de conjunto. A selecao de estrategia compara:
+
+```text
+demanda de eixos do caso
+pesos de eixo aprendidos
+perfil da estrategia
+pontuacao de sobrevivencia da estrategia
 ```
 
 Quando o scaffold esta injetado, `set-scaffold-context` fica disponivel como uma estrategia candidata. Ela pode conectar um separador a:
@@ -147,11 +166,11 @@ B1
 OUT1
 ```
 
-O sistema acompanha pontuacoes de estrategia. Feedback posterior de sobrevivencia altera a pontuacao da estrategia que criou o recrutado:
+O sistema acompanha pontuacoes de estrategia e pesos de eixo. Feedback posterior de sobrevivencia altera a pontuacao e ajusta os eixos usados pela estrategia que criou o recrutado:
 
 ```text
-recrutado sobrevive -> pontuacao da estrategia sobe
-recrutado desvanece -> pontuacao da estrategia cai
+recrutado sobrevive -> pontuacao sobe, eixos uteis fortalecem
+recrutado desvanece -> pontuacao cai, esses eixos enfraquecem
 ```
 
 Co-presenca continua sendo evidencia para recrutamento conceitual posterior; ela nao deve automaticamente tornar todo separador de caso amplo de novo.

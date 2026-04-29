@@ -41,6 +41,7 @@ Cada teste e registrado com:
 | feature | recruitment creates separators for repeated ambiguity | recrutamento amplo por pressao nao resolvida |
 | feature | set scaffold guides recruitment connections | politica de recrutamento guiada por scaffold conjunto/propriedade |
 | feature | recruitment strategy space includes scaffold option | candidatos experimentais de estrategia de recrutamento |
+| feature | recruitment axis demand is case dependent | gradientes de eixo do tuner secundario de recrutamento |
 | feature | recruitment strategies tune from survival | ajuste de estrategia de recrutamento por feedback |
 | feature | recruitable topology attempts bitwise operations | avaliacao exploratoria XOR/AND/OR/NAND fim-a-fim |
 
