@@ -161,6 +161,29 @@ Examples of extracted invariants are `mixed-value`, `same-value`, `all-value-1`,
 
 This is still bounded to the current bitwise lab. It is meant to test whether relation meaning can run backward from target role to possible source structure.
 
+## Meta-Regulation
+
+`metaRegulationState` is the first scaffold for control over learning. It reads observer-side signals:
+
+- accuracy;
+- ambiguity;
+- low-margin rate;
+- unresolved recruitment pressure;
+- candidate and stable recruited nodes.
+
+It turns them into continuous axes:
+
+```text
+stability <-> plasticity
+exploration <-> exploitation
+certainty <-> doubt
+constraint <-> freedom
+```
+
+and suggested controls for plasticity, valve mode, threshold mode, and time window length.
+
+This state is observational. It does not yet override the manual controls or mutate the network by itself.
+
 ## Important Constraint
 
 Reverse output valves are marked `trainingOnly`. In the shaped pair-node experiment they are reserved but not conductive. Output flood participates by activating the desired output node; learning then happens locally where active hidden pressure reaches that active output.

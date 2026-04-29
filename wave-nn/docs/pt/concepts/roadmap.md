@@ -11,6 +11,7 @@ Branches de versao sao prateleiras experimentais e checkpoints historicos, nao m
 ```text
 recrutamento sob pressao nao resolvida
 -> geracao relacional a partir de invariantes aprendidos
+-> eixos de meta-regulacao para controle de aprendizagem
 -> estado de expectativa/erro
 -> metricas de precisao/certeza
 -> probing por perturbacao
@@ -57,3 +58,15 @@ saida alvo
 ```
 
 Ela serve para testar se uma relacao aprendida pode ser usada como gerador restrito. Nao deve virar um oraculo da operacao nem um gerador de tabela-verdade escrito a mao.
+
+## Uso Atual De Meta-Regulacao
+
+A primeira fatia em `main` tambem deve ficar observacional:
+
+```text
+acuracia / ambiguidade / margem / pressao de recrutamento
+-> eixos de tensao adaptativa
+-> controles de aprendizagem sugeridos
+```
+
+O proximo passo e comparar essas sugestoes com os controles manuais de ecologia antes de deixar a camada dirigir plasticidade, modo de valvula, modo de limiar ou janelas temporais automaticamente.

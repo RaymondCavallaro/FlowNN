@@ -20,6 +20,7 @@ const RECRUITMENT_OBSERVATION_THRESHOLD = 2;
 const LOW_MARGIN_THRESHOLD = 0.16;
 const RECRUIT_EXPLORATORY_RESISTANCE = 0.72;
 const RECRUIT_EXPLORATORY_WEIGHT = 0.42;
+const META_LOW_MARGIN_WINDOW = 16;
 
 function sigmoid(value) {
   if (value > 40) return 1 - 1e-12;
@@ -853,6 +854,7 @@ export class PressureNetwork {
       recruitment: this.recruitmentSummary(),
       scaffold: this.scaffoldSummary(),
       explanation: this.explainOperation(),
+      metaRegulation: this.metaRegulationState(),
       lastCycleAccuracy: this.lastCycleAccuracy,
       perfectCycleStreak: this.perfectCycleStreak,
       lastCycleSummary: this.lastCycleSummary,
@@ -883,6 +885,63 @@ export class PressureNetwork {
 
   hasStableAccuracy() {
     return this.testHistory.length >= ROLLING_WINDOW && this.testHistory.every((result) => result.correct);
+  }
+
+  metaRegulationState() {
+    const recent = this.testHistory.slice(-META_LOW_MARGIN_WINDOW);
+    const lowMarginRate = recent.length
+      ? recent.filter((result) => result.margin < LOW_MARGIN_THRESHOLD).length / recent.length
+      : 0;
+    const accuracy = this.lastCycleSummary?.accuracy ?? this.rollingAccuracy();
+    const ambiguity = this.lastCycleSummary?.ambiguity
+      ?? (recent.length ? recent.filter((result) => result.ambiguous).length / recent.length : 0);
+    const error = 1 - accuracy;
+    const unresolvedSignatures = Array.from(this.recruitment.observations.values())
+      .filter((observation) => !this.recruitedNodeFor(observation.signature)).length;
+    const candidateRecruits = this.nodes.filter((node) => node.recruitment?.status === "candidate").length;
+    const stableRecruits = this.nodes.filter((node) => node.recruitment?.status === "stable").length;
+    const noveltyPressure = clamp((unresolvedSignatures + candidateRecruits * 0.5) / TRUTH_TABLE.length, 0, 1);
+    const uncertainty = clamp(error * 0.55 + ambiguity * 0.25 + lowMarginRate * 0.2, 0, 1);
+    const precision = clamp(accuracy * (1 - ambiguity) * (1 - lowMarginRate * 0.5), 0, 1);
+    const plasticityDemand = clamp(uncertainty * 0.75 + noveltyPressure * 0.25, 0, 1);
+    const stabilityDemand = clamp(precision * 0.75 + stableRecruits * 0.08, 0, 1);
+    const explorationDemand = clamp(uncertainty * 0.7 + noveltyPressure * 0.3, 0, 1);
+    const constraintHardness = clamp(precision * 0.6 + accuracy * 0.25 - ambiguity * 0.2, 0, 1);
+
+    return {
+      axes: {
+        stabilityPlasticity: {
+          stability: stabilityDemand,
+          plasticity: plasticityDemand,
+        },
+        explorationExploitation: {
+          exploration: explorationDemand,
+          exploitation: clamp(precision, 0, 1),
+        },
+        certaintyDoubt: {
+          certainty: precision,
+          doubt: uncertainty,
+        },
+        constraintFreedom: {
+          constraint: constraintHardness,
+          freedom: clamp(1 - constraintHardness, 0, 1),
+        },
+      },
+      signals: {
+        accuracy,
+        ambiguity,
+        lowMarginRate,
+        uncertainty,
+        precision,
+        noveltyPressure,
+      },
+      suggestedControls: {
+        plasticity: plasticityDemand > 0.55 ? "raise" : stabilityDemand > 0.6 ? "lower" : "hold",
+        valveMode: explorationDemand > 0.55 ? "seeking" : precision > 0.65 ? "certainty" : "neutral",
+        thresholdMode: uncertainty > 0.6 ? "seeking" : precision > 0.65 ? "certainty" : "neutral",
+        timeWindow: uncertainty > 0.55 && precision < 0.45 ? "extend" : "normal",
+      },
+    };
   }
 
   recruitmentSummary() {

@@ -18,6 +18,7 @@ nav:
       - Topology: concepts/topology.md
       - Relational Meaning: concepts/relational-meaning.md
       - Information Landscape: concepts/information-landscape.md
+      - Meta-Regulation: concepts/meta-regulation.md
       - System Dynamics: concepts/system-dynamics.md
       - Self, Values, And Curiosity: concepts/self-values-and-curiosity.md
       - Roadmap: concepts/roadmap.md
@@ -39,6 +40,7 @@ nav:
           - Topologia: pt/concepts/topology.md
           - Significado Relacional: pt/concepts/relational-meaning.md
           - Paisagem de Informacao: pt/concepts/information-landscape.md
+          - Meta-Regulacao: pt/concepts/meta-regulation.md
           - Dinamica do Sistema: pt/concepts/system-dynamics.md
           - Self, Valores E Curiosidade: pt/concepts/self-values-and-curiosity.md
           - Roadmap: pt/concepts/roadmap.md

@@ -40,6 +40,7 @@ A versao atual e um app de navegador simples com:
 - scaffold de significado para origem e valor
 - leitura relacional de invariantes aprendidos
 - geracao restrita de pares de fonte a partir de relacoes de saida
+- scaffold observacional de meta-regulacao para controlar plasticidade, exploracao e certeza
 - controles de ecologia para valvulas e limiares
 - metricas de pressao, abertura, plasticidade, ciclos e acuracia
 

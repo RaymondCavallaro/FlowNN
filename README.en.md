@@ -40,6 +40,7 @@ The current version is a plain browser app with:
 - origin/value meaning scaffold
 - relational reading of learned invariants
 - constrained source-pair generation from output relations
+- observational meta-regulation scaffold for plasticity, exploration, and certainty control
 - ecology controls for valves and thresholds
 - metrics for pressure, openness, plasticity, cycles, and accuracy
 

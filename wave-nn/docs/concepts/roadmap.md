@@ -15,6 +15,7 @@ The immediate direction is:
 ```text
 recruitment under unresolved pressure
 -> relational generation from learned invariants
+-> meta-regulation axes for learning control
 -> expectation/error state
 -> precision/certainty metrics
 -> perturbation-based landscape probing
@@ -77,6 +78,16 @@ target output
 ```
 
 This should remain a small bridge from relation reading to generation. It should not become an operation oracle or a hand-authored truth-table generator.
+
+Current main-line meta-regulation use:
+
+```text
+accuracy / ambiguity / margin / recruitment pressure
+-> adaptive tension axes
+-> suggested learning controls
+```
+
+This remains observational for now. The next step is to compare its suggestions with manual ecology settings before letting it drive plasticity, valve mode, threshold mode, or time windows automatically.
 
 Next main-line use:
 

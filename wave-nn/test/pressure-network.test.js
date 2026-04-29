@@ -242,6 +242,42 @@ function testRelationReaderGeneratesSourceCandidates() {
   }
 }
 
+function testMetaRegulationRespondsToUncertainty() {
+  const network = new PressureNetwork();
+  network.updateOperationPlasticityFromCycle([
+    { correct: false, ambiguous: true },
+    { correct: false, ambiguous: true },
+    { correct: false, ambiguous: true },
+    { correct: false, ambiguous: true },
+  ]);
+
+  const state = network.metaRegulationState();
+
+  assert.ok(state.axes.stabilityPlasticity.plasticity > state.axes.stabilityPlasticity.stability);
+  assert.ok(state.axes.explorationExploitation.exploration > state.axes.explorationExploitation.exploitation);
+  assert.equal(state.suggestedControls.plasticity, "raise");
+  assert.equal(state.suggestedControls.valveMode, "seeking");
+}
+
+function testMetaRegulationConsolidatesStableBehavior() {
+  const network = new PressureNetwork();
+  const stableCycle = [
+    { correct: true, ambiguous: false },
+    { correct: true, ambiguous: false },
+    { correct: true, ambiguous: false },
+    { correct: true, ambiguous: false },
+  ];
+
+  network.updateOperationPlasticityFromCycle(stableCycle);
+  network.updateOperationPlasticityFromCycle(stableCycle);
+  const state = network.metaRegulationState();
+
+  assert.ok(state.axes.stabilityPlasticity.stability > state.axes.stabilityPlasticity.plasticity);
+  assert.ok(state.axes.certaintyDoubt.certainty > state.axes.certaintyDoubt.doubt);
+  assert.equal(state.suggestedControls.plasticity, "lower");
+  assert.equal(state.suggestedControls.thresholdMode, "certainty");
+}
+
 function testFloodTrainingChangesValves() {
   const network = new PressureNetwork();
   const before = network.valves.map((valve) => valve.resistance);
@@ -462,6 +498,18 @@ const TEST_CASES = [
     kind: "feature",
     covers: "target output to candidate source generation",
     run: testRelationReaderGeneratesSourceCandidates,
+  },
+  {
+    name: "meta regulation responds to uncertainty",
+    kind: "feature",
+    covers: "adaptive tension axes under unresolved behavior",
+    run: testMetaRegulationRespondsToUncertainty,
+  },
+  {
+    name: "meta regulation consolidates stable behavior",
+    kind: "feature",
+    covers: "adaptive tension axes under stable behavior",
+    run: testMetaRegulationConsolidatesStableBehavior,
   },
   {
     name: "flood training changes valves",

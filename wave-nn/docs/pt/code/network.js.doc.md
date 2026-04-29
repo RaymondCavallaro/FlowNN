@@ -35,3 +35,26 @@ Quando uma assinatura nao resolvida persiste, a rede cria um separador fraco. A 
 `generateForOutput` e o primeiro uso generativo restrito das relacoes. Ele le a relacao da saida alvo, enumera o espaco atual de pares de fonte, le cada par pelos significados de scaffold, e mantem candidatos que satisfazem todos os invariantes aprendidos.
 
 Isso ainda fica limitado ao laboratorio bitwise. A funcao testa se significado relacional pode rodar de volta, saindo de um papel alvo para estruturas de fonte possiveis.
+
+## Meta-Regulacao
+
+`metaRegulationState` e o primeiro scaffold para controle sobre aprendizagem. Ele le sinais observacionais:
+
+- acuracia;
+- ambiguidade;
+- taxa de margem baixa;
+- pressao de recrutamento nao resolvida;
+- nos recrutados candidatos e estaveis.
+
+Ele transforma esses sinais em eixos continuos:
+
+```text
+estabilidade <-> plasticidade
+exploracao <-> exploracao do conhecido
+certeza <-> duvida
+restricao <-> liberdade
+```
+
+e controles sugeridos para plasticidade, modo de valvula, modo de limiar e tamanho da janela temporal.
+
+Esse estado e observacional. Ele ainda nao sobrescreve controles manuais nem muda a rede sozinho.

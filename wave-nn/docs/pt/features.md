@@ -20,6 +20,7 @@ Esta pagina nomeia explicitamente os recursos atuais do FlowNN. Um recurso so de
 | Scaffold de origem/valor | Significados primitivos sao treinados separados das operacoes. | `semantic scaffold topology exists`; `scaffold training locks primitive regions` |
 | Explicacao de significado | O inspector le estrutura aprendida, scaffold e relacoes. | `meaning explanations use scaffold primitives`; `relation reader extracts operation meanings` |
 | Leitura relacional generativa | Uma relacao de saida pode gerar pares candidatos de fonte a partir dos invariantes aprendidos. | `relation reader generates source candidates` |
+| Scaffold de meta-regulacao | A rede relata eixos de tensao adaptativa e controles sugeridos de aprendizagem a partir de estabilidade, ambiguidade e pressao de recrutamento. | `meta regulation responds to uncertainty`; `meta regulation consolidates stable behavior` |
 | Aprendizagem local de valvulas | Flood altera resistencia e peso por coativacao. | `flood training changes valves` |
 | Diagnosticos de teste | Testes registram pico, area, duracao e predicao hibrida. | `input-only tests produce diagnostic result shape` |
 | Topologia recrutavel | O modo principal comeca sem pares fixos. | `recruitable topology starts without fixed pairs` |
