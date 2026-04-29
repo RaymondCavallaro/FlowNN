@@ -14,4 +14,4 @@ It shows:
 - node pressure, activation, and threshold progress;
 - selected node or valve state through the inspector in `main.js`.
 
-Training-only reverse valves are still drawn, so they can be inspected as reserved topology for later flood behavior.
+Training-only valves are still styled distinctly when present, but the current topology no longer reserves output-to-hidden reverse valves.

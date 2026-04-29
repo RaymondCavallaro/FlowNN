@@ -32,7 +32,7 @@ During testing:
 
 If flooding is the learning mechanism, the flooded output has to physically participate in the graph. A passive sink can still be useful later, but it cannot be the teacher source for this training style.
 
-An attempted reverse flood from outputs into every pair node caused collapse: all pair nodes learned the same output. For the shaped topology, reverse output valves are therefore reserved for later experiments instead of conducting.
+An attempted reverse flood from outputs into every pair node caused collapse: all pair nodes learned the same output. The current topology removes those reverse output valves instead of reserving them, keeping teacher pressure local to the expected output until a narrower mechanism is justified.
 
 ## Next Lesson
 

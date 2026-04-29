@@ -20,7 +20,7 @@ Cada teste e registrado com:
 | feature | threshold gates node activation | ativacao por limiar de pressao |
 | feature | outputs can flood pressure during training | saida teacher como fonte ativa |
 | feature | shaped pair topology is structural | topologia de pares de referencia |
-| error | reverse output valves are training-only | rotas teacher nao vazam para teste |
+| error | output reverse valves are omitted | pressao teacher fica local no alvo sem rotas reversas |
 | error | valve openness stays bounded | ecologia assimptotica de valvulas |
 | feature | valves and thresholds use separate ecology modes | controles independentes de valvula/limiar |
 | feature | operation plasticity consolidates after stable cycles | consolidacao de plasticidade regional |

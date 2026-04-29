@@ -326,7 +326,6 @@ export class PressureNetwork {
       ? [
         ...pairSourceLinks.map(([from, to]) => ({ from, to, region: "operation" })),
         ...reversibleLinks.map(([from, to]) => ({ from, to, region: "operation" })),
-        ...reversibleLinks.map(([from, to]) => ({ from: to, to: from, region: "operation", trainingOnly: true })),
       ]
       : directOperationLinks.map(([from, to]) => ({ from, to, region: "operation" }));
 
@@ -802,7 +801,6 @@ export class PressureNetwork {
         peers: [...activeInputs, observation.expectedOutputId],
         inputSources: activeInputs,
         outputTargets: [observation.expectedOutputId],
-        reverseTeachers: [observation.expectedOutputId],
         concepts: [],
       },
       {
@@ -810,7 +808,6 @@ export class PressureNetwork {
         peers: [observation.expectedOutputId],
         inputSources: [],
         outputTargets: [observation.expectedOutputId],
-        reverseTeachers: [observation.expectedOutputId],
         concepts: [],
       },
       {
@@ -818,7 +815,6 @@ export class PressureNetwork {
         peers: [...activeInputs, observation.expectedOutputId],
         inputSources: activeInputs,
         outputTargets: [observation.expectedOutputId],
-        reverseTeachers: [observation.expectedOutputId],
         concepts,
         available: this.setScaffold.injected,
       },
@@ -827,7 +823,6 @@ export class PressureNetwork {
         peers: this.solvingAreaNodes().map((node) => node.id),
         inputSources: activeInputs,
         outputTargets: outputs,
-        reverseTeachers: outputs,
         concepts: [],
       },
     ].filter((candidate) => candidate.available !== false)
@@ -907,13 +902,16 @@ export class PressureNetwork {
     this.nodes.splice(Math.max(0, this.nodes.length - 2), 0, node);
     for (const peerId of policy.peers) {
       if (peerId === id) continue;
-      this.addValve({
-        from: peerId,
-        to: id,
-        resistance: RECRUIT_EXPLORATORY_RESISTANCE,
-        weight: RECRUIT_EXPLORATORY_WEIGHT,
-        trainingOnly: policy.reverseTeachers.includes(peerId),
-      });
+      const peer = this.getNode(peerId);
+      if (peer?.role !== "output") {
+        this.addValve({
+          from: peerId,
+          to: id,
+          resistance: RECRUIT_EXPLORATORY_RESISTANCE,
+          weight: RECRUIT_EXPLORATORY_WEIGHT,
+          trainingOnly: false,
+        });
+      }
       this.addValve({
         from: id,
         to: peerId,

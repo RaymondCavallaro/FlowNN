@@ -65,7 +65,7 @@ These meanings are trained in separate regions, then consolidated by lowering th
 - `OUT0`: operation result with value-0 meaning
 - `OUT1`: operation result with value-1 meaning
 
-In shaped mode, every pair node has a forward valve to each output. Each output also has reserved reverse training-only valves back to pair nodes, but those reverse valves are not conductive in the current shaped experiment.
+In shaped mode, every pair node has a forward valve to each output. Outputs do not reserve reverse valves back to pair nodes in the current experiment; the earlier reverse-flood path is now treated as a removed branch until a narrower teacher mechanism needs it.
 
 ## Recruitment Principle
 

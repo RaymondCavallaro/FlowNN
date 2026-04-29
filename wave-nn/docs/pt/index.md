@@ -14,7 +14,7 @@ A implementacao e pequena de proposito. A topologia principal comeca subestrutur
 - Nos ocultos recrutaveis criados a partir de assinaturas repetidas de pressao nao resolvida.
 - Duas saidas: `OUT0`, `OUT1`.
 - Valvulas diretas para teste somente com entradas.
-- Valvulas reversas de saida reservadas para treino com teacher flood.
+- Sem valvulas reversas de saida para ocultos na topologia atual.
 - Leituras relacionais de saida que podem propor pares candidatos de fonte.
 - Eixos observacionais de meta-regulacao para plasticidade, exploracao, certeza e pressao de restricao.
 - Injecao manual de scaffold conjunto/propriedade, mantida explicita para depois virar recrutamento automatico.

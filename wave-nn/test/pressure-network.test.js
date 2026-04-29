@@ -64,14 +64,13 @@ function testPairTopologyIsStructural() {
   assert.deepEqual(sourceTargets("B1"), ["H1", "H3"]);
 }
 
-function testReverseOutputValvesAreTrainingOnly() {
+function testOutputReverseValvesAreAbsent() {
   const network = new PressureNetwork({ topology: "shaped" });
   const reverseOutputValves = network.valves.filter((valve) => {
     return valve.from.startsWith("OUT") && network.getNode(valve.to)?.role === "hidden";
   });
 
-  assert.ok(reverseOutputValves.length > 0);
-  assert.ok(reverseOutputValves.every((valve) => valve.trainingOnly));
+  assert.deepEqual(reverseOutputValves, []);
 }
 
 function testValveOpennessIsAsymptotic() {
@@ -450,8 +449,8 @@ function testRecruitmentCreatesSeparatorForRepeatedAmbiguity() {
   assert.ok(network.getValve("R0->B1"));
   assert.ok(network.getValve("R0->OUT0"));
   assert.ok(network.getValve("R0->OUT1"));
-  assert.ok(network.getValve("OUT0->R0").trainingOnly);
-  assert.ok(network.getValve("OUT1->R0").trainingOnly);
+  assert.equal(network.getValve("OUT0->R0"), undefined);
+  assert.equal(network.getValve("OUT1->R0"), undefined);
   assert.equal(network.getValve("ORIGIN_A->R0"), undefined);
   assert.equal(network.getValve("VALUE_0->R0"), undefined);
 }
@@ -480,11 +479,11 @@ function testSetScaffoldGuidesRecruitmentConnections() {
   assert.equal(recruited.recruitment.policy, "set-scaffold-context");
   assert.ok(network.getValve("A0->R0"));
   assert.ok(network.getValve("B1->R0"));
-  assert.ok(network.getValve("OUT1->R0").trainingOnly);
   assert.ok(network.getValve("R0->OUT1"));
   assert.equal(network.getValve("A1->R0"), undefined);
   assert.equal(network.getValve("B0->R0"), undefined);
   assert.equal(network.getValve("OUT0->R0"), undefined);
+  assert.equal(network.getValve("OUT1->R0"), undefined);
   assert.equal(network.getValve("R0->OUT0"), undefined);
 }
 
@@ -636,10 +635,10 @@ const TEST_CASES = [
     run: testPairTopologyIsStructural,
   },
   {
-    name: "reverse output valves are training-only",
+    name: "output reverse valves are omitted",
     kind: "error",
-    covers: "teacher routes do not leak into input-only testing",
-    run: testReverseOutputValvesAreTrainingOnly,
+    covers: "teacher pressure stays target-local without reverse routes",
+    run: testOutputReverseValvesAreAbsent,
   },
   {
     name: "valve openness stays bounded",

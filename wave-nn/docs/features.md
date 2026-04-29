@@ -12,7 +12,7 @@ This page names the current FlowNN features explicitly. A feature is considered 
 | Structural source identity | Pressure carries strength only; identity comes from source node and topology. | `source identity is structural` |
 | Threshold activation | Nodes activate only when pressure crosses their threshold. | `threshold gates node activation` |
 | Output flooding | During training, the desired output can act as a teacher pressure source. | `outputs can flood pressure during training` |
-| Training-only teacher routes | Reverse output routes are reserved for training and should not leak into input-only testing. | `reverse output valves are training-only` |
+| Omitted reverse teacher routes | Output-to-hidden reverse routes are absent; teacher pressure stays local to the expected output. | `output reverse valves are omitted` |
 | Bounded valve ecology | Valve openness approaches limits without becoming exactly open or closed. | `valve openness stays bounded` |
 | Separate ecology modes | Valve and threshold controls can be adjusted independently. | `valves and thresholds use separate ecology modes` |
 | Regional plasticity | Operation, origin, and value regions can consolidate at different rates. | `operation plasticity consolidates after stable cycles`; `scaffold training locks primitive regions` |

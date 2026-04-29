@@ -12,7 +12,7 @@ Esta pagina nomeia explicitamente os recursos atuais do FlowNN. Um recurso so de
 | Identidade estrutural de fonte | A pressao carrega apenas forca; identidade vem da fonte e da topologia. | `source identity is structural` |
 | Ativacao por limiar | Nos ativam quando a pressao cruza o limiar. | `threshold gates node activation` |
 | Flood de saida | No treino, a saida desejada pode agir como fonte de pressao teacher. | `outputs can flood pressure during training` |
-| Rotas teacher so de treino | Rotas reversas de saida nao devem vazar para teste so com entradas. | `reverse output valves are training-only` |
+| Rotas teacher reversas omitidas | Rotas reversas de saida para ocultos nao existem; a pressao teacher fica local na saida esperada. | `output reverse valves are omitted` |
 | Ecologia limitada de valvulas | Abertura se aproxima de limites sem virar exatamente aberta ou fechada. | `valve openness stays bounded` |
 | Modos separados de ecologia | Valvulas e limiares podem mudar de forma independente. | `valves and thresholds use separate ecology modes` |
 | Plasticidade regional | Regioes de operacao, origem e valor consolidam em ritmos diferentes. | `operation plasticity consolidates after stable cycles`; `scaffold training locks primitive regions` |

@@ -14,7 +14,7 @@ The implementation is intentionally small. The main topology now starts under-st
 - Recruitable hidden nodes created from repeated unresolved pressure signatures.
 - Two output nodes: `OUT0`, `OUT1`.
 - Forward valves for input-only testing.
-- Reserved reverse valves from outputs for later teacher-flood experiments.
+- No output-to-hidden reverse valves in the current topology.
 - Output relation reads that can propose constrained source-pair candidates.
 - Observational meta-regulation axes for plasticity, exploration, certainty, and constraint pressure.
 - Manual set/property scaffold injection, kept explicit so it can later become automatic recruitment.

@@ -20,7 +20,7 @@ Every test is registered with:
 | feature | threshold gates node activation | pressure threshold activation |
 | feature | outputs can flood pressure during training | teacher output as active pressure source |
 | feature | shaped pair topology is structural | reference pair-node topology |
-| error | reverse output valves are training-only | teacher routes do not leak into input-only testing |
+| error | output reverse valves are omitted | teacher pressure stays target-local without reverse routes |
 | error | valve openness stays bounded | asymptotic valve ecology |
 | feature | valves and thresholds use separate ecology modes | independent valve/threshold controls |
 | feature | operation plasticity consolidates after stable cycles | regional plasticity consolidation |
