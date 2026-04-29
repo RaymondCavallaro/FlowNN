@@ -21,6 +21,10 @@ A implementacao e pequena de proposito. A topologia principal comeca subestrutur
 
 ## Caminho de leitura
 
-Comece por [Convergencia do nucleo](concepts/core-convergence.md), depois [Rede de pressao](concepts/pressure-network.md), [Matematica de campo unificada](concepts/field-math.md), [Computacao temporal](concepts/temporal-computation.md), [Topologia](concepts/topology.md), [Significado relacional](concepts/relational-meaning.md), [Paisagem de informacao](concepts/information-landscape.md), [Meta-Regulacao](concepts/meta-regulation.md), [Dinamica do sistema](concepts/system-dynamics.md). Notas de fase posterior ficam em [Self, valores e curiosidade](concepts/self-values-and-curiosity.md). Depois leia [Recursos](features.md), [Testes](tests.md), [Teste Manual](manual-testing.md), e as notas de implementacao de [network.js](code/network.js.doc.md).
+Comece por [Visao geral](overview.md), [Walkthrough](walkthrough.md), [Fluxo central](core-flow.md) e [Glossario](glossary.md).
+
+Depois leia [Convergencia do nucleo](concepts/core-convergence.md), [Rede de pressao](concepts/pressure-network.md), [Matematica de campo unificada](concepts/field-math.md), [Computacao temporal](concepts/temporal-computation.md), [Topologia](concepts/topology.md), [Significado relacional](concepts/relational-meaning.md), [Paisagem de informacao](concepts/information-landscape.md), [Meta-Regulacao](concepts/meta-regulation.md) e [Dinamica do sistema](concepts/system-dynamics.md). Notas de fase posterior ficam em [Self, valores e curiosidade](concepts/self-values-and-curiosity.md).
+
+Para status de implementacao, leia [Recursos](features.md), [Testes](tests.md), [Teste Manual](manual-testing.md), e as notas de implementacao de [network.js](code/network.js.doc.md).
 
 Para proximos passos, veja [Roadmap](concepts/roadmap.md).

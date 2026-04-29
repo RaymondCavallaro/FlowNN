@@ -21,6 +21,10 @@ The implementation is intentionally small. The main topology now starts under-st
 
 ## Reading Path
 
-Start with [Core Convergence](concepts/core-convergence.md), then [Pressure Network](concepts/pressure-network.md), then [Unified Field Math](concepts/field-math.md), then [Temporal Computation](concepts/temporal-computation.md), then [Topology](concepts/topology.md), then [Relational Meaning](concepts/relational-meaning.md), then [Information Landscape](concepts/information-landscape.md), then [Meta-Regulation](concepts/meta-regulation.md), then [System Dynamics](concepts/system-dynamics.md). Later-stage notes live in [Self, Values, And Curiosity](concepts/self-values-and-curiosity.md). Then read [Features](features.md), [Tests](tests.md), [Manual Testing](manual-testing.md), and the implementation notes for [network.js](code/network.js.doc.md).
+Start with [Overview](overview.md), [Walkthrough](walkthrough.md), [Core Flow](core-flow.md), and [Glossary](glossary.md).
+
+Then read [Core Convergence](concepts/core-convergence.md), [Pressure Network](concepts/pressure-network.md), [Unified Field Math](concepts/field-math.md), [Temporal Computation](concepts/temporal-computation.md), [Topology](concepts/topology.md), [Relational Meaning](concepts/relational-meaning.md), [Information Landscape](concepts/information-landscape.md), [Meta-Regulation](concepts/meta-regulation.md), and [System Dynamics](concepts/system-dynamics.md). Later-stage notes live in [Self, Values, And Curiosity](concepts/self-values-and-curiosity.md).
+
+For implementation status, read [Features](features.md), [Tests](tests.md), [Manual Testing](manual-testing.md), and the implementation notes for [network.js](code/network.js.doc.md).
 
 For upcoming work, see [Roadmap](concepts/roadmap.md).

@@ -8,6 +8,10 @@ theme:
 
 nav:
   - Home: index.md
+  - Overview: overview.md
+  - Walkthrough: walkthrough.md
+  - Core Flow: core-flow.md
+  - Glossary: glossary.md
   - Features: features.md
   - Tests: tests.md
   - Manual Testing: manual-testing.md
@@ -32,6 +36,10 @@ nav:
       - Output Flooding: experiments/001-output-flooding.md
   - Portugues:
       - Inicio: pt/index.md
+      - Visao geral: pt/overview.md
+      - Walkthrough: pt/walkthrough.md
+      - Fluxo central: pt/core-flow.md
+      - Glossario: pt/glossary.md
       - Recursos: pt/features.md
       - Testes: pt/tests.md
       - Teste Manual: pt/manual-testing.md
