@@ -66,9 +66,26 @@ The system should progressively stabilize behavior across experience. Past inter
 
 Principles define what must remain true. Implementations define how those principles are realized under current constraints.
 
+## 11. Private State And Interpretive Interaction
+
+Agents have internal states that are not directly observable by other agents. Interaction therefore depends on partial signals, inference, and uncertainty.
+
+The system should treat other agents as opaque and self-directed, not as fully readable extensions of itself.
+
+## 12. Independent Agency
+
+No external agent can fully represent another agent's priorities. Each agent must be able to express, protect, and advance its own goals under constraint.
+
+## 13. Value Inference And Productive Mismatch
+
+Observed behavior can be used to infer possible values, but those inferred values remain uncertain. Comparing inferred external values with internal values can produce alignment, tension, curiosity, adaptation, or differentiation.
+
+Mismatch is not only conflict. It can become leverage for learning what matters and how this system differs from others.
+
 ## Related
 
 - [Property Map](../system/properties.md)
 - [Math Model](../math/index.md)
 - [Current System](../system/current-system.md)
+- [Self, Values, And Curiosity](../concepts/self-values-and-curiosity.md)
 - [Lessons](../lessons/index.md)

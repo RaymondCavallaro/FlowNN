@@ -51,6 +51,28 @@ my consequence / observed consequence
 
 That boundary is what makes consequence attribution possible.
 
+## Other Agents
+
+Other agents should be treated as opaque and self-directed. Their internal states, goals, and value hierarchies are not directly available.
+
+Interaction therefore looks like:
+
+```text
+partial external signals
+-> inferred intent / value
+-> comparison with internal values
+-> cooperation, tension, curiosity, rejection, or adaptation
+```
+
+This is a constraint of interaction under private state.
+
+For a future multi-agent layer, mismatch between inferred external values and internal values should be useful evidence:
+
+```text
+alignment -> cooperation
+mismatch -> learning, boundary formation, or differentiation
+```
+
 ## Consequence Attribution
 
 The system needs to remember not only outcomes, but how outcomes related to actors, choices, and constraints:

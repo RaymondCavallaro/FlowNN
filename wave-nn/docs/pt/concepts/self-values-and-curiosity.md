@@ -51,6 +51,28 @@ minha consequencia / consequencia observada
 
 Essa fronteira torna atribuicao de consequencia possivel.
 
+## Outros agentes
+
+Outros agentes devem ser tratados como opacos e autodirigidos. Seus estados internos, objetivos e hierarquias de valor nao estao diretamente disponiveis.
+
+Interacao entao fica assim:
+
+```text
+sinais externos parciais
+-> intencao / valor inferido
+-> comparacao com valores internos
+-> cooperacao, tensao, curiosidade, rejeicao ou adaptacao
+```
+
+Isso é uma restricao de interacao sob estado privado.
+
+Para uma futura camada multiagente, mismatch entre valores externos inferidos e valores internos deve ser evidencia util:
+
+```text
+alinhamento -> cooperacao
+mismatch -> aprendizagem, formacao de fronteira ou diferenciacao
+```
+
 ## Atribuicao de consequencia
 
 O sistema precisa lembrar nao apenas resultados, mas como resultados se relacionam com atores, escolhas e restricoes:

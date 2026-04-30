@@ -66,9 +66,26 @@ O sistema deve estabilizar progressivamente comportamento ao longo da experienci
 
 Principios definem o que deve continuar verdadeiro. Implementacoes definem como esses principios sao realizados sob restricoes atuais.
 
+## 11. Estado privado e interacao interpretativa
+
+Agentes possuem estados internos que nao sao diretamente observaveis por outros agentes. Interacao depende de sinais parciais, inferencia e incerteza.
+
+O sistema deve tratar outros agentes como opacos e autodirigidos, nao como extensoes totalmente legiveis de si mesmo.
+
+## 12. Agencia independente
+
+Nenhum agente externo consegue representar totalmente as prioridades de outro agente. Cada agente deve poder expressar, proteger e avancar seus proprios objetivos sob restricao.
+
+## 13. Inferencia de valores e mismatch produtivo
+
+Comportamento observado pode ser usado para inferir valores possiveis, mas esses valores inferidos continuam incertos. Comparar valores externos inferidos com valores internos pode produzir alinhamento, tensao, curiosidade, adaptacao ou diferenciacao.
+
+Mismatch nao é apenas conflito. Ele pode virar alavanca para aprender o que importa e como este sistema difere de outros.
+
 ## Relacionados
 
 - [Mapa de propriedades](../system/properties.md)
 - [Modelo matematico](../math/index.md)
 - [Sistema atual](../system/current-system.md)
+- [Self, valores e curiosidade](../concepts/self-values-and-curiosity.md)
 - [Licoes](../lessons/index.md)
