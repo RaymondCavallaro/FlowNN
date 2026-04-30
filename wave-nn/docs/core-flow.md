@@ -75,4 +75,4 @@ This keeps the experiment focused on structural identity and local pressure dyna
 - [Glossary](glossary.md)
 - [Learning Dynamics](concepts/learning-dynamics.md)
 - [Topology](concepts/topology.md)
-- [Unified Field Math](concepts/field-math.md)
+- [Math Model](math/index.md)

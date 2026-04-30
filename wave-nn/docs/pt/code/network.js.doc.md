@@ -6,7 +6,7 @@
 
 O arquivo de codigo deve ficar relativamente limpo. Esta pagina carrega a explicacao que ficaria barulhenta dentro do motor.
 
-Para o alvo matematico unificado atual, veja [Matematica de campo unificada](../concepts/field-math.md). A versao curta: `PressureNetwork` continua inspecionavel, enquanto um `PressureField` futuro pode comprimir as mesmas dinamicas em estado esparso indexado.
+Para o alvo matematico unificado atual, veja [Modelo matematico](../math/index.md). A versao curta: `PressureNetwork` continua inspecionavel, enquanto um `PressureField` futuro pode comprimir as mesmas dinamicas em estado esparso indexado.
 
 ## Responsabilidades
 

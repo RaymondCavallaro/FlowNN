@@ -6,7 +6,7 @@
 
 The source file should stay mostly clean. This document carries the explanatory comments that would otherwise clutter the engine.
 
-For the current unified math target, see [Unified Field Math](../concepts/field-math.md). The short version is: `PressureNetwork` stays inspectable, while a future `PressureField` can compress the same dynamics into sparse indexed state.
+For the current unified math target, see [Math Model](../math/index.md). The short version is: `PressureNetwork` stays inspectable, while a future `PressureField` can compress the same dynamics into sparse indexed state.
 
 ## Public Model
 
@@ -153,7 +153,7 @@ The candidate is not a symbolic label. It is a pressure structure born from unre
 - stable when it improves margin and correctness;
 - fading when it continues to fail.
 
-In recruitable mode, direct source-to-output operation routes learn slowly. Separator routes learn more strongly while they are candidates, then slow down after they become stable. Recruited separator nodes start with broad weak exploratory routes; output-to-recruit routes are training-only so normal input-only testing does not begin by injecting answer pressure backward.
+In recruitable mode, direct source-to-output operation routes learn slowly. Separator routes learn more strongly while they are candidates, then slow down after they become stable. Recruited separator nodes start with weak exploratory routes. The current model does not create output-to-recruit reverse routes, so normal input-only testing does not begin by injecting answer pressure backward.
 
 `recruitmentPolicyFor` no longer contains one fixed answer for where a separator should connect. It builds candidate strategies and lets the recruitment controller select one.
 
@@ -233,4 +233,4 @@ This state is observational. It does not yet override the manual controls or mut
 
 ## Important Constraint
 
-Reverse output valves are marked `trainingOnly`. In the shaped pair-node experiment they are reserved but not conductive. Output flood participates by activating the desired output node; learning then happens locally where active hidden pressure reaches that active output.
+Output flood participates by activating the desired output node during training. The current model does not reserve reverse output valves. Learning happens locally where active route pressure reaches the active teacher output.

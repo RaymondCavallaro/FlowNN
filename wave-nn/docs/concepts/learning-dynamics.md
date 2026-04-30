@@ -12,7 +12,7 @@ A0 + B1 + OUT1
 
 The desired output is not a passive sink. During training it becomes active, so input pressure arriving at the output boundary can meet teacher pressure locally.
 
-Reverse output valves are not part of the current topology. Letting output pressure activate every candidate pair node made all concepts learn the same output, so teacher pressure now stays local to the expected output unless a narrower future mechanism is justified.
+Reverse output valves are not part of the current topology. The failure that led to this rule is recorded in [Output Flooding](../lessons/output-flooding.md).
 
 Teacher output strength is balanced by output rarity. Rare outputs receive stronger flood pressure using a gentle square-root balance plus a small distinctiveness boost. This makes `0` and `1` both positive output meanings instead of allowing frequent outputs to dominate purely by appearing more often.
 

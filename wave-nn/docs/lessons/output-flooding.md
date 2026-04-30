@@ -1,6 +1,6 @@
 # 001: Output Flooding
 
-[Portugues](../pt/experiments/001-output-flooding.md)
+[Portugues](../pt/lessons/output-flooding.md)
 
 ## Question
 

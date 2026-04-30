@@ -8,17 +8,24 @@ theme:
 
 nav:
   - Home: index.md
-  - Overview: overview.md
-  - Walkthrough: walkthrough.md
-  - Core Flow: core-flow.md
-  - Glossary: glossary.md
-  - Features: features.md
-  - Tests: tests.md
-  - Manual Testing: manual-testing.md
+  - Onboarding:
+      - Overview: overview.md
+      - Walkthrough: walkthrough.md
+      - Core Flow: core-flow.md
+      - Glossary: glossary.md
+  - Current System:
+      - Current System: system/current-system.md
+      - Features: features.md
+      - Tests: tests.md
+      - Manual Testing: manual-testing.md
+  - Principles:
+      - Principles: principles/index.md
+  - Math Model:
+      - Math Model: math/index.md
+      - Unified Field Model: math/unified-field.md
   - Concepts:
       - Core Convergence: concepts/core-convergence.md
       - Pressure Network: concepts/pressure-network.md
-      - Unified Field Math: concepts/field-math.md
       - Temporal Computation: concepts/temporal-computation.md
       - Learning Dynamics: concepts/learning-dynamics.md
       - Topology: concepts/topology.md
@@ -28,25 +35,35 @@ nav:
       - System Dynamics: concepts/system-dynamics.md
       - Self, Values, And Curiosity: concepts/self-values-and-curiosity.md
       - Roadmap: concepts/roadmap.md
+  - Lessons:
+      - Lessons: lessons/index.md
+      - Output Flooding: lessons/output-flooding.md
+  - History:
+      - Project History: history/project-history.md
   - Code Notes:
       - network.js: code/network.js.doc.md
       - main.js: code/main.js.doc.md
       - visualizer.js: code/visualizer.js.doc.md
-  - Experiments:
-      - Output Flooding: experiments/001-output-flooding.md
   - Portugues:
       - Inicio: pt/index.md
-      - Visao geral: pt/overview.md
-      - Walkthrough: pt/walkthrough.md
-      - Fluxo central: pt/core-flow.md
-      - Glossario: pt/glossary.md
-      - Recursos: pt/features.md
-      - Testes: pt/tests.md
-      - Teste Manual: pt/manual-testing.md
+      - Onboarding:
+          - Visao geral: pt/overview.md
+          - Walkthrough: pt/walkthrough.md
+          - Fluxo central: pt/core-flow.md
+          - Glossario: pt/glossary.md
+      - Sistema atual:
+          - Sistema atual: pt/system/current-system.md
+          - Recursos: pt/features.md
+          - Testes: pt/tests.md
+          - Teste Manual: pt/manual-testing.md
+      - Principios:
+          - Principios: pt/principles/index.md
+      - Modelo matematico:
+          - Modelo matematico: pt/math/index.md
+          - Modelo de campo unificado: pt/math/unified-field.md
       - Conceitos:
           - Convergencia do nucleo: pt/concepts/core-convergence.md
           - Rede de pressao: pt/concepts/pressure-network.md
-          - Matematica de campo unificada: pt/concepts/field-math.md
           - Computacao temporal: pt/concepts/temporal-computation.md
           - Dinamica de aprendizagem: pt/concepts/learning-dynamics.md
           - Topologia: pt/concepts/topology.md
@@ -56,9 +73,12 @@ nav:
           - Dinamica do sistema: pt/concepts/system-dynamics.md
           - Self, valores e curiosidade: pt/concepts/self-values-and-curiosity.md
           - Roadmap: pt/concepts/roadmap.md
+      - Licoes:
+          - Licoes: pt/lessons/index.md
+          - Flooding de saida: pt/lessons/output-flooding.md
+      - Historia:
+          - Historico do projeto: pt/history/project-history.md
       - Codigo:
           - network.js: pt/code/network.js.doc.md
           - main.js: pt/code/main.js.doc.md
           - visualizer.js: pt/code/visualizer.js.doc.md
-      - Experimentos:
-          - Flooding de saida: pt/experiments/001-output-flooding.md

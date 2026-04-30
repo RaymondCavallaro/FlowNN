@@ -23,7 +23,9 @@ A implementacao e pequena de proposito. A topologia principal comeca subestrutur
 
 Comece por [Visao geral](overview.md), [Walkthrough](walkthrough.md), [Fluxo central](core-flow.md) e [Glossario](glossary.md).
 
-Depois leia [Convergencia do nucleo](concepts/core-convergence.md), [Rede de pressao](concepts/pressure-network.md), [Matematica de campo unificada](concepts/field-math.md), [Computacao temporal](concepts/temporal-computation.md), [Topologia](concepts/topology.md), [Significado relacional](concepts/relational-meaning.md), [Paisagem de informacao](concepts/information-landscape.md), [Meta-Regulacao](concepts/meta-regulation.md) e [Dinamica do sistema](concepts/system-dynamics.md). Notas de fase posterior ficam em [Self, valores e curiosidade](concepts/self-values-and-curiosity.md).
+Depois leia [Sistema atual](system/current-system.md), [Principios](principles/index.md) e o [Modelo matematico](math/index.md). Depois disso, use [Rede de pressao](concepts/pressure-network.md), [Computacao temporal](concepts/temporal-computation.md), [Topologia](concepts/topology.md), [Significado relacional](concepts/relational-meaning.md), [Paisagem de informacao](concepts/information-landscape.md), [Meta-Regulacao](concepts/meta-regulation.md) e [Dinamica do sistema](concepts/system-dynamics.md) como referencias mais profundas.
+
+Decisoes historicas e mecanismos que falharam ficam em [Licoes](lessons/index.md) e [Historico do projeto](history/project-history.md), nao na descricao do sistema atual.
 
 Para status de implementacao, leia [Recursos](features.md), [Testes](tests.md), [Teste Manual](manual-testing.md), e as notas de implementacao de [network.js](code/network.js.doc.md).
 

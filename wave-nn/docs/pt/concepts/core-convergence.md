@@ -12,12 +12,7 @@ fatia temporaria -> experimento isolado -> dinamica reutilizavel -> node unifica
 
 ## Principio Principal
 
-O branch `main` atual é a linha de convergencia. Branches de versao sao prateleiras de experimento e historia, nao um mapa da arquitetura final.
-
-- `v0.0.1`: fatia de tempo/roteamento temporal;
-- `v0.0.2`: checkpoint historico que pode ser reutilizado ou aposentado;
-- `v0.0.3`: prateleira de consolidacao/campo esparso;
-- `v0.0.4`: prateleira de aritmetica enquanto aritmetica nao é o foco principal.
+O branch `main` atual é a linha de convergencia. Branches de versao sao prateleiras de experimento e historia, nao um mapa da arquitetura final. Veja [Historico do projeto](../history/project-history.md) para a linhagem dos branches.
 
 ## Esboco de node unificado
 
@@ -50,4 +45,4 @@ Isso nao autoriza injecao escondida de resposta. Pressao esperada de saida so de
 
 ## Regra de documentacao
 
-Docs devem chamar trabalho de branch de experimento, prateleira ou fatia de desenvolvimento. Docs centrais devem descrever a dinamica que converge, nao o layout dos branches.
+Docs centrais devem descrever dinamicas convergentes. Trabalho especifico de branch, mecanismos que falharam e mudancas de direcao pertencem em [Licoes](../lessons/index.md) ou [Historico do projeto](../history/project-history.md).

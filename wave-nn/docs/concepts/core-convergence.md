@@ -12,16 +12,7 @@ temporary slice -> isolated experiment -> reusable dynamic -> unified node
 
 ## Main Principle
 
-The current `main` branch is the convergence line. Version branches are shelves for experiments and history, not a map of final architecture.
-
-That means:
-
-- `v0.0.1` can stay as the time-routing slice;
-- `v0.0.2` should not be treated as the permanent main architecture;
-- `v0.0.3` can keep consolidation or sparse-field work as a shelf;
-- `v0.0.4` can keep arithmetic work while arithmetic is not the main focus.
-
-Those labels can be reused or retired later. The docs should avoid making them sound like fixed subsystems.
+The current `main` branch is the convergence line. Version branches are shelves for experiments and history, not a map of final architecture. See [Project History](../history/project-history.md) for the branch lineage.
 
 ## Unified Node Sketch
 
@@ -76,4 +67,4 @@ What part should converge back into the node substrate?
 
 ## Documentation Rule
 
-Docs should name branch-specific work as experiments, shelves, or development slices. Core docs should describe the converging dynamics, not the branch layout.
+Core docs should describe converging dynamics. Branch-specific work, failed mechanisms, and changes of direction belong in [Lessons](../lessons/index.md) or [Project History](../history/project-history.md).

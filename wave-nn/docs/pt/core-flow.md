@@ -75,4 +75,4 @@ Isso mantem o experimento focado em identidade estrutural e dinamicas locais de 
 - [Glossario](glossary.md)
 - [Dinamica de aprendizagem](concepts/learning-dynamics.md)
 - [Topologia](concepts/topology.md)
-- [Matematica de campo unificada](concepts/field-math.md)
+- [Modelo matematico](math/index.md)

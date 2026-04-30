@@ -12,7 +12,7 @@ A0 + B1 + OUT1
 
 Valvulas que veem coativacao local tendem a abrir e ganhar peso. Pressao que passa sem assentamento util pode aumentar resistencia. A rede nao recebe um historico simbolico de rota nem credito global de erro.
 
-Valvulas reversas de saida nao fazem parte da topologia atual. Quando a pressao de saida ativava todos os pares candidatos, todos os conceitos aprendiam a mesma saida. Por isso a pressao teacher agora fica local na saida esperada, ate existir um mecanismo futuro mais estreito que justifique reabrir essa linha.
+Valvulas reversas de saida nao fazem parte da topologia atual. A falha que levou a essa regra esta registrada em [Flooding de saida](../lessons/output-flooding.md).
 
 ## Plasticidade Regional
 

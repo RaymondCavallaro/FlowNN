@@ -48,7 +48,7 @@ The prototype also has explicit scaffolds for set/property meaning, relational r
 2. [Core Flow](core-flow.md)
 3. [Glossary](glossary.md)
 4. [Pressure Network](concepts/pressure-network.md)
-5. [Unified Field Math](concepts/field-math.md)
+5. [Math Model](math/index.md)
 6. [Temporal Computation](concepts/temporal-computation.md)
 
 After that, use the concept pages as deeper references.

@@ -1,14 +1,14 @@
 # Unified Field Math
 
-[Portugues](../pt/concepts/field-math.md)
+[Portugues](../pt/math/unified-field.md)
 
-This page updates the `v0.0.3` field-math framing for the current meaning-first line.
+This page defines the current unified field-math model for the meaning-first line.
 
 The object graph remains useful for drawing, inspection, and incremental experiments. The model underneath can be described as sparse field dynamics with regulation layers.
 
 ## Core Shift
 
-`v0.0.3` described the network as:
+The historical `v0.0.3` model described the network as:
 
 ```text
 pressure state

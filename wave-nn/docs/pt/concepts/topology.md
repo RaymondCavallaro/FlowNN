@@ -6,6 +6,8 @@ A topologia principal comeca sem a camada fixa de pares da tabela-verdade.
 
 A topologia moldada antiga ainda existe como referencia nos testes, mas o experimento principal pergunta se pressao nao resolvida consegue recrutar a estrutura intermediaria ausente.
 
+Saidas nao reservam valvulas reversas para pares ou recrutados na topologia atual. A linha removida de reverse flood fica documentada como licao, nao como topologia atual.
+
 ## Modo Recrutavel
 
 Fontes comecam com rotas fracas para `OUT0` e `OUT1`. Quando um caso fica repetidamente ambiguo, com baixa margem ou pressao nao resolvida, a rede registra a assinatura ativa e pode criar um separador fraco.

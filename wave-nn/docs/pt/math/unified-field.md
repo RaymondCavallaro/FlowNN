@@ -1,14 +1,14 @@
 # Matematica de campo unificada
 
-[English](../../concepts/field-math.md)
+[English](../../math/unified-field.md)
 
-Esta pagina atualiza o enquadramento matematico de campo do `v0.0.3` para a linha atual orientada por significado.
+Esta pagina define o modelo matematico de campo unificado atual para a linha orientada por significado.
 
 O grafo de objetos continua util para desenho, inspecao e experimentos incrementais. Por baixo, o modelo pode ser descrito como dinamica esparsa de campo com camadas de regulacao.
 
 ## Mudanca central
 
-O `v0.0.3` descrevia a rede como:
+O modelo historico `v0.0.3` descrevia a rede como:
 
 ```text
 estado de pressao

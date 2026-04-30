@@ -1,6 +1,6 @@
 # 001: Flooding de saida
 
-[English](../../experiments/001-output-flooding.md)
+[English](../../lessons/output-flooding.md)
 
 ## Pergunta
 
