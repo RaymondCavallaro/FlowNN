@@ -50,6 +50,14 @@ Selecao so tem significado quando alternativas eram possiveis. O sistema deve pr
 rotas possiveis != rotas ativas
 ```
 
+A teoria deve preservar diversidade de rotas conceitualmente. A implementacao deve manter ativo apenas o que os recursos permitem:
+
+```text
+muitos caminhos possiveis sao registrados
+poucos caminhos ativos sao mantidos
+caminhos inativos podem ser comprimidos, arquivados ou descartados
+```
+
 Quando recursos sao abundantes, exploracao mais ampla pode permanecer ativa. Quando recursos sao limitados, o sistema deve manter ativamente apenas rotas com alto valor esperado, incerteza de alto risco, valor de fallback diverso, ou importancia explicativa / reversivel.
 
 ## 6. Persistencia seletiva

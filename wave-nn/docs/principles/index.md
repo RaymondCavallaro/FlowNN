@@ -50,6 +50,14 @@ Selection is meaningful only when alternatives were possible. The system should 
 possible routes != active routes
 ```
 
+The theory should preserve route diversity conceptually. The implementation should keep active only what resources allow:
+
+```text
+many possible paths are recorded
+few active paths are maintained
+inactive paths may be compressed, archived, or discarded
+```
+
 When resources are abundant, broader exploration can remain active. When resources are limited, the system should actively maintain only routes with high expected value, high-risk uncertainty, diverse fallback value, or explanatory / reversible importance.
 
 ## 6. Selective Persistence

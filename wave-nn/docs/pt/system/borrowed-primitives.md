@@ -49,6 +49,16 @@ Rastreamento de distribuicao de caminhos deve preservar diversidade de rotas con
 rotas possiveis != rotas ativas
 ```
 
+Um rastreador futuro de rotas deve separar:
+
+```text
+RouteSet {
+  active_routes       // mantidas agora com recursos vivos
+  compressed_routes   // lembradas como resumos
+  discarded_routes    // abandonadas com motivo
+}
+```
+
 Se recursos sao abundantes:
 
 ```text

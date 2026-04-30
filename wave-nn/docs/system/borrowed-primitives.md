@@ -49,6 +49,16 @@ Path distribution tracking should preserve route diversity conceptually. It shou
 possible routes != active routes
 ```
 
+A future route tracker should separate:
+
+```text
+RouteSet {
+  active_routes       // currently maintained with live resources
+  compressed_routes   // remembered as summaries
+  discarded_routes    // abandoned with reason
+}
+```
+
 If resources are abundant:
 
 ```text
