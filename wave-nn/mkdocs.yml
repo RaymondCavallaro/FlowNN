@@ -16,6 +16,7 @@ nav:
   - Current System:
       - Current System: system/current-system.md
       - Property Map: system/properties.md
+      - Borrowed Primitives: system/borrowed-primitives.md
       - Features: features.md
       - Tests: tests.md
       - Manual Testing: manual-testing.md
@@ -55,6 +56,7 @@ nav:
       - Sistema atual:
           - Sistema atual: pt/system/current-system.md
           - Mapa de propriedades: pt/system/properties.md
+          - Primitivas emprestadas: pt/system/borrowed-primitives.md
           - Recursos: pt/features.md
           - Testes: pt/tests.md
           - Teste Manual: pt/manual-testing.md

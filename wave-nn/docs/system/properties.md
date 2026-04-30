@@ -29,6 +29,11 @@ Status means:
 | Recruitment strategy tuning | partial | native target | Axis gradients should become system-controlled, not manually prioritized. |
 | Meta-regulation | partial | native target | Observational now; should eventually regulate plasticity, thresholds, valves, and time windows. |
 | Adaptive pressure balance | target | native target | Capacity and constraint should be regulated together. |
+| Path distribution tracking | target | native target | Track viable route distributions before committing to one explanation or output. |
+| Partial reversibility / trace memory | target | native target | Trace outcomes back to contributing routes for explanation and refinement. |
+| Hard constraints over flow | target | native target | Prevent invalid states while keeping pressure dynamics inspectable. |
+| Field bias | target | native target | Add global directional pressure without replacing local routing. |
+| Controlled routing noise | target | native target | Use structured exploration that can decay or slow its decay. |
 | Option awareness | target | emergent target | The system should know which alternatives were possible before selection. |
 | Selective persistence | target | emergent target | The system should decide what to keep active, compress, or discard. |
 | Time material layer | target | native target | Raw temporal structure should become pre-semantic material. |

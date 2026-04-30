@@ -29,6 +29,11 @@ Status significa:
 | Ajuste de estrategia de recrutamento | parcial | alvo nativo | Gradientes de eixo devem virar controle do sistema, nao prioridade manual. |
 | Meta-regulacao | parcial | alvo nativo | Observacional agora; deve eventualmente regular plasticidade, limiares, valvulas e janelas temporais. |
 | Balanco adaptativo de pressao | alvo | alvo nativo | Capacidade e restricao devem ser reguladas juntas. |
+| Rastreamento de distribuicao de caminhos | alvo | alvo nativo | Rastrear distribuicoes de rotas viaveis antes de se comprometer com uma explicacao ou saida. |
+| Reversibilidade parcial / memoria de traces | alvo | alvo nativo | Rastrear resultados de volta para rotas contribuintes para explicacao e refinamento. |
+| Restricoes duras sobre fluxo | alvo | alvo nativo | Impedir estados invalidos mantendo dinamicas de pressao inspecionaveis. |
+| Vies de campo | alvo | alvo nativo | Adicionar pressao direcional global sem substituir roteamento local. |
+| Ruido controlado de roteamento | alvo | alvo nativo | Usar exploracao estruturada que pode decair ou ter seu decaimento desacelerado. |
 | Consciencia de opcoes | alvo | alvo emergente | O sistema deve saber quais alternativas eram possiveis antes da selecao. |
 | Persistencia seletiva | alvo | alvo emergente | O sistema deve decidir o que manter ativo, comprimir ou descartar. |
 | Camada de material temporal | alvo | alvo nativo | Estrutura temporal bruta deve virar material pre-semantico. |
