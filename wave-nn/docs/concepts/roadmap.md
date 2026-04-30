@@ -2,11 +2,11 @@
 
 [Portugues](../pt/concepts/roadmap.md)
 
-The current `main` branch is the convergence line for the pressure-network experiment.
+This roadmap describes the convergence line for the pressure-network experiment.
 
-Version branches are experimental shelves and historical checkpoints, not permanent modules in the architecture. The docs should describe the converging node dynamics first, and only mention branches when a piece of work is parked outside `main`.
+Historical experiments can explain origin and lessons, but they are not permanent modules in the architecture. The docs should describe converging node dynamics before historical lineage.
 
-See [Core Convergence](core-convergence.md) for the naming rule.
+See [Core Convergence](core-convergence.md) for the documentation rule.
 
 ## Current Direction
 
@@ -131,7 +131,7 @@ The purpose is not to teach the answer directly. The purpose is to see when the 
 
 ## Meaning Extraction Direction
 
-The direction from `3.txt` and `4.txt` is to use forward and backward reasoning to extract meanings from internal structure.
+Meaning extraction should use forward and backward reasoning to read meanings from internal structure.
 
 An intermediate node or group should be explainable through two complementary signatures:
 
@@ -210,7 +210,7 @@ The scaffold is allowed to teach origin and value. It should not teach operation
 
 ## Relational Meaning And Invariants
 
-The direction from `5.txt` and `6.txt` changes meaning reading from node-centric to relation-centric.
+Meaning reading should move from node-centric explanations toward relation-centric invariants.
 
 Earlier framing:
 
@@ -252,7 +252,7 @@ This gives a cleaner hierarchy:
 6. pattern matching    -> reuse invariants across contexts
 ```
 
-The Noether-style intuition from `6.txt` is useful but should remain an analogy:
+A Noether-style intuition is useful but should remain an analogy:
 
 ```text
 variation -> invariant -> meaning

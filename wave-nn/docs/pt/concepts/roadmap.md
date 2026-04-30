@@ -2,9 +2,9 @@
 
 [English](../../concepts/roadmap.md)
 
-O branch `main` atual é a linha de convergencia do experimento de rede de pressao.
+Este roadmap descreve a linha de convergencia do experimento de rede de pressao.
 
-Branches de versao sao prateleiras experimentais e checkpoints historicos, nao modulos permanentes. Os docs devem descrever primeiro a dinamica convergente dos nodes, e so mencionar branches quando algum trabalho esta estacionado fora do `main`.
+Experimentos historicos podem explicar origem e licoes, mas nao sao modulos permanentes da arquitetura. Os docs devem descrever dinamicas convergentes de nodes antes da linhagem historica.
 
 ## Direcao atual
 

@@ -4,7 +4,7 @@
 
 FlowNN should not grow into a set of permanent feature modules.
 
-The branch and feature names are temporary study slices. They isolate one capacity at a time so the behavior can be inspected, tested, and simplified. The long-term target is a unified node substrate where timing, prediction, precision, probing, recruitment, and transfer are different capacities of the same pressure dynamics.
+Named development slices are temporary study tools. They isolate one capacity at a time so the behavior can be inspected, tested, and simplified. The long-term target is a unified node substrate where timing, prediction, precision, probing, recruitment, and transfer are different capacities of the same pressure dynamics.
 
 ```text
 temporary slice -> isolated experiment -> reusable dynamic -> unified node
@@ -12,7 +12,7 @@ temporary slice -> isolated experiment -> reusable dynamic -> unified node
 
 ## Main Principle
 
-The current `main` branch is the convergence line. Version branches are shelves for experiments and history, not a map of final architecture. See [Project History](../history/project-history.md) for the branch lineage.
+The current work should be treated as the convergence line. Historical slices are shelves for experiments and history, not a map of final architecture. See [Project History](../history/project-history.md) for lineage.
 
 ## Unified Node Sketch
 
@@ -67,4 +67,4 @@ What part should converge back into the node substrate?
 
 ## Documentation Rule
 
-Core docs should describe converging dynamics. Branch-specific work, failed mechanisms, and changes of direction belong in [Lessons](../lessons/index.md) or [Project History](../history/project-history.md).
+Core docs should describe converging dynamics. Historical work, failed mechanisms, and changes of direction belong in [Lessons](../lessons/index.md) or [Project History](../history/project-history.md).

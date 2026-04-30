@@ -2,7 +2,7 @@
 
 [Portugues](../pt/concepts/temporal-computation.md)
 
-This page collects the temporal concepts from the numbered notes into a compact design entry. They are not current runtime features yet. They are constraints for the next stage after the pressure network can recruit, stabilize, and inspect simple structure.
+This page collects the temporal concepts into a compact design entry. They are not current runtime features yet. They are constraints for the next stage after the pressure network can recruit, stabilize, and inspect simple structure.
 
 ## Time Material Layer
 

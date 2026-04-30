@@ -8,7 +8,7 @@ The object graph remains useful for drawing, inspection, and incremental experim
 
 ## Core Shift
 
-The historical `v0.0.3` model described the network as:
+The earlier sparse-field model described the network as:
 
 ```text
 pressure state
@@ -104,7 +104,7 @@ P'_j = decay_j(P_j + I_j + sum_i F_ij)
 A'_j = activate(P'_j, Theta_j, Role_j)
 ```
 
-This preserves the useful `v0.0.3` rule: pressure is not copied through every open route. A source activation is divided across available conductance.
+This preserves a core field rule: pressure is not copied through every open route. A source activation is divided across available conductance.
 
 ## Learning
 
@@ -262,7 +262,7 @@ same or better flow stabilization
 
 ## Regulation And Salience
 
-The notes from `13.txt` add a general rule:
+A general regulation rule:
 
 ```text
 many failures are shared mechanisms pushed out of regulation

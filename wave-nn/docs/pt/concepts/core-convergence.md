@@ -4,7 +4,7 @@
 
 FlowNN nao deve crescer como um conjunto de modulos permanentes.
 
-Branches e nomes de recursos sao fatias temporarias de estudo. Eles isolam uma capacidade por vez para que o comportamento possa ser inspecionado, testado e simplificado. O alvo de longo prazo é um substrato unico de nodes, onde tempo, predicao, precisao, probing, recrutamento e transferencia sao capacidades da mesma dinamica de pressao.
+Fatias nomeadas de desenvolvimento sao ferramentas temporarias de estudo. Elas isolam uma capacidade por vez para que o comportamento possa ser inspecionado, testado e simplificado. O alvo de longo prazo é um substrato unico de nodes, onde tempo, predicao, precisao, probing, recrutamento e transferencia sao capacidades da mesma dinamica de pressao.
 
 ```text
 fatia temporaria -> experimento isolado -> dinamica reutilizavel -> node unificado
@@ -12,7 +12,7 @@ fatia temporaria -> experimento isolado -> dinamica reutilizavel -> node unifica
 
 ## Principio Principal
 
-O branch `main` atual é a linha de convergencia. Branches de versao sao prateleiras de experimento e historia, nao um mapa da arquitetura final. Veja [Historico do projeto](../history/project-history.md) para a linhagem dos branches.
+O trabalho atual deve ser tratado como a linha de convergencia. Fatias historicas sao prateleiras de experimento e historia, nao um mapa da arquitetura final. Veja [Historico do projeto](../history/project-history.md) para a linhagem.
 
 ## Esboco de node unificado
 
@@ -45,4 +45,4 @@ Isso nao autoriza injecao escondida de resposta. Pressao esperada de saida so de
 
 ## Regra de documentacao
 
-Docs centrais devem descrever dinamicas convergentes. Trabalho especifico de branch, mecanismos que falharam e mudancas de direcao pertencem em [Licoes](../lessons/index.md) ou [Historico do projeto](../history/project-history.md).
+Docs centrais devem descrever dinamicas convergentes. Trabalho historico, mecanismos que falharam e mudancas de direcao pertencem em [Licoes](../lessons/index.md) ou [Historico do projeto](../history/project-history.md).

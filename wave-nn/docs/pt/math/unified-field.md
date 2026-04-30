@@ -8,7 +8,7 @@ O grafo de objetos continua util para desenho, inspecao e experimentos increment
 
 ## Mudanca central
 
-O modelo historico `v0.0.3` descrevia a rede como:
+O modelo anterior de campo esparso descrevia a rede como:
 
 ```text
 estado de pressao
@@ -104,7 +104,7 @@ P'_j = decay_j(P_j + I_j + sum_i F_ij)
 A'_j = activate(P'_j, Theta_j, Role_j)
 ```
 
-Isso preserva a regra util do `v0.0.3`: pressao nao é copiada por toda rota aberta. Uma ativacao de fonte é dividida pela condutancia disponivel.
+Isso preserva uma regra central de campo: pressao nao é copiada por toda rota aberta. Uma ativacao de fonte é dividida pela condutancia disponivel.
 
 ## Aprendizagem
 
@@ -262,7 +262,7 @@ mesma ou melhor estabilizacao de fluxo
 
 ## Regulacao e saliencia
 
-As notas de `13.txt` adicionam uma regra geral:
+Uma regra geral de regulacao:
 
 ```text
 muitas falhas sao mecanismos compartilhados fora de regulacao

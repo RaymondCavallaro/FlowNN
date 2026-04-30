@@ -2,7 +2,7 @@
 
 [English](../../concepts/temporal-computation.md)
 
-Esta pagina junta os conceitos temporais das notas numeradas em uma entrada compacta de design. Eles ainda nao sao recursos do runtime atual. Sao restricoes para a proxima etapa depois que a rede de pressao conseguir recrutar, estabilizar e inspecionar estruturas simples.
+Esta pagina junta os conceitos temporais em uma entrada compacta de design. Eles ainda nao sao recursos do runtime atual. Sao restricoes para a proxima etapa depois que a rede de pressao conseguir recrutar, estabilizar e inspecionar estruturas simples.
 
 ## Camada de material temporal
 
