@@ -49,14 +49,16 @@ Rastreamento de distribuicao de caminhos deve preservar diversidade de rotas con
 rotas possiveis != rotas ativas
 ```
 
-Um rastreador futuro de rotas deve separar:
+O sistema nao deve armazenar buckets de ciclo de vida de rota como verdade primaria. Ele deve armazenar dinamicas:
 
 ```text
-RouteSet {
-  active_routes       // mantidas agora com recursos vivos
-  compressed_routes   // lembradas como resumos
-  discarded_routes    // abandonadas com motivo
-}
+suporte de rota
+fluxo recente
+resistencia
+recorrencia
+residuo de trace
+utilidade preditiva
+potencial de reativacao
 ```
 
 Se recursos sao abundantes:
@@ -71,6 +73,8 @@ Se recursos sao limitados, preserve ativamente apenas:
 - caminhos de incerteza de alto risco;
 - caminhos diversos de fallback;
 - caminhos necessarios para reversibilidade ou explicacao.
+
+Leitores externos de scaffold podem inferir que uma rota esta fluindo, disponivel, residual, fria ou latente. Essas sao leituras do comportamento de fluxo, nao categorias armazenadas como mecanismo.
 
 ## Fase 1: estabilidade e interpretabilidade
 

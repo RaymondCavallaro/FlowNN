@@ -29,6 +29,14 @@ Valves now belong to a region:
 - `value`: source/output-to-value scaffold meanings;
 - `operation`: source-to-pair and pair-to-output operation flow.
 
+`InputValve` also carries a small observer scaffold:
+
+- `flowTrace`: decaying residue of recent throughput;
+- `recurrence`: how repeatedly the route has conducted;
+- `usefulness`: whether learning recently treated the route as helpful or harmful.
+
+These are not route lifecycle labels. They are dynamic traces that let the inspector infer whether a route is currently flowing, available, residual, cold, or latent.
+
 ## Runtime Loop
 
 Each step:
@@ -199,12 +207,26 @@ This is observational. It reads learned structure after training instead of addi
 
 Examples of extracted invariants are `mixed-value`, `same-value`, `all-value-1`, `all-value-0`, `at-least-one-value-1`, and `not-all-value-1`.
 
+`readRouteDynamics` is an external scaffold reader. It observes route dynamics without storing explicit buckets such as active, compressed, or discarded. For each route it reports:
+
+- support from current weight and openness;
+- recent flow from transient pressure/activity;
+- resistance;
+- recurrence;
+- trace residue;
+- usefulness;
+- reactivation potential;
+- an inferred availability reading.
+
+The availability reading is diagnostic. The network stores pressure dynamics; the reader infers route state from those dynamics.
+
 `generateForOutput` is the first constrained generative use of those relations. It:
 
 1. reads the target output relation;
 2. enumerates the current source-pair space;
 3. reads each candidate pair through the scaffold meanings;
-4. keeps candidates whose relation satisfies every learned invariant.
+4. keeps candidates whose relation satisfies every learned invariant;
+5. attaches route evidence from the learned path set and ranks candidates by inferred route support.
 
 This is still bounded to the current bitwise lab. It is meant to test whether relation meaning can run backward from target role to possible source structure.
 

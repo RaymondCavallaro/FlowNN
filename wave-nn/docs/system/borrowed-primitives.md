@@ -49,14 +49,16 @@ Path distribution tracking should preserve route diversity conceptually. It shou
 possible routes != active routes
 ```
 
-A future route tracker should separate:
+The system should not store route lifecycle buckets as primary truth. It should store dynamics:
 
 ```text
-RouteSet {
-  active_routes       // currently maintained with live resources
-  compressed_routes   // remembered as summaries
-  discarded_routes    // abandoned with reason
-}
+route support
+recent flow
+resistance
+recurrence
+trace residue
+prediction usefulness
+reactivation potential
 ```
 
 If resources are abundant:
@@ -71,6 +73,8 @@ If resources are limited, actively preserve only:
 - high-risk uncertainty paths;
 - diverse fallback paths;
 - paths needed for reversibility or explanation.
+
+External scaffold readers may infer that a route is flowing, available, residual, cold, or latent. Those are readings of flow behavior, not categories stored as the mechanism.
 
 ## Phase 1: Stability And Interpretability
 

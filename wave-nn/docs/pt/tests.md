@@ -35,6 +35,8 @@ Cada teste e registrado com:
 | feature | meaning explanations use scaffold primitives | explicacao por significados primitivos |
 | feature | relation reader extracts operation meanings | invariantes de operacao |
 | feature | relation reader generates source candidates | geracao de fontes candidatas a partir da saida alvo |
+| feature | route dynamics reader infers availability | scaffold externo le estado de rota a partir de dinamicas |
+| feature | generated candidates carry route evidence | geracao relacional ordenada por suporte inferido de rota |
 | feature | meta regulation responds to uncertainty | eixos de tensao adaptativa sob comportamento nao resolvido |
 | feature | meta regulation consolidates stable behavior | eixos de tensao adaptativa sob comportamento estavel |
 | feature | flood training changes valves | aprendizagem local por coativacao |

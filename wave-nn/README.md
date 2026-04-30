@@ -30,6 +30,8 @@ The earlier shaped pair topology is still available as a reference mode in tests
 
 Output explanations can also use learned relational invariants as a constrained generator. Given a target output, the network reads the stable relation and proposes source pairs from the current bitwise source space that satisfy it.
 
+Generated candidates now carry route evidence from learned path dynamics. The system stores flow traces, recurrence, resistance, and usefulness on valves; diagnostic readers infer route availability from those dynamics instead of storing explicit route lifecycle buckets.
+
 ## Training
 
 Flood training injects the selected truth-table input sources and the desired output node at the same time.

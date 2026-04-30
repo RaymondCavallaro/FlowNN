@@ -25,6 +25,16 @@ Para o alvo matematico unificado atual, veja [Modelo matematico](../math/index.m
 
 Nao existe objeto runtime `Signal` separado. Pressao é injetada diretamente em nodes de fonte/saida como forca, e identidade continua estrutural. O sistema deve evitar tipo semantico explicito, tipo aceito por node, historico de rota e backprop.
 
+## Dinamica de rotas
+
+`InputValve` carrega um pequeno scaffold observacional:
+
+- `flowTrace`: residuo decrescente de throughput recente;
+- `recurrence`: quao repetidamente a rota conduziu;
+- `usefulness`: se a aprendizagem tratou a rota recentemente como util ou prejudicial.
+
+Esses campos nao sao rotulos de ciclo de vida da rota. Eles sao tracos dinamicos que permitem ao inspector inferir se a rota esta fluindo, disponivel, residual, fria ou latente.
+
 ## Teste
 
 `testCase` injeta apenas fontes de entrada. Ele mede as saidas durante a janela de assentamento porque o pulso significativo pode acontecer antes do quadro final.
@@ -82,7 +92,9 @@ Cada estrategia tem um perfil nesses eixos. A selecao compara demanda atual do c
 
 `generateForOutput` é o primeiro uso generativo restrito das relacoes. Ele le a relacao da saida alvo, enumera o espaco atual de pares de fonte, le cada par pelos significados de scaffold, e mantem candidatos que satisfazem todos os invariantes aprendidos.
 
-Isso ainda fica limitado ao laboratorio bitwise. A funcao testa se significado relacional pode rodar de volta, saindo de um papel alvo para estruturas de fonte possiveis.
+`readRouteDynamics` é um leitor externo de scaffold. Ele observa suporte, fluxo recente, resistencia, recorrencia, residuo de traco, utilidade e potencial de reativacao sem armazenar buckets explicitos como ativo, comprimido ou descartado. A disponibilidade é uma leitura diagnostica inferida das dinamicas.
+
+`generateForOutput` tambem anexa evidencia de rota do conjunto de caminhos aprendido e ordena candidatos pelo suporte inferido. Isso ainda fica limitado ao laboratorio bitwise. A funcao testa se significado relacional pode rodar de volta, saindo de um papel alvo para estruturas de fonte possiveis.
 
 ## Meta-Regulacao
 

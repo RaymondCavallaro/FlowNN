@@ -53,16 +53,16 @@ rotas possiveis != rotas ativas
 A teoria deve preservar diversidade de rotas conceitualmente. A implementacao deve manter ativo apenas o que os recursos permitem:
 
 ```text
-muitos caminhos possiveis sao registrados
-poucos caminhos ativos sao mantidos
-caminhos inativos podem ser comprimidos, arquivados ou descartados
+rotas deixam tracos dinamicos
+alocacao de recursos muda condutancia, decaimento e recorrencia
+leitores externos inferem quais rotas continuam disponiveis
 ```
 
-Quando recursos sao abundantes, exploracao mais ampla pode permanecer ativa. Quando recursos sao limitados, o sistema deve manter ativamente apenas rotas com alto valor esperado, incerteza de alto risco, valor de fallback diverso, ou importancia explicativa / reversivel.
+Quando recursos sao abundantes, exploracao mais ampla pode permanecer disponivel. Quando recursos sao limitados, as dinamicas de rota devem favorecer alto valor esperado, incerteza de alto risco, valor de fallback diverso, ou importancia explicativa / reversivel.
 
 ## 6. Persistencia seletiva
 
-Nem toda informacao, rota ou trace deve ser retido. O sistema deve aprender o que manter ativo, comprimir ou descartar.
+Nem toda informacao, rota ou trace deve continuar igualmente disponivel. O sistema deve aprender dinamicas que tornam alguns padroes faceis de reativar enquanto outros decaem para residuos de trace mais fracos.
 
 ## 7. Rastreabilidade e transparencia estrutural
 

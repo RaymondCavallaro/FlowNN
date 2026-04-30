@@ -170,6 +170,9 @@ export class InputValve {
     this.pressure = 0;
     this.activity = 0;
     this.coactivity = 0;
+    this.flowTrace = 0;
+    this.recurrence = 0;
+    this.usefulness = 0;
   }
 
   get openness() {
@@ -195,6 +198,10 @@ export class InputValve {
     const throughput = sourceActivation * conductance / Math.max(1, totalConductance);
     this.pressure += throughput;
     this.activity = Math.max(this.activity, throughput);
+    this.flowTrace = clamp(this.flowTrace * 0.985 + throughput * 0.09, 0, 4);
+    if (throughput > 0.015) {
+      this.recurrence = clamp(this.recurrence + 0.018, 0, 1);
+    }
     return throughput;
   }
 
@@ -202,6 +209,9 @@ export class InputValve {
     this.pressure *= 0.66;
     this.activity *= 0.62;
     this.coactivity *= 0.7;
+    this.flowTrace *= 0.992;
+    this.recurrence *= 0.999;
+    this.usefulness *= 0.9995;
   }
 }
 
@@ -1025,6 +1035,7 @@ export class PressureNetwork {
     if (sourceActive && to.role === "output" && teacherOutputId && to.id !== teacherOutputId) {
       valve.weight = clamp(valve.weight - amount * 0.55, 0.15, 3.2);
       valve.adjustOpenness(-amount);
+      valve.usefulness = clamp(valve.usefulness - amount * 0.08, -1, 2);
       return;
     }
 
@@ -1032,6 +1043,7 @@ export class PressureNetwork {
       valve.weight = clamp(valve.weight + amount, 0.15, 3.2);
       valve.adjustOpenness(amount * 0.7);
       valve.coactivity = Math.max(valve.coactivity, throughput);
+      valve.usefulness = clamp(valve.usefulness + amount * 0.12, -1, 2);
     } else if (to.role !== "output" && valve.pressure > 0.18 && to.activation <= 0.01) {
       valve.adjustOpenness(-valve.pressure * (0.0005 + learningRate * 0.0015));
     }
@@ -1164,6 +1176,7 @@ export class PressureNetwork {
       scaffold: this.scaffoldSummary(),
       setScaffold: this.setScaffoldSummary(),
       explanation: this.explainOperation(),
+      routeDynamics: this.readRouteDynamics({ region: "operation" }),
       metaRegulation: this.metaRegulationState(),
       lastCycleAccuracy: this.lastCycleAccuracy,
       perfectCycleStreak: this.perfectCycleStreak,
@@ -1395,6 +1408,7 @@ export class PressureNetwork {
       supporters,
       relationReading: this.readOutputRelation(outputId),
       generativeCandidates: this.generateForOutput(outputId),
+      routeDynamics: this.readRouteDynamics({ outputId, region: "operation" }),
     };
   }
 
@@ -1425,21 +1439,78 @@ export class PressureNetwork {
     return ["OUT0", "OUT1"].map((outputId) => this.readOutputRelation(outputId));
   }
 
+  readRouteDynamics({ outputId = null, region = "operation" } = {}) {
+    return this.valves
+      .filter((valve) => {
+        if (valve.trainingOnly) return false;
+        if (region && valve.region !== region) return false;
+        if (outputId && valve.to !== outputId) return false;
+        return true;
+      })
+      .map((valve) => this.describeRouteDynamics(valve))
+      .sort((left, right) => {
+        return right.routeScore - left.routeScore || left.id.localeCompare(right.id);
+      });
+  }
+
+  describeRouteDynamics(valve) {
+    const support = valve.weight * valve.openness;
+    const recentFlow = valve.activity + valve.pressure * 0.2;
+    const traceResidue = valve.flowTrace;
+    const recurrence = valve.recurrence;
+    const usefulness = valve.usefulness;
+    const routeScore = routeDynamicsScore({
+      support,
+      recentFlow,
+      traceResidue,
+      recurrence,
+      usefulness,
+      resistance: valve.resistance,
+    });
+
+    return {
+      id: valve.id,
+      from: valve.from,
+      to: valve.to,
+      region: valve.region,
+      support,
+      recentFlow,
+      resistance: valve.resistance,
+      recurrence,
+      traceResidue,
+      usefulness,
+      reactivationPotential: clamp(support * 0.45 + traceResidue * 0.25 + usefulness * 0.2 + recurrence * 0.1, 0, 4),
+      routeScore,
+      inferredAvailability: inferRouteAvailability({
+        support,
+        recentFlow,
+        traceResidue,
+        recurrence,
+        usefulness,
+        resistance: valve.resistance,
+      }),
+    };
+  }
+
   readOutputRelation(outputId, { supportRatio = 0.72 } = {}) {
     const valueMeaning = this.strongestMeaningFor(outputId);
     const candidates = this.valves
       .filter((valve) => valve.to === outputId && this.getNode(valve.from)?.role === "hidden")
       .map((valve) => {
         const pair = this.explainPairNode(valve.from);
+        const dynamics = this.describeRouteDynamics(valve);
         return {
           id: valve.from,
-          strength: valve.weight * valve.openness,
+          strength: dynamics.support,
+          routeScore: dynamics.routeScore,
+          inferredAvailability: dynamics.inferredAvailability,
+          dynamics,
           sources: pair.sources,
           relation: pair.relation,
         };
       })
-      .sort((a, b) => b.strength - a.strength);
-    const strongest = candidates[0]?.strength ?? 0;
+      .sort((a, b) => b.routeScore - a.routeScore || b.strength - a.strength);
+    const strongest = candidates.reduce((max, candidate) => Math.max(max, candidate.strength), 0);
     const pathSet = candidates.filter((candidate) => {
       return strongest > 0 && candidate.strength >= strongest * supportRatio;
     });
@@ -1464,15 +1535,46 @@ export class PressureNetwork {
       const matchedInvariants = relation.invariants.filter((invariant) => {
         return relationCandidateMatchesInvariant(candidateRelation, invariant);
       });
+      const routeEvidence = relation.pathSet
+        .filter((path) => path.relation.signature === candidateRelation.signature);
+      const routeScore = routeEvidence.reduce((sum, path) => sum + path.routeScore, 0);
       return {
         ...candidate,
         relation: candidateRelation,
         matchedInvariants,
         confidence: matchedInvariants.length / relation.invariants.length,
+        routeScore,
+        routeEvidence: routeEvidence.map((path) => ({
+          id: path.id,
+          strength: path.strength,
+          routeScore: path.routeScore,
+          inferredAvailability: path.inferredAvailability,
+        })),
       };
     }).filter((candidate) => candidate.confidence === 1)
-      .sort((a, b) => a.signature.localeCompare(b.signature));
+      .sort((a, b) => b.routeScore - a.routeScore || a.signature.localeCompare(b.signature));
   }
+}
+
+function routeDynamicsScore({ support, recentFlow, traceResidue, recurrence, usefulness, resistance }) {
+  return clamp(
+    support * 0.42
+      + recentFlow * 0.18
+      + traceResidue * 0.16
+      + recurrence * 0.12
+      + Math.max(0, usefulness) * 0.12
+      - resistance * 0.08,
+    0,
+    4,
+  );
+}
+
+function inferRouteAvailability({ support, recentFlow, traceResidue, recurrence, usefulness, resistance }) {
+  if (recentFlow > 0.05) return "flowing";
+  if (support > 0.7 && usefulness >= -0.1) return "available";
+  if (traceResidue > 0.04 || recurrence > 0.08 || usefulness > 0.08) return "residual";
+  if (resistance > 0.75 && usefulness < 0.02) return "cold";
+  return "latent";
 }
 
 function sourcePairCandidates() {

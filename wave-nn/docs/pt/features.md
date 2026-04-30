@@ -22,6 +22,8 @@ Esta pagina nomeia explicitamente os recursos atuais do FlowNN. Um recurso so de
 | Scaffold gerado de conjuntos | Uma descricao funcional do scaffold pode regenerar o mesmo comportamento conjunto/propriedade e plugar de volta no recrutamento. | `generated set scaffold matches manual functionality`; `generated set scaffold plugs into recruitment` |
 | Explicacao de significado | O inspector le estrutura aprendida, scaffold e relacoes. | `meaning explanations use scaffold primitives`; `relation reader extracts operation meanings` |
 | Leitura relacional generativa | Uma relacao de saida pode gerar pares candidatos de fonte a partir dos invariantes aprendidos. | `relation reader generates source candidates` |
+| Leitor de dinamica de rotas | Um scaffold externo le suporte de rota, fluxo recente, resistencia, recorrencia, residuo de traco e utilidade para inferir disponibilidade sem armazenar buckets de ciclo de vida. | `route dynamics reader infers availability` |
+| Geracao apoiada por rotas | Candidatos gerados carregam evidencia de rota e sao ordenados por suporte inferido a partir das dinamicas aprendidas. | `generated candidates carry route evidence` |
 | Scaffold de meta-regulacao | A rede relata eixos de tensao adaptativa e controles sugeridos de aprendizagem a partir de estabilidade, ambiguidade e pressao de recrutamento. | `meta regulation responds to uncertainty`; `meta regulation consolidates stable behavior` |
 | Aprendizagem local de valvulas | Flood altera resistencia e peso por coativacao. | `flood training changes valves` |
 | Diagnosticos de teste | Testes registram pico, area, duracao e predicao hibrida. | `input-only tests produce diagnostic result shape` |

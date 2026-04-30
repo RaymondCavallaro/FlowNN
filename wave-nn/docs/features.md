@@ -22,6 +22,8 @@ This page names the current FlowNN features explicitly. A feature is considered 
 | Generated set scaffold | A functional scaffold description can regenerate the same set/property behavior and plug it back into recruitment. | `generated set scaffold matches manual functionality`; `generated set scaffold plugs into recruitment` |
 | Meaning explanation | Inspector explanations read structure from learned scaffold and relations. | `meaning explanations use scaffold primitives`; `relation reader extracts operation meanings` |
 | Generative relation reading | A target output relation can generate candidate source pairs from its learned invariants. | `relation reader generates source candidates` |
+| Route dynamics reader | External scaffold reads route support, recent flow, resistance, recurrence, trace residue, and usefulness to infer availability without storing lifecycle buckets. | `route dynamics reader infers availability` |
+| Route-supported generation | Generated candidates carry route evidence and are ranked by inferred support from learned dynamics. | `generated candidates carry route evidence` |
 | Meta-regulation scaffold | The network reports adaptive tension axes and suggested learning controls from stability, ambiguity, and recruitment pressure. | `meta regulation responds to uncertainty`; `meta regulation consolidates stable behavior` |
 | Local valve learning | Flood training changes valve resistance and weight through co-activation. | `flood training changes valves` |
 | Input-only diagnostics | Test cycles report peak, area, duration, and hybrid predictions. | `input-only tests produce diagnostic result shape` |

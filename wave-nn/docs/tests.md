@@ -35,6 +35,8 @@ Every test is registered with:
 | feature | meaning explanations use scaffold primitives | pair-node explanation from primitive meanings |
 | feature | relation reader extracts operation meanings | operation invariants from learned structure |
 | feature | relation reader generates source candidates | target output to candidate source generation |
+| feature | route dynamics reader infers availability | external scaffold reads route state from dynamics |
+| feature | generated candidates carry route evidence | relation generation ranked by inferred route support |
 | feature | meta regulation responds to uncertainty | adaptive tension axes under unresolved behavior |
 | feature | meta regulation consolidates stable behavior | adaptive tension axes under stable behavior |
 | feature | flood training changes valves | local co-activation learning |

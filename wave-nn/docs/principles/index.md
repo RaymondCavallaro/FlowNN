@@ -53,16 +53,16 @@ possible routes != active routes
 The theory should preserve route diversity conceptually. The implementation should keep active only what resources allow:
 
 ```text
-many possible paths are recorded
-few active paths are maintained
-inactive paths may be compressed, archived, or discarded
+routes leave dynamic traces
+resource allocation changes conductance, decay, and recurrence
+external readers infer which routes remain available
 ```
 
-When resources are abundant, broader exploration can remain active. When resources are limited, the system should actively maintain only routes with high expected value, high-risk uncertainty, diverse fallback value, or explanatory / reversible importance.
+When resources are abundant, broader exploration can remain available. When resources are limited, route dynamics should favor high expected value, high-risk uncertainty, diverse fallback value, or explanatory / reversible importance.
 
 ## 6. Selective Persistence
 
-Not all information, routes, or traces should be retained. The system must learn what to maintain actively, compress, or discard.
+Not all information, routes, or traces should remain equally available. The system must learn dynamics that make some patterns easy to reactivate while others decay into weaker trace residue.
 
 ## 7. Traceability And Structural Transparency
 

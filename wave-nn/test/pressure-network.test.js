@@ -307,6 +307,37 @@ function testRelationReaderGeneratesSourceCandidates() {
   }
 }
 
+function testRouteDynamicsReaderInfersAvailability() {
+  const network = new PressureNetwork({ topology: "shaped" });
+  imprintOperation(network, "xor");
+
+  const dynamics = network.readRouteDynamics({ outputId: "OUT1" });
+  const supported = dynamics.find((route) => route.id === "H1->OUT1");
+  const unsupported = dynamics.find((route) => route.id === "H0->OUT1");
+
+  assert.ok(supported);
+  assert.ok(unsupported);
+  assert.ok(supported.support > unsupported.support);
+  assert.ok(supported.routeScore > unsupported.routeScore);
+  assert.equal(supported.inferredAvailability, "available");
+  assert.equal("active_routes" in supported, false);
+  assert.equal("compressed_routes" in supported, false);
+  assert.equal("discarded_routes" in supported, false);
+}
+
+function testGeneratedCandidatesCarryRouteEvidence() {
+  const network = new PressureNetwork({ topology: "shaped" });
+  imprintOperation(network, "xor");
+
+  const candidates = network.generateForOutput("OUT1");
+  const candidate = candidates.find((item) => item.signature === "01");
+
+  assert.ok(candidate);
+  assert.ok(candidate.routeScore > 0);
+  assert.deepEqual(candidate.routeEvidence.map((route) => route.id), ["H1"]);
+  assert.equal(candidate.routeEvidence[0].inferredAvailability, "available");
+}
+
 function testMetaRegulationRespondsToUncertainty() {
   const network = new PressureNetwork();
   network.updateOperationPlasticityFromCycle([
@@ -723,6 +754,18 @@ const TEST_CASES = [
     kind: "feature",
     covers: "target output to candidate source generation",
     run: testRelationReaderGeneratesSourceCandidates,
+  },
+  {
+    name: "route dynamics reader infers availability",
+    kind: "feature",
+    covers: "external scaffold reads route state from dynamics",
+    run: testRouteDynamicsReaderInfersAvailability,
+  },
+  {
+    name: "generated candidates carry route evidence",
+    kind: "feature",
+    covers: "relation generation ranked by inferred route support",
+    run: testGeneratedCandidatesCarryRouteEvidence,
   },
   {
     name: "meta regulation responds to uncertainty",
