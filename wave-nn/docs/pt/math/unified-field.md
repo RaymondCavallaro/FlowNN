@@ -71,7 +71,7 @@ H      = tuner de estrategia de recrutamento
 E      = sinais de evidencia
 ```
 
-`Role` pode comecar como rotulo visivel para o designer, mas o alvo de longo prazo e:
+`Role` pode comecar como rotulo visivel para o designer, mas o alvo de longo prazo é:
 
 ```text
 Role ~= funcao estavel inferida do historico de fluxo
@@ -79,7 +79,7 @@ Role ~= funcao estavel inferida do historico de fluxo
 
 ## Fluxo
 
-O campo condutivo e:
+O campo condutivo é:
 
 ```text
 G_ij = K_ij * O_ij * W_ij * active_region(Q_ij) * allowed(T_ij)
@@ -108,7 +108,7 @@ Isso preserva a regra util do `v0.0.3`: pressao nao é copiada por toda rota abe
 
 ## Aprendizagem
 
-A configuracao aprendivel e:
+A configuracao aprendivel é:
 
 ```text
 C = {O, W, Theta, R, H}
@@ -142,6 +142,48 @@ A separacao importante:
 ```text
 aprendizagem altera rotas
 meta-regulacao altera quao mutavel o sistema deve ser
+```
+
+## Balanco adaptativo de pressao
+
+O sistema nao deve tratar pressao sozinha como otimizacao. Pressao sem capacidade pode colapsar em rigidez. Capacidade sem pressao pode derivar sem selecao.
+
+O gradiente util de design é:
+
+```text
+otimizacao ~= capacidade * restricao
+```
+
+Neste modelo:
+
+```text
+capacidade = espaco de opcoes disponivel para mudanca
+restricao  = pressao de selecao que faz algumas mudancas sobreviverem
+```
+
+Capacidade vem de:
+
+- multiplas rotas possiveis;
+- limiares e abertura de valvulas flexiveis;
+- nodes recrutados;
+- alternativas de scaffold ou relacao;
+- plasticidade regional suficiente para mover.
+
+Restricao vem de:
+
+- topologia de valvulas e condutancia;
+- resistencia e competicao entre rotas;
+- requisitos de margem de saida;
+- consistencia temporal;
+- feedback de sobrevivencia para estrutura recrutada.
+
+Entao o alvo adaptativo é:
+
+```text
+capacidade baixa demais -> nenhuma mudanca util
+restricao baixa demais  -> nenhuma direcao
+restricao alta demais   -> colapso fragil
+gradiente equilibrado   -> estrutura adaptativa
 ```
 
 ## Recrutamento como campo de estrategias

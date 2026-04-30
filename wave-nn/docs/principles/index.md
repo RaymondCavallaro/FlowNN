@@ -32,6 +32,24 @@ The field model is the long-term source of coherence. Code and docs should incre
 
 Generative behavior should come from stable relations, recruited structure, and inspectable constraints, not from an oracle hidden outside the pressure system.
 
+## 8. Balance Capacity And Constraint
+
+Structure emerges when freedom to vary meets pressure to select.
+
+Too much pressure can collapse the system into brittle routes. Too much capacity can produce drift, noise, and no selection. Useful optimization requires both:
+
+```text
+optimization ~= capacity * constraint
+```
+
+Design target:
+
+```text
+enough option space to explore
++ enough constraint to select
+-> adaptive structure
+```
+
 ## Related
 
 - [Math Model](../math/index.md)

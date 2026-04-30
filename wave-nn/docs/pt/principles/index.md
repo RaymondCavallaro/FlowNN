@@ -32,6 +32,24 @@ O modelo de campo é a fonte de coerencia de longo prazo. Codigo e docs devem ma
 
 Comportamento generativo deve vir de relacoes estaveis, estrutura recrutada e restricoes inspecionaveis, nao de um oraculo escondido fora do sistema de pressao.
 
+## 8. Equilibre capacidade e restricao
+
+Estrutura emerge quando liberdade para variar encontra pressao para selecionar.
+
+Pressao demais pode colapsar o sistema em rotas frageis. Capacidade demais pode gerar deriva, ruido e ausencia de selecao. Otimizacao util exige as duas:
+
+```text
+otimizacao ~= capacidade * restricao
+```
+
+Alvo de design:
+
+```text
+espaco de opcoes suficiente para explorar
++ restricao suficiente para selecionar
+-> estrutura adaptativa
+```
+
 ## Relacionados
 
 - [Modelo matematico](../math/index.md)

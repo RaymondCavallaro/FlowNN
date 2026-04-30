@@ -144,6 +144,48 @@ learning changes routes
 meta-regulation changes how changeable the system is
 ```
 
+## Adaptive Pressure Balance
+
+The system should not treat pressure alone as optimization. Pressure without capacity can collapse into rigidity. Capacity without pressure can drift without selection.
+
+The useful design gradient is:
+
+```text
+optimization ~= capacity * constraint
+```
+
+In this model:
+
+```text
+capacity   = option space available for change
+constraint = selection pressure that makes some changes survive
+```
+
+Capacity comes from:
+
+- multiple possible routes;
+- flexible thresholds and valve openness;
+- recruited nodes;
+- scaffold or relation alternatives;
+- enough regional plasticity to move.
+
+Constraint comes from:
+
+- valve topology and conductance;
+- resistance and competition between routes;
+- output-margin requirements;
+- temporal consistency;
+- survival feedback for recruited structure.
+
+So the adaptive target is:
+
+```text
+too little capacity   -> no useful change
+too little constraint -> no direction
+too much constraint   -> brittle collapse
+balanced gradient     -> adaptive structure
+```
+
 ## Recruitment As Strategy Field
 
 Recruitment is no longer a single hard-coded wiring rule.
