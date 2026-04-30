@@ -40,6 +40,7 @@ O projeto valoriza inspecionabilidade acima de performance bruta. Uma mudanca ut
 ## Relacionados
 
 - [Fluxo central](../core-flow.md)
+- [Mapa de propriedades](properties.md)
 - [Recursos](../features.md)
 - [Modelo matematico](../math/index.md)
 - [Principios](../principles/index.md)

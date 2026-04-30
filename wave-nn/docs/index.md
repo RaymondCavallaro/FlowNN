@@ -23,7 +23,7 @@ The implementation is intentionally small. The main topology now starts under-st
 
 Start with [Overview](overview.md), [Walkthrough](walkthrough.md), [Core Flow](core-flow.md), and [Glossary](glossary.md).
 
-Then read [Current System](system/current-system.md), [Principles](principles/index.md), and the [Math Model](math/index.md). After that, use [Pressure Network](concepts/pressure-network.md), [Temporal Computation](concepts/temporal-computation.md), [Topology](concepts/topology.md), [Relational Meaning](concepts/relational-meaning.md), [Information Landscape](concepts/information-landscape.md), [Meta-Regulation](concepts/meta-regulation.md), and [System Dynamics](concepts/system-dynamics.md) as deeper references.
+Then read [Current System](system/current-system.md), [Property Map](system/properties.md), [Principles](principles/index.md), and the [Math Model](math/index.md). After that, use [Pressure Network](concepts/pressure-network.md), [Temporal Computation](concepts/temporal-computation.md), [Topology](concepts/topology.md), [Relational Meaning](concepts/relational-meaning.md), [Information Landscape](concepts/information-landscape.md), [Meta-Regulation](concepts/meta-regulation.md), and [System Dynamics](concepts/system-dynamics.md) as deeper references.
 
 Historical decisions and failed mechanisms live in [Lessons](lessons/index.md) and [Project History](history/project-history.md), not in the current system description.
 

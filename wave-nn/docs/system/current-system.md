@@ -40,6 +40,7 @@ The project values inspectability over raw performance. A useful change should m
 ## Related
 
 - [Core Flow](../core-flow.md)
+- [Property Map](properties.md)
 - [Features](../features.md)
 - [Math Model](../math/index.md)
 - [Principles](../principles/index.md)

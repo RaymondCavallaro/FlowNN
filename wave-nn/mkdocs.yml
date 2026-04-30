@@ -15,6 +15,7 @@ nav:
       - Glossary: glossary.md
   - Current System:
       - Current System: system/current-system.md
+      - Property Map: system/properties.md
       - Features: features.md
       - Tests: tests.md
       - Manual Testing: manual-testing.md
@@ -53,6 +54,7 @@ nav:
           - Glossario: pt/glossary.md
       - Sistema atual:
           - Sistema atual: pt/system/current-system.md
+          - Mapa de propriedades: pt/system/properties.md
           - Recursos: pt/features.md
           - Testes: pt/tests.md
           - Teste Manual: pt/manual-testing.md

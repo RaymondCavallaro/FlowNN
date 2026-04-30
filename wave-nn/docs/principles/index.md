@@ -2,56 +2,73 @@
 
 [Portugues](../pt/principles/index.md)
 
-These principles guide the project. They are separate from historical lessons and from current implementation details.
+These principles define constraints that should hold across implementations. They are not descriptions of the current code, node layout, or chosen algorithms.
 
-## 1. Meaning Is Structural
-
-Pressure carries strength. Meaning is read from entry point, topology, route behavior, scaffold relations, and stable output response.
-
-## 2. Keep Learning Local
-
-Learning should be explainable through local pressure meetings, valve adaptation, recruitment, and perturbation response. Avoid hidden route-credit shortcuts.
-
-## 3. Prefer Converging Dynamics Over Permanent Modules
-
-Feature branches and named mechanisms are study slices. Useful behavior should eventually converge back into shared node, valve, field, and regulation dynamics.
-
-## 4. Separate Current System From Lessons
-
-A failed or abandoned mechanism can be valuable, but it belongs in Lessons or History, not in the description of the current system.
-
-## 5. Scaffolds Are Control Layers
-
-Explicit scaffolds are allowed when they make a mechanism inspectable. They should be documented as temporary control, not as discovered knowledge.
-
-## 6. Math Unifies The Project
-
-The field model is the long-term source of coherence. Code and docs should increasingly map back to the math model.
-
-## 7. Generation Must Stay Grounded
-
-Generative behavior should come from stable relations, recruited structure, and inspectable constraints, not from an oracle hidden outside the pressure system.
-
-## 8. Balance Capacity And Constraint
-
-Structure emerges when freedom to vary meets pressure to select.
-
-Too much pressure can collapse the system into brittle routes. Too much capacity can produce drift, noise, and no selection. Useful optimization requires both:
+A good test for a principle:
 
 ```text
-optimization ~= capacity * constraint
+if the implementation changed completely, should this still be true?
 ```
 
-Design target:
+If yes, it belongs here. If no, it belongs in [Current System](../system/current-system.md), [Property Map](../system/properties.md), or a mechanism doc.
 
-```text
-enough option space to explore
-+ enough constraint to select
--> adaptive structure
-```
+## Meta-Principles
+
+### A. Interaction Over Representation
+
+Things are defined by what they do in relation to other things, not by static labels or stored vectors.
+
+### B. Process Over State
+
+Time, change, recurrence, and stabilization matter more than any single frozen configuration.
+
+### C. Constraint Over Idealization
+
+The system must operate under limits. Intelligence means behavior under constraint, not infinite optimization.
+
+## 1. Meaning As Behavior
+
+Meaning is not stored as a static representation. Meaning emerges from how signals interact, propagate, constrain each other, and affect future behavior.
+
+## 2. Time As Structure
+
+Time is a primary structural dimension. Temporal patterns make structure possible and can transform first-order meaning into deeper meaning.
+
+## 3. Emergent Logic
+
+Logical relationships should not be imposed as permanent rules. They should arise from stable, repeatable interaction patterns inside the system.
+
+## 4. Constraint-Driven Intelligence
+
+The system operates with finite resources. Behavior must reflect tradeoffs, prioritization, selective allocation, and consequences.
+
+## 5. Option Awareness Before Selection
+
+Selection is meaningful only when alternatives were possible. The system should preserve awareness of viable possibilities before committing, even when only a subset can remain active.
+
+## 6. Selective Persistence
+
+Not all information, routes, or traces should be retained. The system must learn what to maintain actively, compress, or discard.
+
+## 7. Traceability And Structural Transparency
+
+The system should allow reconstruction of how outcomes were produced. Behavior should be explainable through structural evolution, not hidden answer injection.
+
+## 8. Learning As Behavioral Change
+
+Learning changes how the system responds. It should appear as changed interaction patterns, not merely as stored facts.
+
+## 9. Coherence Over Time
+
+The system should progressively stabilize behavior across experience. Past interactions should influence future responses without freezing adaptation.
+
+## 10. Separation Of Theory And Implementation
+
+Principles define what must remain true. Implementations define how those principles are realized under current constraints.
 
 ## Related
 
+- [Property Map](../system/properties.md)
 - [Math Model](../math/index.md)
 - [Current System](../system/current-system.md)
 - [Lessons](../lessons/index.md)

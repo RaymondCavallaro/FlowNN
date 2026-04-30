@@ -2,56 +2,73 @@
 
 [English](../../principles/index.md)
 
-Estes principios guiam o projeto. Eles ficam separados das licoes historicas e dos detalhes da implementacao atual.
+Estes principios definem restricoes que devem valer entre implementacoes. Eles nao descrevem o codigo atual, o layout de nodes ou algoritmos escolhidos.
 
-## 1. Significado é estrutural
-
-Pressao carrega forca. Significado é lido a partir de ponto de entrada, topologia, comportamento de rota, relacoes de scaffold e resposta estavel de saida.
-
-## 2. Mantenha aprendizagem local
-
-Aprendizagem deve ser explicavel por encontros locais de pressao, adaptacao de valvulas, recrutamento e resposta a perturbacao. Evite atalhos escondidos de credito de rota.
-
-## 3. Prefira dinamicas convergentes a modulos permanentes
-
-Branches de recurso e mecanismos nomeados sao fatias de estudo. Comportamento util deve eventualmente convergir de volta para dinamicas compartilhadas de node, valvula, campo e regulacao.
-
-## 4. Separe sistema atual de licoes
-
-Um mecanismo que falhou ou foi abandonado pode ser valioso, mas pertence em Licoes ou Historia, nao na descricao do sistema atual.
-
-## 5. Scaffolds sao camadas de controle
-
-Scaffolds explicitos sao permitidos quando tornam um mecanismo inspecionavel. Eles devem ser documentados como controle temporario, nao como conhecimento descoberto.
-
-## 6. A matematica unifica o projeto
-
-O modelo de campo é a fonte de coerencia de longo prazo. Codigo e docs devem mapear cada vez mais de volta para o modelo matematico.
-
-## 7. Geracao deve ficar aterrada
-
-Comportamento generativo deve vir de relacoes estaveis, estrutura recrutada e restricoes inspecionaveis, nao de um oraculo escondido fora do sistema de pressao.
-
-## 8. Equilibre capacidade e restricao
-
-Estrutura emerge quando liberdade para variar encontra pressao para selecionar.
-
-Pressao demais pode colapsar o sistema em rotas frageis. Capacidade demais pode gerar deriva, ruido e ausencia de selecao. Otimizacao util exige as duas:
+Um bom teste para um principio:
 
 ```text
-otimizacao ~= capacidade * restricao
+se a implementacao mudasse completamente, isto ainda deveria ser verdade?
 ```
 
-Alvo de design:
+Se sim, pertence aqui. Se nao, pertence em [Sistema atual](../system/current-system.md), [Mapa de propriedades](../system/properties.md), ou em um doc de mecanismo.
 
-```text
-espaco de opcoes suficiente para explorar
-+ restricao suficiente para selecionar
--> estrutura adaptativa
-```
+## Meta-principios
+
+### A. Interacao acima de representacao
+
+Coisas sao definidas pelo que fazem em relacao a outras coisas, nao por rotulos estaticos ou vetores armazenados.
+
+### B. Processo acima de estado
+
+Tempo, mudanca, recorrencia e estabilizacao importam mais do que qualquer configuracao congelada.
+
+### C. Restricao acima de idealizacao
+
+O sistema deve operar sob limites. Inteligencia significa comportamento sob restricao, nao otimizacao infinita.
+
+## 1. Significado como comportamento
+
+Significado nao é armazenado como representacao estatica. Significado emerge de como sinais interagem, propagam, restringem uns aos outros e afetam comportamento futuro.
+
+## 2. Tempo como estrutura
+
+Tempo é uma dimensao estrutural primaria. Padroes temporais tornam estrutura possivel e podem transformar significado de primeira ordem em significado mais profundo.
+
+## 3. Logica emergente
+
+Relacoes logicas nao devem ser impostas como regras permanentes. Elas devem emergir de padroes de interacao estaveis e repetiveis dentro do sistema.
+
+## 4. Inteligencia guiada por restricao
+
+O sistema opera com recursos finitos. Comportamento deve refletir tradeoffs, priorizacao, alocacao seletiva e consequencias.
+
+## 5. Consciencia de opcoes antes da selecao
+
+Selecao so tem significado quando alternativas eram possiveis. O sistema deve preservar consciencia de possibilidades viaveis antes de se comprometer, mesmo quando apenas um subconjunto pode permanecer ativo.
+
+## 6. Persistencia seletiva
+
+Nem toda informacao, rota ou trace deve ser retido. O sistema deve aprender o que manter ativo, comprimir ou descartar.
+
+## 7. Rastreabilidade e transparencia estrutural
+
+O sistema deve permitir reconstruir como resultados foram produzidos. Comportamento deve ser explicavel por evolucao estrutural, nao por injecao escondida de resposta.
+
+## 8. Aprendizagem como mudanca de comportamento
+
+Aprendizagem muda como o sistema responde. Ela deve aparecer como padroes de interacao alterados, nao apenas como fatos armazenados.
+
+## 9. Coerencia ao longo do tempo
+
+O sistema deve estabilizar progressivamente comportamento ao longo da experiencia. Interacoes passadas devem influenciar respostas futuras sem congelar adaptacao.
+
+## 10. Separacao entre teoria e implementacao
+
+Principios definem o que deve continuar verdadeiro. Implementacoes definem como esses principios sao realizados sob restricoes atuais.
 
 ## Relacionados
 
+- [Mapa de propriedades](../system/properties.md)
 - [Modelo matematico](../math/index.md)
 - [Sistema atual](../system/current-system.md)
 - [Licoes](../lessons/index.md)
