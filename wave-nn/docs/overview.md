@@ -29,6 +29,31 @@ meaning is shaped by where pressure enters, where it can flow, and what patterns
 - A place to inspect how structure, routing, and meaning can be recruited.
 - A stepping stone toward temporal and generative behavior.
 
+## Positioning Among Flow Systems
+
+The word "flow" is used by several research families. FlowNN uses it in a specific sense:
+
+```text
+flow = pressure carrying activity through structure so meaning can stabilize
+```
+
+Other flow systems often focus on different layers:
+
+- distribution flow: transforming simple distributions into complex data;
+- probability flow: sampling diverse solutions in proportion to reward;
+- vector-field flow: learning directions through a continuous state space;
+- optical flow: estimating motion between visual frames.
+
+FlowNN is about semantic processing:
+
+```text
+structure + routing + time
+-> stable meaning
+-> explainable behavior
+```
+
+These other flow approaches can still be useful neighbors. For example, a generative model could propose candidates while FlowNN evaluates, routes, and stabilizes meaning over those candidates.
+
 ## What This Is Not
 
 - Not a normal neural network: there is no hidden vector trained by backprop.

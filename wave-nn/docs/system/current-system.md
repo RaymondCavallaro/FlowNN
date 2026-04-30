@@ -8,6 +8,28 @@ This page describes what the current system is, without historical detours.
 
 FlowNN currently studies whether a small pressure-routing system can learn and explain tiny truth-table behavior without explicit signal labels, symbolic gates, path traces, or backprop-style route credit.
 
+## System Category
+
+FlowNN should be described as a semantic pressure-routing system.
+
+Its "flow" is not primarily probability mass, distribution transformation, pixel motion, or direct data generation. In the current system:
+
+```text
+flow = activation pressure moving through valves and nodes
+```
+
+The research axis is:
+
+```text
+source identity
+-> routed pressure
+-> local adaptation
+-> recruited structure
+-> relational meaning
+```
+
+This makes FlowNN closer to a process model for meaning and reasoning than to a standalone data generator. Future hybrids can still use external generative or sampling systems as candidate producers, while FlowNN handles semantic routing, constraint checking, and meaning stabilization.
+
 ## Runtime Shape
 
 - source nodes: `A0`, `A1`, `B0`, `B1`;

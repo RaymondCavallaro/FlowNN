@@ -8,6 +8,28 @@ Esta pagina descreve o que o sistema atual é, sem desvios historicos.
 
 FlowNN atualmente estuda se um pequeno sistema de roteamento por pressao consegue aprender e explicar comportamento minimo de tabela-verdade sem rotulos explicitos de sinal, portas simbolicas, traces de caminho ou credito de rota no estilo backprop.
 
+## Categoria do sistema
+
+FlowNN deve ser descrito como um sistema semantico de roteamento por pressao.
+
+Seu "flow" nao é principalmente massa de probabilidade, transformacao de distribuicao, movimento de pixels ou geracao direta de dados. No sistema atual:
+
+```text
+flow = pressao de ativacao movendo por valvulas e nodes
+```
+
+O eixo de pesquisa é:
+
+```text
+identidade de fonte
+-> pressao roteada
+-> adaptacao local
+-> estrutura recrutada
+-> significado relacional
+```
+
+Isso aproxima FlowNN de um modelo de processo para significado e raciocinio, nao de um gerador autonomo de dados. Hibridos futuros ainda podem usar sistemas generativos ou de amostragem como produtores de candidatos, enquanto FlowNN cuida de roteamento semantico, checagem de restricoes e estabilizacao de significado.
+
 ## Forma do runtime
 
 - nodes de fonte: `A0`, `A1`, `B0`, `B1`;

@@ -29,6 +29,31 @@ significado é moldado por onde a pressao entra, por onde ela pode fluir, e quai
 - Um lugar para inspecionar como estrutura, roteamento e significado podem ser recrutados.
 - Um passo em direcao a comportamento temporal e generativo.
 
+## Posicionamento entre sistemas de fluxo
+
+A palavra "flow" é usada por varias familias de pesquisa. FlowNN usa a palavra em um sentido especifico:
+
+```text
+flow = pressao carregando atividade pela estrutura para estabilizar significado
+```
+
+Outros sistemas de fluxo costumam focar em outras camadas:
+
+- fluxo de distribuicao: transformar distribuicoes simples em dados complexos;
+- fluxo de probabilidade: amostrar solucoes diversas em proporcao a recompensa;
+- fluxo de campo vetorial: aprender direcoes em um espaco de estado continuo;
+- fluxo optico: estimar movimento entre frames visuais.
+
+FlowNN trata processamento semantico:
+
+```text
+estrutura + roteamento + tempo
+-> significado estavel
+-> comportamento explicavel
+```
+
+Essas outras abordagens de fluxo ainda podem ser vizinhas uteis. Por exemplo, um modelo generativo poderia propor candidatos enquanto FlowNN avalia, roteia e estabiliza significado sobre esses candidatos.
+
 ## O que isto nao é
 
 - Nao é uma rede neural comum: nao ha vetor oculto treinado por backprop.
