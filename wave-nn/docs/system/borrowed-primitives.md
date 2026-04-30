@@ -17,7 +17,7 @@ FlowNN remains a semantic pressure-routing system. Neighboring flow, sampling, d
 | Neighboring idea | Primitive to borrow | FlowNN interpretation |
 | --- | --- | --- |
 | Flow matching | directional transformation field | global bias for where meaning is evolving |
-| Generative flow networks | path distribution tracking | remember multiple viable routes, not only the best route |
+| Generative flow networks | path distribution tracking | avoid losing awareness of viable alternatives too early |
 | Normalizing / reversible flows | partial reversibility | trace outputs back to contributing paths |
 | Continuous dynamical systems | continuous time state | let pressure vary through decay, amplification, and oscillation |
 | Diffusion-style exploration | controlled noise | explore early, stabilize later |
@@ -40,6 +40,27 @@ Raw Signal
 ```
 
 This is a target architecture, not the current runtime.
+
+## Resource-Aware Option Rule
+
+Path distribution tracking should preserve route diversity conceptually. It should not keep every possible path active forever.
+
+```text
+possible routes != active routes
+```
+
+If resources are abundant:
+
+```text
+keep broader exploration alive
+```
+
+If resources are limited, actively preserve only:
+
+- highest expected value paths;
+- high-risk uncertainty paths;
+- diverse fallback paths;
+- paths needed for reversibility or explanation.
 
 ## Phase 1: Stability And Interpretability
 

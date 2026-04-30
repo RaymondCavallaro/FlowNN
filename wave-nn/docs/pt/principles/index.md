@@ -44,7 +44,13 @@ O sistema opera com recursos finitos. Comportamento deve refletir tradeoffs, pri
 
 ## 5. Consciencia de opcoes antes da selecao
 
-Selecao so tem significado quando alternativas eram possiveis. O sistema deve preservar consciencia de possibilidades viaveis antes de se comprometer, mesmo quando apenas um subconjunto pode permanecer ativo.
+Selecao so tem significado quando alternativas eram possiveis. O sistema deve preservar consciencia de possibilidades viaveis antes de se comprometer, enquanto aloca recursos ativos seletivamente.
+
+```text
+rotas possiveis != rotas ativas
+```
+
+Quando recursos sao abundantes, exploracao mais ampla pode permanecer ativa. Quando recursos sao limitados, o sistema deve manter ativamente apenas rotas com alto valor esperado, incerteza de alto risco, valor de fallback diverso, ou importancia explicativa / reversivel.
 
 ## 6. Persistencia seletiva
 

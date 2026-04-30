@@ -17,7 +17,7 @@ FlowNN continua sendo um sistema semantico de roteamento por pressao. Sistemas v
 | Ideia vizinha | Primitiva a emprestar | Interpretacao em FlowNN |
 | --- | --- | --- |
 | Flow matching | campo direcional de transformacao | vies global para onde o significado esta evoluindo |
-| Generative flow networks | rastreamento de distribuicao de caminhos | lembrar multiplas rotas viaveis, nao so a melhor rota |
+| Generative flow networks | rastreamento de distribuicao de caminhos | evitar perder consciencia de alternativas viaveis cedo demais |
 | Fluxos normalizantes / reversiveis | reversibilidade parcial | rastrear saidas de volta para caminhos contribuintes |
 | Sistemas dinamicos continuos | estado de tempo continuo | deixar pressao variar por decaimento, amplificacao e oscilacao |
 | Exploracao estilo difusao | ruido controlado | explorar cedo, estabilizar depois |
@@ -40,6 +40,27 @@ Sinal bruto
 ```
 
 Isto é uma arquitetura alvo, nao o runtime atual.
+
+## Regra de opcoes com recursos limitados
+
+Rastreamento de distribuicao de caminhos deve preservar diversidade de rotas conceitualmente. Ele nao deve manter todo caminho possivel ativo para sempre.
+
+```text
+rotas possiveis != rotas ativas
+```
+
+Se recursos sao abundantes:
+
+```text
+manter exploracao mais ampla viva
+```
+
+Se recursos sao limitados, preserve ativamente apenas:
+
+- caminhos de maior valor esperado;
+- caminhos de incerteza de alto risco;
+- caminhos diversos de fallback;
+- caminhos necessarios para reversibilidade ou explicacao.
 
 ## Fase 1: estabilidade e interpretabilidade
 

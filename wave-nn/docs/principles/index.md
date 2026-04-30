@@ -44,7 +44,13 @@ The system operates with finite resources. Behavior must reflect tradeoffs, prio
 
 ## 5. Option Awareness Before Selection
 
-Selection is meaningful only when alternatives were possible. The system should preserve awareness of viable possibilities before committing, even when only a subset can remain active.
+Selection is meaningful only when alternatives were possible. The system should preserve awareness of viable possibilities before committing, while allocating active resources selectively.
+
+```text
+possible routes != active routes
+```
+
+When resources are abundant, broader exploration can remain active. When resources are limited, the system should actively maintain only routes with high expected value, high-risk uncertainty, diverse fallback value, or explanatory / reversible importance.
 
 ## 6. Selective Persistence
 
