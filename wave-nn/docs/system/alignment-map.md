@@ -48,14 +48,29 @@ These are useful, but should not define the active system by themselves:
 | Principle | Property | Mechanism | Implementation |
 | --- | --- | --- | --- |
 | Meaning as behavior | Structural source identity | source entry point + topology | source nodes `A0`, `A1`, `B0`, `B1`; no signal type payload |
-| Process over state | Temporal persistence | pressure decay and trace residue | `PressureNode.decay`, `InputValve.flowTrace` |
-| Constraint-driven intelligence | Selective allocation | thresholding and route conductance | node thresholds, valve openness, valve weight |
+| Process over state | Temporal persistence | pressure decay now; drain-flow target later | `PressureNode.decay` is a direct handle under review; future drain routes should reproduce the effect |
+| Constraint-driven intelligence | Selective allocation | thresholding and route conductance now; semaphore target later | node thresholds, valve openness, valve weight are current handles; semaphore-like flow competition is the review target |
 | Learning as behavioral change | Local valve learning | co-activation changes conductance | `learnValve`, `adjustOpenness`, valve weight updates |
 | Option awareness before selection | Route availability without bucket labels | route dynamics reader | `readRouteDynamics`, `inferRouteAvailability` |
 | Traceability | Relation explanation | read stable support paths and invariants | `readOutputRelation`, `explainOutput`, `generateForOutput` |
 | Separation of theory and implementation | Explicit scaffold as temporary aid | manual/generated set scaffold | `injectSetScaffold`, `generateSetScaffold` |
 | Coherence over time | Regional consolidation | plasticity changes after cycles | `updateOperationPlasticityFromCycle`, region plasticity |
 | Emergent logic | Relation-based generation | invariants across support paths | `invariantsFromPaths`, `relationFromSources` |
+
+## Direct Handle Review Rule
+
+Some implementation handles are allowed because they make tests possible before the system has richer internal mechanisms.
+
+Examples:
+
+- node `decay`;
+- valve `openness` and `weight`;
+- region plasticity;
+- explicit recruitment strategy axes.
+
+They must remain reviewable. For each one, name a possible flow-based replacement and add tests that compare the direct handle against the replacement when the replacement exists.
+
+The goal is not to imitate biology exactly. The goal is a credible minimum mechanism: understandable, practical to implement, and not dependent on unexplained properties appearing from nowhere.
 
 ## Kill Rule
 
@@ -76,6 +91,7 @@ route dynamics observability
 -> inferred route availability
 -> route-supported generation
 -> traceable explanation
+-> flow-based replacements for direct handles
 -> later internalization of the scaffold
 ```
 

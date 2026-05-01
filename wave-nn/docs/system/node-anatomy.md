@@ -32,6 +32,14 @@ received / pulse
 
 Pressure is the current internal accumulation. Threshold decides whether pressure becomes activation. Decay decides how much pressure remains after a step. Activation is the emitted usable pressure for routes leaving the node. `received` and `pulse` are short-lived traces that help output testing and visualization.
 
+Important review tag:
+
+```text
+direct handle under review
+```
+
+`decay`, threshold adjustment, valve openness, valve weight, and region plasticity are useful implementation handles and test probes. They are not automatically permanent primitives. When possible, future work should try to reproduce their effects through flow, valves, local routing, and recruited support structures.
+
 ## Why The Node Has Many Roles
 
 A node sits between input and routing. If it only stored one scalar and immediately forgot it, the network could not express timing, persistence, selectivity, or reusable meaning.
@@ -45,7 +53,7 @@ The roles separate different questions:
 | Input valves | Which routes can feed the node and with what conductance. | current | Opening, closing, adding, or removing valves changes what can activate the node. |
 | Activation threshold | How much pressure is enough to activate. | current | Lower threshold makes the node sensitive; higher threshold makes it selective. |
 | Routing behavior | Where activation can travel next. | current through outgoing valves | Changing outgoing routes changes what the node contributes to. |
-| Temporal memory | How much past pressure remains available. | current as decay / traces | Higher decay preserves pressure longer; lower decay makes the node forget quickly. |
+| Temporal memory | How much past pressure remains available. | current as direct decay / traces; review target as drain-flow mechanism | Higher persistence can be tested with decay now, but should later be reproducible with drain routes and valve control. |
 | Emission pattern | How activation leaves the node. | current through activation and outgoing valve conductance | Stronger supported routes receive more pressure; weak routes receive less. |
 
 ## Current Implementation
@@ -54,7 +62,7 @@ The roles separate different questions:
 
 - `pressure`: accumulated internal pressure;
 - `threshold`: derived from a bounded threshold state for adaptive nodes;
-- `decay`: how much pressure remains after settling;
+- `decay`: current direct handle for how much pressure remains after settling;
 - `activation`: pressure made available to outgoing valves;
 - `received`: recent incoming pressure;
 - `pulse`: strongest recent pulse.
@@ -70,6 +78,19 @@ The roles separate different questions:
 - `usefulness`.
 
 This separation matters. A node does not decide everything alone. Node behavior emerges from node state plus the valves around it.
+
+## Direct Handles Versus Flow Mechanisms
+
+Some code fields exist because they make the current lab small, testable, and inspectable. A direct handle is acceptable when it lets us prove that a behavior is useful. It should be tagged for review when the long-term target is a flow-generated mechanism.
+
+| Current Handle | Why It Exists Now | Flow-First Replacement To Test |
+| --- | --- | --- |
+| `PressureNode.decay` | Cheap way to test temporal persistence. | Connect the node to a drain structure; regulate forgetting through drain-valve conductance. |
+| Valve `openness` / `weight` | Cheap way to test route preference and learning. | Let alternating paths carve route conductance through shared pressure, plasticity, and semaphore-like competition. |
+| Region plasticity | Cheap way to protect or loosen whole regions. | Let local modulators change plasticity around active regions, similar to a local resource or hormone-like emitter. |
+| Connection creation / removal | Cheap way to test recruitment. | Simulate practical creation/destruction by driving resistance toward available or unavailable extremes. |
+
+The question is not whether direct handles are forbidden. The question is whether each direct handle can later be replaced by a credible mechanism made from flow, valves, nodes, and local modulation.
 
 ## How Each Part Is Used
 
@@ -90,13 +111,22 @@ Tests:
 
 ### Temporal Memory
 
-Decay controls how much pressure survives each settle step.
+In the current code, decay controls how much pressure survives each settle step.
 
 ```text
 next pressure = current pressure * decay
 ```
 
 High decay means pressure persists. Low decay means pressure fades quickly.
+
+This is a direct implementation probe. A more native mechanism would make forgetting emerge from flow leaving the node:
+
+```text
+node pressure -> drain node
+drain valve conductance -> effective decay
+```
+
+That would let the same valve machinery regulate persistence instead of giving every node a permanent decay knob.
 
 Tests:
 
@@ -131,11 +161,41 @@ conductance = weight * openness
 
 The same node activation can therefore produce different downstream effects depending on route support.
 
+`openness` and `weight` are direct route handles today. The flow-first target is to make route availability emerge from pressure history and competition:
+
+```text
+path A active -> carves shared valve conditions
+path B later flows through the shaped conditions
+path B flow becomes proportional to prior path A flow
+```
+
+That requires a semaphore-like mechanism: one path changes local conditions, and another path reads those changed conditions without needing a manually assigned route priority.
+
 Tests:
 
 - `emission follows valve route support`
 - `valve openness stays bounded`
 - `flood training changes valves`
+
+### Semaphore-Like Routing
+
+A semaphore is a supporting mechanism candidate, not a proven core primitive yet.
+
+Working intuition:
+
+```text
+one active path changes local valve/plasticity conditions
+another path is gated or scaled by those changed conditions
+```
+
+This could support multiplication-like or proportional behavior without directly setting `openness`. It would also let a node belong to overlapping regions, like a Venn diagram, where multiple active contexts modulate the same local routes.
+
+Review target:
+
+```text
+prove a small group of nodes can create semaphore behavior
+before promoting it into the core system
+```
 
 ### Time Intake
 
@@ -166,9 +226,19 @@ Use small knob tests:
 | Add incoming route | New possible cause for activation. |
 | Add outgoing route | New possible effect of activation. |
 
+These are test knobs, not final philosophy. When a knob proves useful, add a second test asking whether a small flow mechanism can reproduce the same effect.
+
 ## Rule
 
 Do not make every node capability explicit unless a test needs it. Keep the implementation minimal, then add observer scaffolds or internal dynamics only when they explain a measurable change.
+
+When a new direct property is added, document it as:
+
+```text
+direct handle under review
+```
+
+and name the flow mechanism that might replace it.
 
 ## Related
 

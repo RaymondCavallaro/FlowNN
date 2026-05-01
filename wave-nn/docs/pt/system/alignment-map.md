@@ -48,14 +48,29 @@ Estes sao uteis, mas nao devem definir o sistema ativo sozinhos:
 | Principio | Propriedade | Mecanismo | Implementacao |
 | --- | --- | --- | --- |
 | Significado como comportamento | Identidade estrutural de fonte | ponto de entrada + topologia | fontes `A0`, `A1`, `B0`, `B1`; sem tipo no payload |
-| Processo sobre estado | Persistencia temporal | decaimento de pressao e residuo de trace | `PressureNode.decay`, `InputValve.flowTrace` |
-| Inteligencia guiada por restricao | Alocacao seletiva | limiar e condutancia de rota | thresholds de node, openness de valvula, weight |
+| Processo sobre estado | Persistencia temporal | decay de pressao agora; alvo de drain-flow depois | `PressureNode.decay` é direct handle under review; rotas futuras de dreno devem reproduzir o efeito |
+| Inteligencia guiada por restricao | Alocacao seletiva | limiar e condutancia de rota agora; alvo de semaforo depois | thresholds de node, openness de valvula e weight sao handles atuais; competicao de fluxo tipo semaforo é o alvo de revisao |
 | Aprendizagem como mudanca de comportamento | Aprendizagem local de valvulas | coativacao muda condutancia | `learnValve`, `adjustOpenness`, updates de weight |
 | Consciencia de opcoes antes da selecao | Disponibilidade de rota sem buckets | leitor de dinamica de rotas | `readRouteDynamics`, `inferRouteAvailability` |
 | Traceability | Explicacao relacional | ler caminhos de suporte estaveis e invariantes | `readOutputRelation`, `explainOutput`, `generateForOutput` |
 | Separacao entre teoria e implementacao | Scaffold explicito como ajuda temporaria | scaffold manual/gerado de conjuntos | `injectSetScaffold`, `generateSetScaffold` |
 | Coerencia ao longo do tempo | Consolidacao regional | plasticidade muda depois de ciclos | `updateOperationPlasticityFromCycle`, plasticidade regional |
 | Logica emergente | Geracao baseada em relacoes | invariantes entre caminhos de suporte | `invariantsFromPaths`, `relationFromSources` |
+
+## Regra de revisao de handles diretos
+
+Alguns handles de implementacao sao permitidos porque tornam testes possiveis antes de o sistema ter mecanismos internos mais ricos.
+
+Exemplos:
+
+- `decay` do node;
+- `openness` e `weight` de valvula;
+- plasticidade regional;
+- eixos explicitos de estrategia de recrutamento.
+
+Eles devem continuar revisaveis. Para cada um, nomeie um substituto possivel baseado em fluxo e adicione testes que comparem o handle direto com o substituto quando o substituto existir.
+
+O objetivo nao é imitar biologia exatamente. O objetivo é um mecanismo minimo crivel: compreensivel, pratico de implementar e nao dependente de propriedades inexplicadas surgindo do nada.
 
 ## Regra de corte
 
@@ -76,6 +91,7 @@ observabilidade de dinamica de rotas
 -> disponibilidade de rota inferida
 -> geracao apoiada por rotas
 -> explicacao rastreavel
+-> substitutos baseados em fluxo para handles diretos
 -> internalizacao posterior do scaffold
 ```
 
