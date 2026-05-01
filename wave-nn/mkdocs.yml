@@ -15,6 +15,8 @@ nav:
       - Glossary: glossary.md
   - Current System:
       - Current System: system/current-system.md
+      - Alignment Map: system/alignment-map.md
+      - Node Anatomy: system/node-anatomy.md
       - Property Map: system/properties.md
       - Borrowed Primitives: system/borrowed-primitives.md
       - Features: features.md
@@ -55,6 +57,8 @@ nav:
           - Glossario: pt/glossary.md
       - Sistema atual:
           - Sistema atual: pt/system/current-system.md
+          - Mapa de alinhamento: pt/system/alignment-map.md
+          - Anatomia do node: pt/system/node-anatomy.md
           - Mapa de propriedades: pt/system/properties.md
           - Primitivas emprestadas: pt/system/borrowed-primitives.md
           - Recursos: pt/features.md

@@ -19,6 +19,8 @@ Status means:
 | Truth-table lab | achieved | implementation choice | XOR/AND/OR/NAND are measuring sticks, not the final domain. |
 | Scalar pressure payload | achieved | native target | Signals should not carry semantic labels. |
 | Structural source identity | achieved | native target | Identity comes from entry point, topology, and routed behavior. |
+| Node temporal persistence | achieved | native target | Decay lets pressure remain available across steps. |
+| Conductance-shaped emission | achieved | native target | Activated nodes emit through outgoing valve support. |
 | Local valve learning | achieved | native target | Learning appears as changed conductance, resistance, and route preference. |
 | Input-only testing boundary | achieved | implementation choice | Useful safety boundary for the current supervised lab. |
 | No output reverse valves | achieved | implementation choice | Current simplification after the reverse-flood lesson. |
@@ -29,13 +31,14 @@ Status means:
 | Recruitment strategy tuning | partial | native target | Axis gradients should become system-controlled, not manually prioritized. |
 | Meta-regulation | partial | native target | Observational now; should eventually regulate plasticity, thresholds, valves, and time windows. |
 | Adaptive pressure balance | target | native target | Capacity and constraint should be regulated together. |
-| Path distribution tracking | target | native target | Preserve awareness of viable alternatives without keeping every route active. |
+| Route dynamics observability | achieved | bridge to native target | External readers infer route availability from support, flow, trace, recurrence, and usefulness. |
+| Path distribution tracking | partial | native target | Preserve awareness of viable alternatives through route dynamics without keeping every route active. |
 | Partial reversibility / trace memory | target | native target | Trace outcomes back to contributing routes for explanation and refinement. |
 | Hard constraints over flow | target | native target | Prevent invalid states while keeping pressure dynamics inspectable. |
 | Field bias | target | native target | Add global directional pressure without replacing local routing. |
 | Controlled routing noise | target | native target | Use structured exploration that can decay or slow its decay. |
 | Option awareness | target | emergent target | The system should know which alternatives were possible before selection while allocating active resources selectively. |
-| Selective persistence | target | emergent target | The system should decide what to keep active, compress, or discard. |
+| Selective persistence | target | emergent target | Availability should emerge from conductance, decay, recurrence, trace residue, and usefulness. |
 | Time material layer | target | native target | Raw temporal structure should become pre-semantic material. |
 | Second-stage temporal meaning | target | emergent target | Meaning should refine through routed temporal behavior. |
 | Structural self/value dynamics | target | emergent target | Values should arise after continuity, option-space, and consequence attribution. |

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import {
+  PressureNode,
   PressureNetwork,
   evaluateOperation,
 } from "../src/network.js";
@@ -35,6 +36,34 @@ function testThresholdActivation() {
   node.inject(node.threshold * 1.2);
   node.settle();
   assert.ok(node.activation > 0);
+}
+
+function testNodeDecayControlsTemporalPersistence() {
+  const fast = new PressureNode({ id: "FAST", role: "hidden", threshold: 0.5, decay: 0.2 });
+  const slow = new PressureNode({ id: "SLOW", role: "hidden", threshold: 0.5, decay: 0.9 });
+
+  fast.inject(1);
+  slow.inject(1);
+  fast.settle();
+  slow.settle();
+
+  assert.equal(fast.activation, slow.activation);
+  assert.ok(slow.pressure > fast.pressure);
+}
+
+function testEmissionFollowsValveRouteSupport() {
+  const network = new PressureNetwork({ topology: "shaped" });
+  const hidden = network.getNode("H1");
+  const weak = network.getValve("H1->OUT0");
+  const strong = network.getValve("H1->OUT1");
+
+  weak.weight = 0.2;
+  strong.weight = 3;
+  hidden.activation = 1;
+  network.step({ learning: false });
+
+  assert.ok(network.getNode("OUT1").activation > network.getNode("OUT0").activation);
+  assert.ok(strong.activity > weak.activity);
 }
 
 function testOutputFloodsSignal() {
@@ -652,6 +681,18 @@ const TEST_CASES = [
     kind: "feature",
     covers: "pressure threshold activation",
     run: testThresholdActivation,
+  },
+  {
+    name: "node decay controls temporal persistence",
+    kind: "feature",
+    covers: "node temporal memory",
+    run: testNodeDecayControlsTemporalPersistence,
+  },
+  {
+    name: "emission follows valve route support",
+    kind: "feature",
+    covers: "node emission through valve conductance",
+    run: testEmissionFollowsValveRouteSupport,
   },
   {
     name: "outputs can flood pressure during training",

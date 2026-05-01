@@ -18,6 +18,8 @@ Cada teste e registrado com:
 | feature | truth table oracle matches supported operations | definicoes das operacoes |
 | error | source identity is structural | nenhum tipo semantico no payload de pressao |
 | feature | threshold gates node activation | ativacao por limiar de pressao |
+| feature | node decay controls temporal persistence | memoria temporal do node |
+| feature | emission follows valve route support | emissao do node por condutancia de valvula |
 | feature | outputs can flood pressure during training | saida teacher como fonte ativa |
 | feature | shaped pair topology is structural | topologia de pares de referencia |
 | error | output reverse valves are omitted | pressao teacher fica local no alvo sem rotas reversas |

@@ -11,6 +11,8 @@ This page names the current FlowNN features explicitly. A feature is considered 
 | Truth-table operations | XOR, AND, OR, and NAND provide the small measuring stick for pressure learning. | `truth table oracle matches supported operations` |
 | Structural source identity | Pressure carries strength only; identity comes from source node and topology. | `source identity is structural` |
 | Threshold activation | Nodes activate only when pressure crosses their threshold. | `threshold gates node activation` |
+| Node temporal memory | Node decay controls how much pressure persists after activation. | `node decay controls temporal persistence` |
+| Conductance-shaped emission | Node activation is distributed through outgoing valve support. | `emission follows valve route support` |
 | Output flooding | During training, the desired output can act as a teacher pressure source. | `outputs can flood pressure during training` |
 | Omitted reverse teacher routes | Output-to-hidden reverse routes are absent; teacher pressure stays local to the expected output. | `output reverse valves are omitted` |
 | Bounded valve ecology | Valve openness approaches limits without becoming exactly open or closed. | `valve openness stays bounded` |

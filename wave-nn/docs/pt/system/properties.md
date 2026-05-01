@@ -19,6 +19,8 @@ Status significa:
 | Laboratorio de tabela-verdade | alcancado | escolha de implementacao | XOR/AND/OR/NAND sao reguas, nao o dominio final. |
 | Payload escalar de pressao | alcancado | alvo nativo | Sinais nao devem carregar rotulos semanticos. |
 | Identidade estrutural de fonte | alcancado | alvo nativo | Identidade vem de ponto de entrada, topologia e comportamento roteado. |
+| Persistencia temporal do node | alcancado | alvo nativo | Decay deixa pressao continuar disponivel entre passos. |
+| Emissao moldada por condutancia | alcancado | alvo nativo | Nodes ativados emitem pelo suporte das valvulas de saida. |
 | Aprendizagem local de valvulas | alcancado | alvo nativo | Aprendizagem aparece como mudanca de condutancia, resistencia e preferencia de rota. |
 | Fronteira de teste somente com entradas | alcancado | escolha de implementacao | Limite util de seguranca para o laboratorio supervisionado atual. |
 | Sem valvulas reversas de saida | alcancado | escolha de implementacao | Simplificacao atual depois da licao de reverse flood. |
@@ -29,13 +31,14 @@ Status significa:
 | Ajuste de estrategia de recrutamento | parcial | alvo nativo | Gradientes de eixo devem virar controle do sistema, nao prioridade manual. |
 | Meta-regulacao | parcial | alvo nativo | Observacional agora; deve eventualmente regular plasticidade, limiares, valvulas e janelas temporais. |
 | Balanco adaptativo de pressao | alvo | alvo nativo | Capacidade e restricao devem ser reguladas juntas. |
-| Rastreamento de distribuicao de caminhos | alvo | alvo nativo | Preservar consciencia de alternativas viaveis sem manter toda rota ativa. |
+| Observabilidade de dinamica de rotas | alcancado | ponte para alvo nativo | Leitores externos inferem disponibilidade de rota por suporte, fluxo, trace, recorrencia e utilidade. |
+| Rastreamento de distribuicao de caminhos | parcial | alvo nativo | Preservar consciencia de alternativas viaveis por dinamica de rotas sem manter toda rota ativa. |
 | Reversibilidade parcial / memoria de traces | alvo | alvo nativo | Rastrear resultados de volta para rotas contribuintes para explicacao e refinamento. |
 | Restricoes duras sobre fluxo | alvo | alvo nativo | Impedir estados invalidos mantendo dinamicas de pressao inspecionaveis. |
 | Vies de campo | alvo | alvo nativo | Adicionar pressao direcional global sem substituir roteamento local. |
 | Ruido controlado de roteamento | alvo | alvo nativo | Usar exploracao estruturada que pode decair ou ter seu decaimento desacelerado. |
 | Consciencia de opcoes | alvo | alvo emergente | O sistema deve saber quais alternativas eram possiveis antes da selecao enquanto aloca recursos ativos seletivamente. |
-| Persistencia seletiva | alvo | alvo emergente | O sistema deve decidir o que manter ativo, comprimir ou descartar. |
+| Persistencia seletiva | alvo | alvo emergente | Disponibilidade deve emergir de condutancia, decay, recorrencia, residuo de trace e utilidade. |
 | Camada de material temporal | alvo | alvo nativo | Estrutura temporal bruta deve virar material pre-semantico. |
 | Significado temporal de segunda etapa | alvo | alvo emergente | Significado deve refinar por comportamento temporal roteado. |
 | Dinamicas estruturais de self/valor | alvo | alvo emergente | Valores devem emergir depois de continuidade, espaco de opcoes e atribuicao de consequencia. |

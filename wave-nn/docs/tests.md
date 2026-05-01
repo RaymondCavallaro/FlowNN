@@ -18,6 +18,8 @@ Every test is registered with:
 | feature | truth table oracle matches supported operations | truth-table operation definitions |
 | error | source identity is structural | no semantic type stored in pressure payload |
 | feature | threshold gates node activation | pressure threshold activation |
+| feature | node decay controls temporal persistence | node temporal memory |
+| feature | emission follows valve route support | node emission through valve conductance |
 | feature | outputs can flood pressure during training | teacher output as active pressure source |
 | feature | shaped pair topology is structural | reference pair-node topology |
 | error | output reverse valves are omitted | teacher pressure stays target-local without reverse routes |
