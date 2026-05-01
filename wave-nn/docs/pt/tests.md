@@ -21,6 +21,7 @@ Cada teste e registrado com:
 | feature | node decay controls temporal persistence | memoria temporal do node |
 | feature | emission follows valve route support | emissao do node por condutancia de valvula |
 | error | drain route does not replace direct decay yet | substituicao flow-only de decay nao é implementada pela condutancia atual |
+| feature | budgeted flow lets large outward route act as drain | decay por fluxo orcado atraves de condutancia comum de saida |
 | feature | resistance extremes simulate connection availability | disponibilidade de conexao por resistencia de valvula |
 | feature | coactivation carves route support for later flow | precursor de semaforo por suporte de rota compartilhada aprendida |
 | feature | outputs can flood pressure during training | saida teacher como fonte ativa |

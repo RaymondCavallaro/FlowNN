@@ -193,9 +193,10 @@ export class InputValve {
     this.coactivity = 0;
   }
 
-  conduct(sourceActivation, totalConductance = 1) {
+  conduct(sourceActivation, totalConductance = 1, budget = Infinity) {
     const conductance = this.weight * this.openness;
-    const throughput = sourceActivation * conductance / Math.max(1, totalConductance);
+    const requested = sourceActivation * conductance / Math.max(1, totalConductance);
+    const throughput = Math.min(requested, budget);
     this.pressure += throughput;
     this.activity = Math.max(this.activity, throughput);
     this.flowTrace = clamp(this.flowTrace * 0.985 + throughput * 0.09, 0, 4);
@@ -983,6 +984,7 @@ export class PressureNetwork {
     valveMode = "neutral",
     thresholdMode = "neutral",
     activeRegions = ["operation"],
+    flowMode = "copy",
   } = {}) {
     this.time += 1;
 
@@ -993,11 +995,15 @@ export class PressureNetwork {
     if (learning) this.applyEcology({ valveMode, thresholdMode, learningRate });
 
     const conductanceBySource = new Map();
+    const pressureBudgetBySource = new Map();
     for (const valve of this.valves) {
       if (!this.canConductValve(valve, { learning, teacherOutputId })) continue;
       if (!activeRegions.includes(valve.region)) continue;
       const conductance = valve.weight * valve.openness;
       conductanceBySource.set(valve.from, (conductanceBySource.get(valve.from) ?? 0) + conductance);
+      if (flowMode === "budgeted" && !pressureBudgetBySource.has(valve.from)) {
+        pressureBudgetBySource.set(valve.from, Math.max(0, this.getNode(valve.from)?.pressure ?? 0));
+      }
     }
 
     for (const valve of this.valves) {
@@ -1005,8 +1011,15 @@ export class PressureNetwork {
       if (!activeRegions.includes(valve.region)) continue;
       const from = this.getNode(valve.from);
       const to = this.getNode(valve.to);
-      const throughput = valve.conduct(from.activation, conductanceBySource.get(valve.from));
+      const budget = flowMode === "budgeted"
+        ? pressureBudgetBySource.get(valve.from) ?? 0
+        : Infinity;
+      const throughput = valve.conduct(from.activation, conductanceBySource.get(valve.from), budget);
       if (throughput <= 0.001) continue;
+      if (flowMode === "budgeted") {
+        pressureBudgetBySource.set(valve.from, Math.max(0, budget - throughput));
+        from.pressure = Math.max(0, from.pressure - throughput);
+      }
 
       to.pressure += throughput;
       to.received += throughput;

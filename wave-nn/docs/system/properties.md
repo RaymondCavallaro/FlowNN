@@ -41,7 +41,7 @@ Status means:
 | Option awareness | target | emergent target | The system should know which alternatives were possible before selection while allocating active resources selectively. |
 | Selective persistence | target | emergent target | Availability should emerge from conductance, decay, recurrence, trace residue, and usefulness. |
 | Semaphore-like gating | target | native target | One active path should be able to shape local flow conditions read by another path. |
-| Flow-based decay / drains | target | native target | Forgetting should be reproducible by routed pressure leaving through drain structures. |
+| Flow-based decay / drains | partial | native target | Experimental budgeted flow shows ordinary high-capacity outward routes can drain source pressure. |
 | Local plasticity modulation | target | native target | Plasticity should eventually come from local modulators instead of global region knobs. |
 | Time material layer | target | native target | Raw temporal structure should become pre-semantic material. |
 | Second-stage temporal meaning | target | emergent target | Meaning should refine through routed temporal behavior. |

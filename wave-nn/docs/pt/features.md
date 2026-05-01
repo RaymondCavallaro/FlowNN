@@ -13,7 +13,7 @@ Esta pagina nomeia explicitamente os recursos atuais do FlowNN. Um recurso so de
 | Ativacao por limiar | Nodes ativam quando a pressao cruza o limiar. | `threshold gates node activation` |
 | Memoria temporal do node | Decay do node controla quanta pressao persiste depois da ativacao. | `node decay controls temporal persistence` |
 | Emissao moldada por condutancia | A ativacao do node é distribuida pelo suporte das valvulas de saida. | `emission follows valve route support` |
-| Probes de substituicao por fluxo | Handles diretos sao testados contra possiveis substitutos baseados em fluxo antes de virar mecanismos centrais. | `drain route does not replace direct decay yet`; `resistance extremes simulate connection availability`; `coactivation carves route support for later flow` |
+| Probes de substituicao por fluxo | Handles diretos sao testados contra possiveis substitutos baseados em fluxo antes de virar mecanismos centrais. | `drain route does not replace direct decay yet`; `budgeted flow lets large outward route act as drain`; `resistance extremes simulate connection availability`; `coactivation carves route support for later flow` |
 | Flood de saida | No treino, a saida desejada pode agir como fonte de pressao teacher. | `outputs can flood pressure during training` |
 | Rotas teacher reversas omitidas | Rotas reversas de saida para ocultos nao existem; a pressao teacher fica local na saida esperada. | `output reverse valves are omitted` |
 | Ecologia limitada de valvulas | Abertura se aproxima de limites sem virar exatamente aberta ou fechada. | `valve openness stays bounded` |

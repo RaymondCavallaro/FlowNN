@@ -39,6 +39,8 @@ Esses campos nao sao rotulos de ciclo de vida da rota. Eles sao tracos dinamicos
 
 `testCase` injeta apenas fontes de entrada. Ele mede as saidas durante a janela de assentamento porque o pulso significativo pode acontecer antes do quadro final.
 
+`step` tambem tem um probe experimental `flowMode = "budgeted"`. No modo padrao `"copy"`, condutancia de saida envia pressao para frente enquanto a pressao de origem decai separadamente. No modo `"budgeted"`, o fluxo de saida consome o orcamento de pressao disponivel no node de origem. Isso permite que um node comum com grande condutancia de saida aja como dreno pratico sem criar tipo especial de node dreno.
+
 ## Scaffold de conjuntos
 
 `injectSetScaffold` injeta conceitos e relacoes explicitas sem treinar rotas de pressao. Ele usa o gerador funcional de scaffold com `source = manual`, produzindo pertencimento a eixo, opcoes de entrada, exclusao mutua, co-presenca, propriedade compartilhada de valor e generalizacao.

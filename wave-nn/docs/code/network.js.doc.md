@@ -50,6 +50,8 @@ Each step:
 
 Outgoing pressure is shared across open valves instead of copied into every valve. This keeps loops from amplifying energy without bound.
 
+`step` also has an experimental `flowMode = "budgeted"` probe. In default `"copy"` mode, outgoing conductance sends pressure forward while source pressure decays independently. In `"budgeted"` mode, outgoing flow consumes the source node's available pressure budget. This lets a normal node with large outward conductance act like a practical drain without introducing a special drain node type.
+
 ## Asymptotic State
 
 Valves keep an internal `aperture` value. `openness` is derived with a sigmoid curve, and `resistance` is `1 - openness`.

@@ -90,6 +90,31 @@ function testDrainRouteDoesNotReplaceDirectDecayYet() {
   assert.equal(subject.pressure, before);
 }
 
+function testBudgetedFlowLetsLargeOutwardRouteActAsDrain() {
+  const network = new PressureNetwork({ topology: "shaped" });
+  const subject = network.getNode("H1");
+  const drain = new PressureNode({ id: "DRAIN", label: "drain", role: "hidden", threshold: 0.1, decay: 0.2 });
+
+  subject.decay = 1;
+  network.nodes.push(drain);
+  network.addValve({
+    from: "H1",
+    to: "DRAIN",
+    resistance: 0.001,
+    weight: 10,
+  });
+
+  subject.inject(1);
+  subject.settle();
+  const before = subject.pressure;
+
+  network.step({ learning: false, flowMode: "budgeted" });
+
+  assert.ok(before > 0);
+  assert.ok(drain.activation > 0);
+  assert.ok(subject.pressure < before * 0.1);
+}
+
 function testResistanceExtremesSimulateConnectionAvailability() {
   const network = new PressureNetwork({ topology: "shaped" });
   const hidden = network.getNode("H1");
@@ -765,6 +790,12 @@ const TEST_CASES = [
     kind: "error",
     covers: "flow-only decay replacement is not implemented by current conductance",
     run: testDrainRouteDoesNotReplaceDirectDecayYet,
+  },
+  {
+    name: "budgeted flow lets large outward route act as drain",
+    kind: "feature",
+    covers: "flow-budgeted decay through ordinary outward conductance",
+    run: testBudgetedFlowLetsLargeOutwardRouteActAsDrain,
   },
   {
     name: "resistance extremes simulate connection availability",

@@ -41,7 +41,7 @@ Status significa:
 | Consciencia de opcoes | alvo | alvo emergente | O sistema deve saber quais alternativas eram possiveis antes da selecao enquanto aloca recursos ativos seletivamente. |
 | Persistencia seletiva | alvo | alvo emergente | Disponibilidade deve emergir de condutancia, decay, recorrencia, residuo de trace e utilidade. |
 | Gating tipo semaforo | alvo | alvo nativo | Um caminho ativo deve conseguir moldar condicoes locais de fluxo lidas por outro caminho. |
-| Decay baseado em fluxo / drenos | alvo | alvo nativo | Esquecimento deve ser reproduzivel por pressao roteada saindo por estruturas de dreno. |
+| Decay baseado em fluxo / drenos | parcial | alvo nativo | Fluxo orcado experimental mostra que rotas comuns de saida com alta capacidade podem drenar pressao de origem. |
 | Modulacao local de plasticidade | alvo | alvo nativo | Plasticidade deve eventualmente vir de moduladores locais em vez de knobs globais de regiao. |
 | Camada de material temporal | alvo | alvo nativo | Estrutura temporal bruta deve virar material pre-semantico. |
 | Significado temporal de segunda etapa | alvo | alvo emergente | Significado deve refinar por comportamento temporal roteado. |

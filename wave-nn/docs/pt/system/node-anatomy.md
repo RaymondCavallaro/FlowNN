@@ -247,6 +247,7 @@ Estes testes verificam de proposito se os substitutos flow-first ja sao reais:
 | Probe | Resultado |
 | --- | --- |
 | Rota de dreno para decay | Ainda **nao** substitui decay direto. A condutancia atual envia pressao para frente, mas nao subtrai do node de origem; entao um dreno pode receber fluxo sem drenar a origem. |
+| Fluxo de dreno orcado | Funciona como modo experimental. Quando o fluxo de saida consome um orcamento de pressao da origem, uma rota comum de saida com alta capacidade pode drenar o node local sem tipo especial de node dreno. |
 | Extremos de resistencia para disponibilidade de conexao | Funciona como proxy pratico de disponibilidade de conexao. Resistencia muito alta se comporta como rota indisponivel, e resistencia muito baixa como rota disponivel. |
 | Coativacao esculpindo fluxo posterior | Funciona como precursor fraco de semaforo. Coativacao pode fortalecer uma rota compartilhada que fluxo posterior le, mas ainda nao é gating completo de caminho para caminho. |
 

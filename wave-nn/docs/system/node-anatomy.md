@@ -247,6 +247,7 @@ These tests deliberately check whether the flow-first replacements are real yet:
 | Probe | Result |
 | --- | --- |
 | Drain route for decay | Does **not** replace direct decay yet. Current conductance sends pressure forward but does not subtract it from the source node, so a drain can receive flow without draining the source. |
+| Budgeted drain flow | Works as an experimental mode. When outgoing flow consumes a source pressure budget, a normal high-capacity outward route can drain the local node without a special drain node type. |
 | Resistance extremes for connection availability | Works as a practical connection-availability proxy. Very high resistance behaves like an unavailable route, and very low resistance behaves like an available route. |
 | Co-activation carving later flow | Works as a weak semaphore precursor. Co-activation can strengthen a shared route that later flow reads, but it is not full path-to-path gating yet. |
 
