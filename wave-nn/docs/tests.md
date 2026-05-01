@@ -20,6 +20,9 @@ Every test is registered with:
 | feature | threshold gates node activation | pressure threshold activation |
 | feature | node decay controls temporal persistence | node temporal memory |
 | feature | emission follows valve route support | node emission through valve conductance |
+| error | drain route does not replace direct decay yet | flow-only decay replacement is not implemented by current conductance |
+| feature | resistance extremes simulate connection availability | connection availability through valve resistance |
+| feature | coactivation carves route support for later flow | semaphore precursor through learned shared route support |
 | feature | outputs can flood pressure during training | teacher output as active pressure source |
 | feature | shaped pair topology is structural | reference pair-node topology |
 | error | output reverse valves are omitted | teacher pressure stays target-local without reverse routes |

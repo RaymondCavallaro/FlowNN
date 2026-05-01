@@ -13,6 +13,7 @@ This page names the current FlowNN features explicitly. A feature is considered 
 | Threshold activation | Nodes activate only when pressure crosses their threshold. | `threshold gates node activation` |
 | Node temporal memory | Node decay controls how much pressure persists after activation. | `node decay controls temporal persistence` |
 | Conductance-shaped emission | Node activation is distributed through outgoing valve support. | `emission follows valve route support` |
+| Flow-replacement probes | Direct handles are tested against possible flow-based replacements before being treated as core mechanisms. | `drain route does not replace direct decay yet`; `resistance extremes simulate connection availability`; `coactivation carves route support for later flow` |
 | Output flooding | During training, the desired output can act as a teacher pressure source. | `outputs can flood pressure during training` |
 | Omitted reverse teacher routes | Output-to-hidden reverse routes are absent; teacher pressure stays local to the expected output. | `output reverse valves are omitted` |
 | Bounded valve ecology | Valve openness approaches limits without becoming exactly open or closed. | `valve openness stays bounded` |

@@ -66,6 +66,72 @@ function testEmissionFollowsValveRouteSupport() {
   assert.ok(strong.activity > weak.activity);
 }
 
+function testDrainRouteDoesNotReplaceDirectDecayYet() {
+  const network = new PressureNetwork({ topology: "shaped" });
+  const subject = network.getNode("H1");
+  const drain = new PressureNode({ id: "DRAIN", label: "drain", role: "hidden", threshold: 0.1, decay: 0.2 });
+
+  subject.decay = 1;
+  network.nodes.push(drain);
+  network.addValve({
+    from: "H1",
+    to: "DRAIN",
+    resistance: 0.001,
+    weight: 10,
+  });
+
+  subject.inject(1);
+  subject.settle();
+  const before = subject.pressure;
+
+  network.step({ learning: false });
+
+  assert.ok(drain.activation > 0);
+  assert.equal(subject.pressure, before);
+}
+
+function testResistanceExtremesSimulateConnectionAvailability() {
+  const network = new PressureNetwork({ topology: "shaped" });
+  const hidden = network.getNode("H1");
+  const valve = network.getValve("H1->OUT1");
+
+  valve.adjustOpenness(-100);
+  hidden.activation = 1;
+  network.step({ learning: false });
+  const unavailableFlow = network.getNode("OUT1").activation;
+
+  network.clearRuntime();
+  valve.adjustOpenness(200);
+  hidden.activation = 1;
+  network.step({ learning: false });
+  const availableFlow = network.getNode("OUT1").activation;
+
+  assert.ok(unavailableFlow < 0.001);
+  assert.ok(availableFlow > unavailableFlow * 1000);
+}
+
+function testCoactivationCarvesRouteSupportForLaterFlow() {
+  const network = new PressureNetwork({ topology: "shaped" });
+  const hidden = network.getNode("H1");
+  const output = network.getNode("OUT1");
+  const valve = network.getValve("H1->OUT1");
+  const supportBefore = valve.weight * valve.openness;
+
+  for (let index = 0; index < 8; index += 1) {
+    hidden.activation = 1;
+    output.activation = 1;
+    network.step({ learning: true, teacherOutputId: "OUT1" });
+  }
+
+  const supportAfter = valve.weight * valve.openness;
+  network.clearRuntime();
+  hidden.activation = 1;
+  network.step({ learning: false });
+
+  assert.ok(supportAfter > supportBefore);
+  assert.ok(network.getNode("OUT1").activation > 0);
+}
+
 function testOutputFloodsSignal() {
   const network = new PressureNetwork();
   const output = network.getNode("OUT1");
@@ -693,6 +759,24 @@ const TEST_CASES = [
     kind: "feature",
     covers: "node emission through valve conductance",
     run: testEmissionFollowsValveRouteSupport,
+  },
+  {
+    name: "drain route does not replace direct decay yet",
+    kind: "error",
+    covers: "flow-only decay replacement is not implemented by current conductance",
+    run: testDrainRouteDoesNotReplaceDirectDecayYet,
+  },
+  {
+    name: "resistance extremes simulate connection availability",
+    kind: "feature",
+    covers: "connection availability through valve resistance",
+    run: testResistanceExtremesSimulateConnectionAvailability,
+  },
+  {
+    name: "coactivation carves route support for later flow",
+    kind: "feature",
+    covers: "semaphore precursor through learned shared route support",
+    run: testCoactivationCarvesRouteSupportForLaterFlow,
   },
   {
     name: "outputs can flood pressure during training",
